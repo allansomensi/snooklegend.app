@@ -64,23 +64,27 @@ to avoid its rate limit). Without network access, the release in
 
 ## Deploying
 
-**GitHub Pages** (set up in `.github/workflows/deploy.yml`):
+The site is deployed by **Vercel** from this repository (Git integration, the
+Next.js preset; nothing else to configure): every push to `main` is published at
+[snooklegend.app](https://snooklegend.app), and every pull request gets a preview.
 
-1. Repository Settings → Pages → Source: **GitHub Actions**.
-2. Settings → Pages → Custom domain: `snooklegend.app` (the file `public/CNAME`
-   already says so), then **Enforce HTTPS**.
-3. At the domain's DNS provider, point the apex domain at GitHub Pages:
-   `A` records to `185.199.108.153`, `185.199.109.153`, `185.199.110.153` and
-   `185.199.111.153` (and `AAAA` records to `2606:50c0:8000::153` through
-   `2606:50c0:8003::153`).
+`.github/workflows/ci.yml` checks each push and pull request (types, lint, a
+build). It can also keep the site in step with the game's releases:
 
-Every push to `main` deploys; the site is also rebuilt daily so that the version
-and checksums follow new releases. To rebuild the moment a version is published,
-the game's release workflow can send a `repository_dispatch` with the event type
-`game-released` to this repository.
+- **Daily rebuild:** in Vercel, the project → Settings → Git → **Deploy Hooks**,
+  create one for `main`, and save its URL as the repository secret
+  `VERCEL_DEPLOY_HOOK` (GitHub → Settings → Secrets and variables → Actions).
+  The workflow then asks Vercel for a fresh build every day.
+- **Right after a release:** the game's release workflow can send a
+  `repository_dispatch` with the event type `game-released` to this repository,
+  which triggers the same rebuild.
 
-**Vercel, Netlify or Cloudflare Pages** work too: build command `npm run build`,
-output folder `out`.
+Optional: a `GITHUB_TOKEN` environment variable in Vercel (any token that can read
+public repositories) avoids GitHub's rate limit when the build reads the release.
+Without it the build still works, and falls back to the release in
+`src/lib/release.ts` if GitHub says no.
+
+Any other static host works too: build command `npm run build`, output folder `out`.
 
 ### Analytics
 

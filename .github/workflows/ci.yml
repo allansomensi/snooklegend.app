@@ -1,0 +1,54 @@
+# The site is deployed by Vercel (its Git integration publishes every push to
+# main and gives pull requests a preview). This workflow only checks the code,
+# and asks Vercel for a fresh build when a new version of the game may be out.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Once a day, or right away when the game's release workflow sends a
+  # repository_dispatch of type "game-released": rebuild on Vercel, so the
+  # version, sizes and checksums follow new releases.
+  schedule:
+    - cron: "23 9 * * *"
+  repository_dispatch:
+    types: [game-released]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEXT_TELEMETRY_DISABLED: 1
+
+  rebuild:
+    if: github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask Vercel for a new deployment
+        env:
+          # Vercel → the project → Settings → Git → Deploy Hooks (branch main),
+          # saved here as the repository secret VERCEL_DEPLOY_HOOK.
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::notice::No VERCEL_DEPLOY_HOOK secret: nothing to rebuild. See the README, Deploying."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" > /dev/null
+          echo "Vercel is building the site."
