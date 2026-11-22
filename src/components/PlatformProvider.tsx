@@ -3,8 +3,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import type { Dict } from "@/i18n";
 import type { ReleaseInfo } from "@/lib/release";
+import { track } from "@vercel/analytics";
 import { detectArch, detectOS, type Arch, type OS } from "@/lib/platform";
-import { REPO, type AssetKey } from "@/lib/site";
+import { ASSETS, REPO, type AssetKey } from "@/lib/site";
 import { DownloadModal } from "./DownloadModal";
 
 export type DesktopOS = "windows" | "mac" | "linux";
@@ -66,6 +67,9 @@ export function PlatformProvider({
   const [target, setTarget] = useState<DownloadTarget | null>(null);
 
   const openDownload = useCallback((next: DownloadTarget) => {
+    // Custom events (shown in Vercel Analytics on the plans that have them).
+    if (next.kind === "file") track("Download", { os: next.os, file: ASSETS[next.asset] });
+    else track("Install command", { os: next.os });
     setTarget(next);
     // Wait for the content to render, then open the dialog.
     requestAnimationFrame(() => {

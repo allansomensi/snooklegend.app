@@ -82,6 +82,23 @@ the game's release workflow can send a `repository_dispatch` with the event type
 **Vercel, Netlify or Cloudflare Pages** work too: build command `npm run build`,
 output folder `out`.
 
+### Analytics
+
+[Vercel Web Analytics](https://vercel.com/docs/analytics) (cookieless) is built in:
+`<Analytics />` is added to the page only when the site is built on Vercel
+(`VERCEL=1`), since Vercel serves its script; on other hosts nothing is loaded.
+Turn it on in the Vercel project: **Analytics → Enable**.
+
+Besides page views, the site sends custom events (Vercel shows them on the plans
+that include custom events):
+
+| Event | When | Data |
+|---|---|---|
+| `Download` | a download button is clicked | `os`, `file` |
+| `Install command` | the macOS/Linux install window opens | `os` |
+| `Copy command` | a command is copied | `command`: `shell`, `powershell` or `verify` |
+| `Microsoft Store` | the Store link is clicked | |
+
 ## Changing things
 
 | What | Where |
@@ -104,8 +121,8 @@ A new language: copy `src/i18n/en.ts`, translate it, add it to `LOCALES` and
 ## Stack
 
 [Next.js](https://nextjs.org) 16 (App Router, static export), React 19,
-TypeScript, [Tailwind CSS](https://tailwindcss.com) 4 and
-[Lucide](https://lucide.dev) icons. Fonts: Bricolage Grotesque, Geist and Geist Mono.
+TypeScript, [Tailwind CSS](https://tailwindcss.com) 4,
+[Lucide](https://lucide.dev) icons and Vercel Web Analytics. Fonts: Bricolage Grotesque, Geist and Geist Mono.
 
 ## License
 

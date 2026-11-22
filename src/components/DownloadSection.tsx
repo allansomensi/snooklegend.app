@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpRight, ChevronDown, Download, FileArchive, Package, ShieldCheck, Terminal } from "lucide-react";
+import { track } from "@vercel/analytics";
 import { useState, type ReactNode } from "react";
 import { fmt, type Dict } from "@/i18n";
 import { formatSize } from "@/lib/release";
@@ -120,7 +121,13 @@ export function DownloadSection({ t, locale, releasedOn }: Props) {
                 </a>
               </Option>
               <Option icon={<MicrosoftIcon />} title={d.windows.storeTitle} text={d.windows.storeText}>
-                <a href={MS_STORE_URL} target="_blank" rel="noopener" className="btn btn-ghost h-11 w-full px-5 text-sm">
+                <a
+                  href={MS_STORE_URL}
+                  target="_blank"
+                  rel="noopener"
+                  onClick={() => track("Microsoft Store")}
+                  className="btn btn-ghost h-11 w-full px-5 text-sm"
+                >
                   {d.windows.storeButton} <ArrowUpRight className="size-4" />
                 </a>
               </Option>

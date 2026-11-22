@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Copy } from "lucide-react";
+import { track } from "@vercel/analytics";
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
@@ -33,6 +34,7 @@ export function CommandBox({ command, prompt = "$", copyLabel, copiedLabel, clas
       return;
     }
     setCopied(true);
+    track("Copy command", { command: prompt === "PS>" ? "powershell" : command.startsWith("curl") ? "shell" : "verify" });
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => setCopied(false), 2200);
   }

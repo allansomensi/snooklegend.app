@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 import { LOCALE_INFO, type Locale } from "@/i18n";
@@ -35,7 +36,11 @@ export function Document({ locale, children, redirect = true }: { locale: Locale
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript(locale, redirect) }} />
       </head>
-      <body className="min-h-dvh">{children}</body>
+      <body className="min-h-dvh">
+        {children}
+        {/* Vercel Web Analytics (cookieless): only on Vercel, which serves its script. */}
+        {process.env.VERCEL && <Analytics />}
+      </body>
     </html>
   );
 }

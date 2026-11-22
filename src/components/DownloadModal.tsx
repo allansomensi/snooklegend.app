@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpRight, Download, Terminal, X } from "lucide-react";
+import { track } from "@vercel/analytics";
 import type { Ref } from "react";
 import type { Dict } from "@/i18n";
 import { formatSize, type ReleaseInfo } from "@/lib/release";
@@ -94,6 +95,7 @@ export function DownloadModal({ ref, target, t, release, locale, arch }: Props) 
                   href={MS_STORE_URL}
                   target="_blank"
                   rel="noopener"
+                  onClick={() => track("Microsoft Store")}
                   className="flex items-center gap-3 rounded-2xl bg-white/[0.04] p-4 text-sm ring-1 ring-white/10 transition hover:bg-white/[0.07]"
                 >
                   <MicrosoftIcon className="size-5 shrink-0" />
