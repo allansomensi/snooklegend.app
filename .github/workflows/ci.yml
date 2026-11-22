@@ -36,6 +36,27 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEXT_TELEMETRY_DISABLED: 1
 
+  admin:
+    # The staff portal (admin/): its own app, its own Vercel project.
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: admin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: admin/package-lock.json
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: https://api.snooklegend.app
+          NEXT_TELEMETRY_DISABLED: 1
+
   rebuild:
     if: github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest

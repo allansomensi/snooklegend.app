@@ -1,0 +1,23 @@
+/* The economy, the metrics, the audit log, the server and the replay
+   viewer: additions to the portal's components (src/app/globals.css). */
+@layer components {
+  /* A list being fetched again keeps its rows, a little faded. */
+  .card.loading-soft { opacity: .7; transition: opacity .15s; }
+
+  /* The audit log's player filter: a chip with its own "clear" button. */
+  .toolbar .badge.accent { height: 30px; padding: 0 4px 0 11px; border-radius: 15px; }
+  .toolbar .badge.accent .btn { height: 22px; width: 22px; border-radius: 11px; color: inherit; }
+
+  /* The replay viewer fills its card; its parts are laid out by globals.css. */
+  .viewer-inner { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+  .viewer-title .row { gap: 8px; }
+  .viewer-controls .btn[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--accent-soft); }
+  .viewer-status .details { margin-top: 2px; }
+  .stroke-list li { align-items: baseline; }
+  .stroke-list li.current { scroll-margin: 8px; }
+  @media (max-width: 600px) {
+    .viewer { padding: 0; }
+    .viewer-card { max-height: 100dvh; height: 100dvh; border-radius: 0; padding: 12px; }
+    .viewer-controls .play { min-width: 0; flex: 1; }
+  }
+}

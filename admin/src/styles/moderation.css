@@ -1,0 +1,18 @@
+/* The moderation and community pages: what the shared stylesheet lacks. */
+@layer components {
+  /* How far a running event is. */
+  .event-progress { height: 8px; border-radius: 4px; background: var(--surface-3); overflow: hidden; }
+  .event-progress > div { height: 100%; border-radius: 4px; background: var(--accent); transition: width .4s ease; }
+  .event-progress > div.success { background: var(--success); }
+  .event-progress > div.warning { background: var(--warning); }
+  .event-progress > div.info { background: var(--info); }
+
+  /* A chat line's actions show to the keyboard as well as the mouse. */
+  .chat-line .line-actions .btn:focus-visible { opacity: 1; }
+
+  /* A report's answers wrap cleanly on a phone. */
+  @media (max-width: 600px) {
+    .report-card .resolve .input { flex-basis: 100%; }
+    .report-card .report-top .when { margin-left: 0; }
+  }
+}

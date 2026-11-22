@@ -27,6 +27,13 @@ it installed in a minute.
   system requirements and an FAQ; SEO metadata, Open Graph picture, `hreflang`,
   sitemap and structured data (`VideoGame`).
 
+## The staff portal
+
+[`admin/`](admin/) is the game's staff portal
+([admin.snooklegend.app](https://admin.snooklegend.app)): its own Next.js app,
+with its own checks and its own Vercel project (Root Directory `admin`). See
+[`admin/README.md`](admin/README.md).
+
 ## The terms of use and the privacy policy
 
 The legal pages live here, in the site's frame, in each language:
@@ -98,7 +105,7 @@ Next.js preset; nothing else to configure): every push to `main` is published at
 [snooklegend.app](https://snooklegend.app), and every pull request gets a preview.
 
 `.github/workflows/ci.yml` checks each push and pull request (types, lint, a
-build). It can also keep the site in step with the game's releases:
+build; the same for the staff portal in `admin/`). It can also keep the site in step with the game's releases:
 
 - **Daily rebuild:** in Vercel, the project → Settings → Git → **Deploy Hooks**,
   create one for `main`, and save its URL as the repository secret
