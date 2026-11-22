@@ -55,16 +55,16 @@ export function DownloadSection({ t, locale, releasedOn }: Props) {
   const size = (k: AssetKey) => formatSize(release.assets[ASSETS[k]]?.size, locale);
 
   return (
-    <section id="download" aria-labelledby="download-title" className="relative py-24 sm:py-32">
+    <section id="download" aria-labelledby="download-title" className="defer-render relative py-24 [--defer-size:2000px] sm:py-32">
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute left-1/2 top-10 h-[36rem] w-[64rem] -translate-x-1/2 rounded-full bg-felt-600/[0.12] blur-[130px]" />
+        <div className="absolute left-1/2 top-0 h-[44rem] w-[72rem] -translate-x-1/2 bg-[radial-gradient(closest-side,rgb(24_138_74/0.14),transparent)]" />
       </div>
       <div className="container-page">
         <SectionHeading id="download-title" kicker={d.kicker} title={d.title} sub={d.sub} />
 
         {/* OS tabs */}
         <div data-reveal className="mt-12 flex justify-center">
-          <div role="tablist" aria-label={d.kicker} className="inline-flex rounded-full bg-white/[0.04] p-1.5 ring-1 ring-white/10 backdrop-blur">
+          <div role="tablist" aria-label={d.kicker} className="inline-flex rounded-full bg-white/[0.05] p-1.5 ring-1 ring-white/10">
             {TABS.map(({ os: o, Icon }) => {
               const active = tab === o;
               return (

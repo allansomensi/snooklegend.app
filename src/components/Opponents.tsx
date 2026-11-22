@@ -7,8 +7,8 @@ const IMAGES = ["leo", "nina", "tito", "lola", "bruno", "ines", "marta", "otto",
 export function Opponents({ t }: { t: Dict }) {
   const o = t.opponents;
   return (
-    <section id="opponents" aria-labelledby="opponents-title" className="relative py-24 sm:py-32">
-      <div className="pointer-events-none absolute inset-x-0 top-1/3 -z-10 mx-auto h-96 max-w-4xl rounded-full bg-gold-500/[0.06] blur-[120px]" />
+    <section id="opponents" aria-labelledby="opponents-title" className="defer-render relative py-24 [--defer-size:1700px] sm:py-32">
+      <div className="pointer-events-none absolute inset-x-0 top-1/4 -z-10 mx-auto h-[34rem] max-w-5xl bg-[radial-gradient(closest-side,rgb(212_162_67/0.07),transparent)]" />
       <div className="container-page">
         <SectionHeading id="opponents-title" kicker={o.kicker} title={o.title} sub={o.sub} />
 
@@ -23,7 +23,6 @@ export function Opponents({ t }: { t: Dict }) {
                 className="card group flex flex-col items-center px-3 pb-5 pt-6 text-center transition-[box-shadow,translate] duration-500 hover:-translate-y-1 hover:shadow-[inset_0_0_0_1px_rgb(232_188_94/0.3),0_24px_50px_-26px_rgb(0_0_0/0.8)]"
               >
                 <span className="relative">
-                  <span className="absolute inset-0 rounded-full bg-gold-400/0 blur-xl transition duration-500 group-hover:bg-gold-400/25" />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={`/opponents/${IMAGES[i]}.webp`}
@@ -31,7 +30,7 @@ export function Opponents({ t }: { t: Dict }) {
                     width={72}
                     height={72}
                     loading="lazy"
-                    className="relative size-[72px] rounded-full ring-2 ring-white/10 transition duration-500 group-hover:scale-105 group-hover:ring-gold-400/50"
+                    className="relative size-[72px] rounded-full ring-2 ring-white/10 transition duration-500 group-hover:scale-105 group-hover:shadow-[0_0_28px_rgb(232_188_94/0.35)] group-hover:ring-gold-400/50"
                   />
                 </span>
                 <h3 className="mt-3.5 font-display text-lg font-bold text-cream">{name}</h3>

@@ -26,7 +26,7 @@ export function Hero({ t, release, locale, shotsDir }: Props) {
         <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_50%_0%,rgb(255_226_160/0.20),transparent_70%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_30%,transparent_40%,var(--color-ink-950)_100%)]" />
         <div className="absolute inset-x-0 top-0 h-[58rem] bg-[radial-gradient(42%_30%_at_50%_42%,rgb(4_9_7/0.6),transparent)]" />
-        <div className="absolute left-1/2 top-0 h-[38rem] w-[54rem] -translate-x-1/2 bg-[conic-gradient(from_180deg_at_50%_0%,transparent_158deg,rgb(255_230_170/0.13)_172deg,rgb(255_230_170/0.20)_180deg,rgb(255_230_170/0.13)_188deg,transparent_202deg)] blur-md [animation:var(--animate-glow)]" />
+        <div className="absolute left-1/2 top-0 h-[38rem] w-[54rem] -translate-x-1/2 bg-[conic-gradient(from_180deg_at_50%_0%,transparent_158deg,rgb(255_230_170/0.13)_172deg,rgb(255_230_170/0.20)_180deg,rgb(255_230_170/0.13)_188deg,transparent_202deg)] md:[animation:var(--animate-glow)]" />
       </div>
 
       {/* A few balls floating around */}
@@ -41,7 +41,7 @@ export function Hero({ t, release, locale, shotsDir }: Props) {
           target="_blank"
           rel="noopener"
           data-reveal
-          className="group mx-auto inline-flex items-center gap-2 rounded-full bg-white/[0.05] py-1.5 pl-1.5 pr-4 text-[13px] text-cream/85 ring-1 ring-white/10 backdrop-blur-md transition hover:bg-white/[0.08] hover:ring-white/20"
+          className="group mx-auto inline-flex items-center gap-2 rounded-full bg-ink-900/70 py-1.5 pl-1.5 pr-4 text-[13px] text-cream/85 ring-1 ring-white/10 transition hover:bg-white/[0.08] hover:ring-white/20"
         >
           <span className="inline-flex items-center gap-1 rounded-full bg-gold-400/15 px-2.5 py-0.5 font-semibold text-gold-200 ring-1 ring-gold-400/30">
             <Sparkles className="size-3.5" /> v{release.version}
@@ -72,11 +72,11 @@ export function Hero({ t, release, locale, shotsDir }: Props) {
           style={{ ["--reveal-delay" as string]: "240ms" }}
           className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row sm:items-start"
         >
-          <DownloadButton t={t} locale={locale} showMeta />
+          <DownloadButton t={{ hero: t.hero, os: t.os }} locale={locale} showMeta />
           <AllPlatformsLink label={t.hero.allPlatforms} />
         </div>
 
-        <MobileNotice t={t} />
+        <MobileNotice t={{ hero: t.hero }} />
 
         <ul
           data-reveal
@@ -93,7 +93,7 @@ export function Hero({ t, release, locale, shotsDir }: Props) {
 
       {/* The game, framed */}
       <div className="container-page relative mt-14 sm:mt-20" data-reveal style={{ ["--reveal-delay" as string]: "380ms" }}>
-        <div className="pointer-events-none absolute inset-x-[8%] -bottom-10 top-[30%] -z-10 rounded-[50%] bg-felt-500/30 blur-[90px]" />
+        <div className="pointer-events-none absolute inset-x-0 -bottom-28 top-[15%] -z-10 bg-[radial-gradient(closest-side,rgb(36_163_91/0.30),rgb(36_163_91/0.10)_55%,transparent)]" />
         <div className="mx-auto max-w-6xl [perspective:2000px]">
           <div className="overflow-hidden rounded-[18px] bg-ink-900 shadow-[0_50px_120px_-30px_rgb(0_0_0/0.95),0_0_0_1px_rgb(255_255_255/0.08)] [transform:rotateX(8deg)] transition-transform duration-1000 ease-[var(--ease-out-expo)] hover:[transform:rotateX(0deg)] sm:rounded-[22px]">
             <div className="flex h-8 items-center gap-2 border-b border-white/[0.06] bg-[#0d1210] px-4 sm:h-10">

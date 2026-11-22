@@ -21,7 +21,7 @@ export function FinalCta({ t, locale }: { t: Dict; locale: string }) {
           </h2>
           <p className="mx-auto mt-4 max-w-md text-lg text-white/80">{t.cta.sub}</p>
           <div className="mt-9 flex justify-center">
-            <DownloadButton t={t} locale={locale} showMeta tone="cream" />
+            <DownloadButton t={{ hero: t.hero, os: t.os }} locale={locale} showMeta tone="cream" />
           </div>
         </div>
       </div>

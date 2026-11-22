@@ -5,8 +5,7 @@
 Reads the store art, the localised screenshots and the emblem, and writes
 WebP/PNG files to public/ (hero art, screenshots per language, the opponents'
 portraits cut from the opponents screen, icons and the Open Graph picture).
-Needs Pillow (pip install pillow). Then copy public/brand/icon-512.png to
-src/app/icon.png if the emblem changed.
+Needs Pillow (pip install pillow).
 """
 import os, sys
 from PIL import Image, ImageDraw
@@ -36,6 +35,7 @@ for loc, d in (('en','en'),('pt','pt-BR'),('es','es')):
         im = Image.open(f'{SRC}/store-art/screenshots/{d}/{s}.png')
         webp(im, f'{OUT}/shots/{loc}/{s}-1920.webp', 1920, 84)
         webp(im, f'{OUT}/shots/{loc}/{s}-960.webp', 960, 80)
+        webp(im, f'{OUT}/shots/{loc}/{s}-1280.webp', 1280, 80)
 
 # Opponent portraits cropped from the opponents screen (1920x1080)
 mk(f'{OUT}/opponents')
@@ -54,6 +54,10 @@ for i, n in enumerate(names):
 # Brand icons
 mk(f'{OUT}/brand')
 icon = Image.open(f'{SRC}/crates/client/assets/icon/snook-legend-1024.png').convert('RGBA')
+# The site's own icons (src/app): small files of the same picture
+icon.resize((192, 192), Image.LANCZOS).save(os.path.join(OUT, '..', 'src', 'app', 'icon.png'), optimize=True)
+icon.resize((180, 180), Image.LANCZOS).save(os.path.join(OUT, '..', 'src', 'app', 'apple-icon.png'), optimize=True)
+icon.resize((64, 64), Image.LANCZOS).save(os.path.join(OUT, '..', 'src', 'app', 'favicon.ico'), sizes=[(16, 16), (32, 32), (48, 48)])
 for s in (512, 256, 192, 128, 64):
     icon.resize((s, s), Image.LANCZOS).save(f'{OUT}/brand/icon-{s}.png', optimize=True)
 icon.resize((128, 128), Image.LANCZOS).save(f'{OUT}/brand/icon-128.webp', 'WEBP', quality=90)

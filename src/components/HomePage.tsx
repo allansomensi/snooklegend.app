@@ -58,7 +58,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         <PlaySection t={t} />
         <Rules t={t} shotsDir={shotsDir} />
         <Opponents t={t} />
-        <section id="gallery" aria-labelledby="gallery-title" className="relative py-24 sm:py-32">
+        <section id="gallery" aria-labelledby="gallery-title" className="defer-render relative py-24 [--defer-size:1800px] sm:py-32">
           <div className="container-page">
             <SectionHeading id="gallery-title" kicker={t.gallery.kicker} title={t.gallery.title} sub={t.gallery.sub} />
             <Gallery t={t.gallery} shotsDir={shotsDir} />

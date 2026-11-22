@@ -75,7 +75,7 @@ export function Gallery({ t, shotsDir }: { t: Dict["gallery"]; shotsDir: string 
             <span className="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-ink-950/10 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100" />
             <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5">
               <span className={`font-medium text-cream ${i === 0 ? "text-base sm:text-lg" : "text-sm"}`}>{caption(name)}</span>
-              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-white/10 text-cream opacity-0 backdrop-blur transition-opacity duration-300 group-hover:opacity-100">
+              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-ink-950/60 text-cream opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <Expand className="size-4" />
               </span>
             </span>
@@ -107,7 +107,7 @@ export function Gallery({ t, shotsDir }: { t: Dict["gallery"]; shotsDir: string 
         <button
           type="button"
           onClick={() => dialog.current?.close()}
-          className="fixed right-3 top-3 grid size-11 place-items-center rounded-full bg-white/10 text-cream backdrop-blur transition hover:bg-white/20"
+          className="fixed right-3 top-3 grid size-11 place-items-center rounded-full bg-white/10 text-cream transition hover:bg-white/20"
           aria-label={t.close}
         >
           <X className="size-5" />
@@ -115,7 +115,7 @@ export function Gallery({ t, shotsDir }: { t: Dict["gallery"]; shotsDir: string 
         <button
           type="button"
           onClick={() => go(-1)}
-          className="fixed left-2 top-1/2 hidden size-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-cream backdrop-blur transition hover:bg-white/20 sm:grid"
+          className="fixed left-2 top-1/2 hidden size-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-cream transition hover:bg-white/20 sm:grid"
           aria-label={t.prev}
         >
           <ChevronLeft className="size-6" />
@@ -123,7 +123,7 @@ export function Gallery({ t, shotsDir }: { t: Dict["gallery"]; shotsDir: string 
         <button
           type="button"
           onClick={() => go(1)}
-          className="fixed right-2 top-1/2 hidden size-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-cream backdrop-blur transition hover:bg-white/20 sm:grid"
+          className="fixed right-2 top-1/2 hidden size-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-cream transition hover:bg-white/20 sm:grid"
           aria-label={t.next}
         >
           <ChevronRight className="size-6" />

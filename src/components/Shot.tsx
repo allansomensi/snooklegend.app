@@ -1,4 +1,4 @@
-/** A screenshot of the game (1920×1080), in two sizes. */
+/** A screenshot of the game (1920×1080), in three sizes. */
 export function Shot({
   dir,
   name,
@@ -18,7 +18,7 @@ export function Shot({
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={`${dir}/${name}-1920.webp`}
-      srcSet={`${dir}/${name}-960.webp 960w, ${dir}/${name}-1920.webp 1920w`}
+      srcSet={`${dir}/${name}-960.webp 960w, ${dir}/${name}-1280.webp 1280w, ${dir}/${name}-1920.webp 1920w`}
       sizes={sizes}
       alt={alt}
       width={1920}

@@ -4,7 +4,7 @@ import { SectionHeading } from "./Section";
 
 export function PlaySection({ t }: { t: Dict }) {
   return (
-    <section id="play" aria-labelledby="play-title" className="relative py-24 sm:py-32">
+    <section id="play" aria-labelledby="play-title" className="defer-render relative py-24 [--defer-size:1100px] sm:py-32">
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute left-1/2 top-24 h-[34rem] w-[70rem] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_226_160/0.10),transparent)]" />
       </div>

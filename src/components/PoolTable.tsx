@@ -70,29 +70,50 @@ export function PoolTable({ t }: Props) {
     const canvas = canvasRef.current!;
     const wrap = wrapRef.current!;
     let msgTimer: ReturnType<typeof setTimeout> | null = null;
-    const engine = createEngine(canvas, {
-      onPot: (n) => {
-        if (n === 0) {
-          setMessage(t.scratch);
-          if (msgTimer) clearTimeout(msgTimer);
-          msgTimer = setTimeout(() => setMessage(null), 2600);
-        } else setPotted((p) => [...p, n]);
-      },
-      onShot: () => setShots((s) => s + 1),
-      onCleared: () => setCleared(true),
-      muted: () => mutedRef.current,
-    });
-    engineRef.current = engine;
+    let engine: ReturnType<typeof createEngine> | null = null;
+    let ro: ResizeObserver | null = null;
 
-    const ro = new ResizeObserver(() => engine.resize(wrap.clientWidth));
-    ro.observe(wrap);
-    const io = new IntersectionObserver(([e]) => engine.setVisible(e.isIntersecting), { rootMargin: "100px" });
+    // The engine (and the drawing of the table) starts only when the table
+    // comes near the screen, so it costs nothing while the page loads.
+    const start = () => {
+      engine = createEngine(canvas, {
+        onPot: (n) => {
+          if (n === 0) {
+            setMessage(t.scratch);
+            if (msgTimer) clearTimeout(msgTimer);
+            msgTimer = setTimeout(() => setMessage(null), 2600);
+          } else setPotted((p) => [...p, n]);
+        },
+        onShot: () => setShots((s) => s + 1),
+        onCleared: () => setCleared(true),
+        muted: () => mutedRef.current,
+      });
+      engineRef.current = engine;
+      let width = 0;
+      ro = new ResizeObserver(() => {
+        // The height follows the width, so only a new width needs a new drawing.
+        if (wrap.clientWidth !== width) {
+          width = wrap.clientWidth;
+          engine?.resize(width);
+        }
+      });
+      ro.observe(wrap);
+    };
+
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting && !engine) start();
+        engine?.setVisible(e.isIntersecting);
+      },
+      { rootMargin: "400px 0px" },
+    );
     io.observe(canvas);
 
     return () => {
-      ro.disconnect();
       io.disconnect();
-      engine.destroy();
+      ro?.disconnect();
+      engine?.destroy();
+      engineRef.current = null;
       if (msgTimer) clearTimeout(msgTimer);
     };
   }, [t.scratch]);
@@ -154,14 +175,14 @@ export function PoolTable({ t }: Props) {
         />
         {shots === 0 && !message && (
           <div className="pointer-events-none absolute inset-x-0 top-[11%] hidden justify-center px-4 sm:flex">
-            <span className="rounded-full bg-ink-950/75 px-4 py-2 text-center text-[13px] font-medium text-cream/90 ring-1 ring-white/10 backdrop-blur sm:text-sm">
+            <span className="rounded-full bg-ink-950/75 px-4 py-2 text-center text-[13px] font-medium text-cream/90 ring-1 ring-white/10 sm:text-sm">
               {touch ? t.hintTouch : t.hint}
             </span>
           </div>
         )}
         {message && (
           <div className="pointer-events-none absolute inset-x-0 top-[12%] flex justify-center" aria-live="polite">
-            <span className="rounded-full bg-ink-950/85 px-4 py-2 text-sm font-semibold text-gold-200 ring-1 ring-gold-400/30 backdrop-blur">
+            <span className="rounded-full bg-ink-950/85 px-4 py-2 text-sm font-semibold text-gold-200 ring-1 ring-gold-400/30">
               {message}
             </span>
           </div>

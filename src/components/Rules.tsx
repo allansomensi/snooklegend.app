@@ -6,7 +6,7 @@ import { Shot } from "./Shot";
 export function Rules({ t, shotsDir }: { t: Dict; shotsDir: string }) {
   const r = t.rules;
   return (
-    <section id="rules" aria-labelledby="rules-title" className="relative py-24 sm:py-32">
+    <section id="rules" aria-labelledby="rules-title" className="defer-render relative py-24 [--defer-size:1500px] sm:py-32">
       <div className="container-page">
         <SectionHeading id="rules-title" kicker={r.kicker} title={r.title} sub={r.sub} />
 
@@ -84,8 +84,8 @@ function RuleCard({
           </div>
         </div>
         <ul className="mt-7 space-y-3.5">
-          {points.map((p) => (
-            <li key={p} className="flex gap-3 text-[15px] leading-relaxed text-cream/85">
+          {points.map((p, i) => (
+            <li key={i} className="flex gap-3 text-[15px] leading-relaxed text-cream/85">
               <Check className="mt-1 size-4 shrink-0 text-felt-400" />
               {p}
             </li>

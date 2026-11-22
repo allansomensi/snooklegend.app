@@ -101,7 +101,7 @@ export function MobileNotice({ t }: { t: Pick<Dict, "hero"> }) {
   }
 
   return (
-    <div className="mx-auto mt-6 max-w-md rounded-2xl bg-white/[0.05] p-4 text-left ring-1 ring-white/10 backdrop-blur-md">
+    <div className="mx-auto mt-6 max-w-md rounded-2xl bg-ink-900/80 p-4 text-left ring-1 ring-white/10">
       <p className="font-semibold text-cream">{t.hero.mobileTitle}</p>
       <p className="mt-1 text-sm leading-relaxed text-mist">{t.hero.mobileText}</p>
       <button type="button" onClick={share} className="btn btn-gold mt-3 h-10 px-5 text-sm">

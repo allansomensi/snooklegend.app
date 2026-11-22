@@ -43,7 +43,7 @@ export function Header({ t, locale }: Props) {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
         scrolled || open
-          ? "bg-ink-950/75 shadow-[0_1px_0_rgb(255_255_255/0.06),0_10px_30px_-10px_rgb(0_0_0/0.6)] backdrop-blur-xl backdrop-saturate-150"
+          ? "bg-ink-950/92 shadow-[0_1px_0_rgb(255_255_255/0.06),0_10px_30px_-10px_rgb(0_0_0/0.6)] md:bg-ink-950/75 md:backdrop-blur-xl md:backdrop-saturate-150"
           : "bg-transparent"
       }`}
     >
@@ -174,7 +174,7 @@ function LangSwitcher({ locale, label }: { locale: Locale; label: string }) {
       </button>
       <div
         role="menu"
-        className={`absolute right-0 top-11 w-44 origin-top-right rounded-2xl bg-ink-800/95 p-1.5 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl transition duration-200 ${
+        className={`absolute right-0 top-11 w-44 origin-top-right rounded-2xl bg-ink-800 p-1.5 shadow-2xl ring-1 ring-white/10 transition duration-200 ${
           open ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
         }`}
       >

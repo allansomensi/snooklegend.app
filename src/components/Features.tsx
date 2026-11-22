@@ -22,8 +22,8 @@ type Props = { t: Dict; shotsDir: string };
 export function Features({ t, shotsDir }: Props) {
   const f = t.features.items;
   return (
-    <section id="features" aria-labelledby="features-title" className="relative py-24 sm:py-32">
-      <div className="pointer-events-none absolute inset-x-0 top-40 -z-10 mx-auto h-[30rem] max-w-5xl rounded-full bg-felt-700/10 blur-[120px]" />
+    <section id="features" aria-labelledby="features-title" className="defer-render relative py-24 [--defer-size:2600px] sm:py-32">
+      <div className="pointer-events-none absolute inset-x-0 top-24 -z-10 mx-auto h-[40rem] max-w-6xl bg-[radial-gradient(closest-side,rgb(15_108_57/0.16),transparent)]" />
       <div className="container-page">
         <SectionHeading id="features-title" kicker={t.features.kicker} title={t.features.title} sub={t.features.sub} />
 

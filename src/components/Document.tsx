@@ -3,14 +3,11 @@ import type { ReactNode } from "react";
 import { LOCALE_INFO, type Locale } from "@/i18n";
 import "../app/globals.css";
 
-const body = Geist({ subsets: ["latin", "latin-ext"], variable: "--font-body", display: "swap" });
-const display = Bricolage_Grotesque({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-display-face",
-  display: "swap",
-  weight: ["500", "600", "700", "800"],
-});
-const code = Geist_Mono({ subsets: ["latin"], variable: "--font-code", display: "swap" });
+// Latin covers English, Portuguese and Spanish; both faces are variable fonts
+// (one file each). The monospaced one is only for commands, further down.
+const body = Geist({ subsets: ["latin"], variable: "--font-body", display: "swap" });
+const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-display-face", display: "swap" });
+const code = Geist_Mono({ subsets: ["latin"], variable: "--font-code", display: "swap", preload: false });
 
 /**
  * Runs before the page paints: marks that scripts run (for the scroll-in
