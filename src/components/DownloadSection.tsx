@@ -220,7 +220,7 @@ export function DownloadSection({ t, locale, releasedOn }: Props) {
                       ? releasedOn.text
                       : new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date(release.date)),
                 })}</span>
-              <span className="flex flex-1 flex-wrap justify-end gap-x-5 gap-y-2">
+              <span className="flex w-full flex-wrap gap-x-5 gap-y-2 sm:w-auto sm:flex-1 sm:justify-end">
                 <ExtLink href={CHANGELOG_URL}>{d.whatsNew}</ExtLink>
                 <ExtLink href={RELEASES_URL}>{d.allReleases}</ExtLink>
                 <ExtLink href={GITHUB_URL}>
@@ -352,10 +352,10 @@ function ExtLink({ href, children }: { href: string; children: ReactNode }) {
       href={href}
       target="_blank"
       rel="noopener"
-      className="inline-flex items-center gap-1.5 font-medium text-cream/75 transition hover:text-gold-200"
+      className="inline-flex items-center gap-1.5 whitespace-nowrap py-1 font-medium text-cream/75 transition hover:text-gold-200"
     >
       {children}
-      <ArrowUpRight className="size-3.5" />
+      <ArrowUpRight className="size-3.5" aria-hidden="true" />
     </a>
   );
 }

@@ -12,20 +12,20 @@ export type ReleaseInfo = {
 
 /** What the site shows when GitHub can't be reached while building. */
 export const FALLBACK_RELEASE: ReleaseInfo = {
-  version: "0.9.0",
-  tag: "v0.9.0",
-  date: "2026-11-22T00:18:25Z",
-  url: `https://github.com/${REPO}/releases/tag/v0.9.0`,
+  version: "0.10.2",
+  tag: "v0.10.2",
+  date: "2026-11-22T23:08:49Z",
+  url: `https://github.com/${REPO}/releases/tag/v0.10.2`,
   assets: {
-    [ASSETS.winMsi]: { size: 17522688 },
-    [ASSETS.winZip]: { size: 17111344 },
-    [ASSETS.macArm]: { size: 11303700 },
-    [ASSETS.macIntel]: { size: 11908576 },
-    [ASSETS.linuxX64]: { size: 12053416 },
-    [ASSETS.linuxArm]: { size: 11380104 },
-    [ASSETS.installSh]: { size: 60569 },
-    [ASSETS.installPs1]: { size: 22665 },
-    [ASSETS.source]: { size: 35842171 },
+    [ASSETS.winMsi]: { size: 17915904 },
+    [ASSETS.winZip]: { size: 17508998 },
+    [ASSETS.macArm]: { size: 11592176 },
+    [ASSETS.macIntel]: { size: 12208840 },
+    [ASSETS.linuxX64]: { size: 12347928 },
+    [ASSETS.linuxArm]: { size: 11669428 },
+    [ASSETS.installSh]: { size: 60576 },
+    [ASSETS.installPs1]: { size: 22672 },
+    [ASSETS.source]: { size: 38592904 },
   },
 };
 

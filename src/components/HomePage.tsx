@@ -52,7 +52,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <Header t={{ nav: t.nav, hero: t.hero, os: t.os }} locale={locale} />
       <main id="main">
-        <Hero t={t} release={release} locale={htmlLang} shotsDir={shotsDir} />
+        <Hero t={t} locale={htmlLang} shotsDir={shotsDir} />
         <Stats t={t} />
         <Features t={t} shotsDir={shotsDir} />
         <PlaySection t={t} />

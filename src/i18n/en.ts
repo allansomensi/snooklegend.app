@@ -20,7 +20,7 @@ const en = {
     github: "Source code on GitHub",
   },
   hero: {
-    badge: "New in {version}: the game in 27 languages",
+    badge: "Now in 27 languages",
     titleA: "Pool the way",
     titleB: "it's really played.",
     sub: "Snook Legend is a 3D eight-ball pool game with real physics, a lively online lounge, fifteen computer opponents with personalities of their own and two sets of rules. Free, small and fast.",

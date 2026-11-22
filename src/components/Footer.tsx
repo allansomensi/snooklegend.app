@@ -9,6 +9,7 @@ import {
   TRANSLATIONS_URL,
 } from "@/lib/site";
 import { GithubIcon } from "./icons";
+import { LiveVersion } from "./LiveVersion";
 
 export function Footer({
   t,
@@ -56,8 +57,8 @@ export function Footer({
 
   return (
     <footer className="relative border-t border-white/[0.07] bg-ink-950">
-      <div className="container-page grid gap-12 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)]">
-        <div>
+      <div className="container-page grid grid-cols-2 gap-x-6 gap-y-10 py-16 sm:grid-cols-3 md:grid-cols-[1.4fr_repeat(3,1fr)] md:gap-12">
+        <div className="col-span-2 sm:col-span-3 md:col-span-1">
           <a href={LOCALE_INFO[locale].path} className="flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/brand/icon-128.webp" alt="" width={44} height={44} loading="lazy" className="size-11 rounded-xl" />
@@ -85,13 +86,13 @@ export function Footer({
         {cols.map((c) => (
           <nav key={c.title} aria-label={c.title}>
             <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-gold-300/90">{c.title}</h3>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-3 space-y-0.5">
               {c.links.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
                     {...("ext" in link && link.ext ? { target: "_blank", rel: "noopener" } : {})}
-                    className="text-sm text-cream/70 transition hover:text-cream"
+                    className="inline-block py-1.5 text-sm text-cream/70 transition hover:text-cream"
                   >
                     {link.label}
                   </a>
@@ -104,10 +105,10 @@ export function Footer({
       <div className="border-t border-white/[0.06]">
         <div className="container-page flex flex-col items-center justify-between gap-3 py-6 text-xs text-fog sm:flex-row">
           <p>
-            © {new Date().getFullYear()} Snook Legend · v{version} · {t.footer.made}
+            © {new Date().getFullYear()} Snook Legend · <LiveVersion built={version} /> · {t.footer.made}
           </p>
-          <a href={GITHUB_URL} target="_blank" rel="noopener" className="flex items-center gap-2 transition hover:text-cream" aria-label="GitHub">
-            <GithubIcon className="size-4" /> allansomensi/snook-legend
+          <a href={GITHUB_URL} target="_blank" rel="noopener" className="flex items-center gap-2 py-1 transition hover:text-cream">
+            <GithubIcon className="size-4" aria-hidden="true" /> allansomensi/snook-legend
           </a>
         </div>
       </div>

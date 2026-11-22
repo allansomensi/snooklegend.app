@@ -50,7 +50,10 @@ export function Header({ t, locale, paths }: Props) {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
-        scrolled || open
+        open
+          ? // The open menu covers the page: solid, so the hero's headline doesn't show through its links.
+            "bg-ink-950 shadow-[0_1px_0_rgb(255_255_255/0.06),0_24px_40px_-12px_rgb(0_0_0/0.8)]"
+          : scrolled
           ? "bg-ink-950/92 shadow-[0_1px_0_rgb(255_255_255/0.06),0_10px_30px_-10px_rgb(0_0_0/0.6)] md:bg-ink-950/75 md:backdrop-blur-xl md:backdrop-saturate-150"
           : "bg-transparent"
       }`}
@@ -123,7 +126,7 @@ export function Header({ t, locale, paths }: Props) {
           open ? "max-h-[32rem] opacity-100" : "pointer-events-none max-h-0 opacity-0"
         }`}
       >
-        <nav className="container-page flex flex-col gap-1 pb-6 pt-2" aria-label="Mobile">
+        <nav className="container-page flex flex-col gap-1 pb-6 pt-2" aria-label={t.nav.menu}>
           {[...links, { href: "#download", label: t.nav.download }].map((l) => (
             <a
               key={l.href}

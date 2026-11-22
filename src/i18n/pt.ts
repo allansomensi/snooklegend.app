@@ -22,7 +22,7 @@ const pt: Dict = {
     github: "Código-fonte no GitHub",
   },
   hero: {
-    badge: "Novo na {version}: o jogo em 27 idiomas",
+    badge: "Agora em 27 idiomas",
     titleA: "Sinuca como ela",
     titleB: "é jogada de verdade.",
     sub: "Snook Legend é um jogo de sinuca de bola 8 em 3D, com física de verdade, um salão online cheio de gente, quinze adversários de computador com personalidade própria e duas regras. Grátis, leve e rápido.",

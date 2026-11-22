@@ -1,14 +1,13 @@
-import { ArrowUpRight, Check, Sparkles } from "lucide-react";
-import { fmt, type Dict } from "@/i18n";
-import type { ReleaseInfo } from "@/lib/release";
-import { CHANGELOG_URL } from "@/lib/site";
+import { Check } from "lucide-react";
+import type { Dict } from "@/i18n";
 import { Ball } from "./Ball";
+import { ReleaseBadge } from "./ReleaseBadge";
 import { AllPlatformsLink, DownloadButton, MobileNotice } from "./DownloadButton";
 import { Shot } from "./Shot";
 
-type Props = { t: Dict; release: ReleaseInfo; locale: string; shotsDir: string };
+type Props = { t: Dict; locale: string; shotsDir: string };
 
-export function Hero({ t, release, locale, shotsDir }: Props) {
+export function Hero({ t, locale, shotsDir }: Props) {
   return (
     <section className="relative isolate overflow-hidden pt-[calc(var(--header-h)+2.5rem)] sm:pt-[calc(var(--header-h)+4rem)]">
       {/* The pool hall, dimmed, behind everything */}
@@ -36,19 +35,7 @@ export function Hero({ t, release, locale, shotsDir }: Props) {
       <Ball n={2} size={30} className="absolute left-[14%] top-[52%] hidden animate-float opacity-50 blur-[1.5px] [animation-delay:-1s] lg:block" />
 
       <div className="container-page relative text-center">
-        <a
-          href={CHANGELOG_URL}
-          target="_blank"
-          rel="noopener"
-          data-reveal
-          className="group mx-auto inline-flex items-center gap-2 rounded-full bg-ink-900/70 py-1.5 pl-1.5 pr-4 text-[13px] text-cream/85 ring-1 ring-white/10 transition hover:bg-white/[0.08] hover:ring-white/20"
-        >
-          <span className="inline-flex items-center gap-1 rounded-full bg-gold-400/15 px-2.5 py-0.5 font-semibold text-gold-200 ring-1 ring-gold-400/30">
-            <Sparkles className="size-3.5" /> v{release.version}
-          </span>
-          {fmt(t.hero.badge, { version: release.version })}
-          <ArrowUpRight className="size-3.5 text-mist transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-        </a>
+        <ReleaseBadge text={t.hero.badge} />
 
         <h1
           data-reveal
