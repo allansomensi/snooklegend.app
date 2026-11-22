@@ -3,23 +3,35 @@ import {
   CHANGELOG_URL,
   GITHUB_URL,
   ISSUES_URL,
-  LEGAL,
+  legalPath,
   LICENSE_URL,
   RELEASES_URL,
   TRANSLATIONS_URL,
 } from "@/lib/site";
 import { GithubIcon } from "./icons";
 
-export function Footer({ t, locale, version }: { t: Dict; locale: Locale; version: string }) {
+export function Footer({
+  t,
+  locale,
+  version,
+  paths,
+}: {
+  t: Dict;
+  locale: Locale;
+  version: string;
+  /** This page in each language (the home page's when left out). */
+  paths?: Record<Locale, string>;
+}) {
   const l = t.footer.links;
+  const home = LOCALE_INFO[locale].path;
   const cols = [
     {
       title: t.footer.game,
       links: [
-        { href: "#download", label: l.download },
-        { href: "#features", label: l.features },
-        { href: "#rules", label: l.rules },
-        { href: "#faq", label: l.faq },
+        { href: `${home}#download`, label: l.download },
+        { href: `${home}#features`, label: l.features },
+        { href: `${home}#rules`, label: l.rules },
+        { href: `${home}#faq`, label: l.faq },
       ],
     },
     {
@@ -28,8 +40,8 @@ export function Footer({ t, locale, version }: { t: Dict; locale: Locale; versio
         { href: CHANGELOG_URL, label: l.changelog, ext: true },
         { href: RELEASES_URL, label: l.releases, ext: true },
         { href: ISSUES_URL, label: l.issues, ext: true },
-        { href: LEGAL[locale].terms, label: l.terms, ext: true },
-        { href: LEGAL[locale].privacy, label: l.privacy, ext: true },
+        { href: legalPath(locale, "terms"), label: l.terms },
+        { href: legalPath(locale, "privacy"), label: l.privacy },
       ],
     },
     {
@@ -58,7 +70,7 @@ export function Footer({ t, locale, version }: { t: Dict; locale: Locale; versio
             {LOCALES.map((code) => (
               <a
                 key={code}
-                href={LOCALE_INFO[code].path}
+                href={paths?.[code] ?? LOCALE_INFO[code].path}
                 hrefLang={LOCALE_INFO[code].htmlLang}
                 lang={LOCALE_INFO[code].htmlLang}
                 className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${

@@ -12,16 +12,17 @@ const code = Geist_Mono({ subsets: ["latin"], variable: "--font-code", display: 
 
 /**
  * Runs before the page paints: marks that scripts run (for the scroll-in
- * animations) and, on the English home page, sends a first-time visitor
- * whose browser speaks Portuguese or Spanish to their language.
+ * animations) and, on the English home page (only there: another page asked
+ * for by its address stays), sends a first-time visitor whose browser speaks
+ * Portuguese or Spanish to their language.
  */
 function bootScript(locale: Locale, redirect: boolean) {
   const go =
     locale === "en" && redirect
-      ? `var s=null;try{s=localStorage.getItem('sl-lang')}catch(e){}
+      ? `if(location.pathname==='/'){var s=null;try{s=localStorage.getItem('sl-lang')}catch(e){}
 if(!s){var l=((navigator.languages&&navigator.languages[0])||navigator.language||'').toLowerCase();
 if(l.indexOf('pt')===0)s='pt';else if(l.indexOf('es')===0)s='es';}
-if(s==='pt'||s==='es'){location.replace('/'+s+'/'+location.search+location.hash);}`
+if(s==='pt'||s==='es'){location.replace('/'+s+'/'+location.search+location.hash);}}`
       : "";
   return `(function(){document.documentElement.classList.add('js');${go}})();`;
 }

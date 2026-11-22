@@ -21,13 +21,24 @@ export const latestAsset = (name: string) => `${GITHUB_URL}/releases/latest/down
 export const MS_STORE_URL =
   process.env.NEXT_PUBLIC_MS_STORE_URL || "https://apps.microsoft.com/search?query=Snook%20Legend";
 
-export const SERVER_URL = "https://snook-server.onrender.com";
+/** The legal pages: the privacy policy and the terms of use. */
+export const LEGAL_DOCS = ["privacy", "terms"] as const;
+export type LegalDoc = (typeof LEGAL_DOCS)[number];
 
-export const LEGAL = {
-  en: { terms: `${SERVER_URL}/terms`, privacy: `${SERVER_URL}/privacy` },
-  pt: { terms: `${SERVER_URL}/termos`, privacy: `${SERVER_URL}/privacidade` },
-  es: { terms: `${SERVER_URL}/terminos`, privacy: `${SERVER_URL}/privacidad` },
-} as const;
+/**
+ * Their address in each language (`/privacy/`, `/pt/privacidade/`, `/es/terminos/`…).
+ * The game and its server link to these: change them only with redirects.
+ */
+export const LEGAL_SLUGS = {
+  en: { privacy: "privacy", terms: "terms" },
+  pt: { privacy: "privacidade", terms: "termos" },
+  es: { privacy: "privacidad", terms: "terminos" },
+} as const satisfies Record<"en" | "pt" | "es", Record<LegalDoc, string>>;
+
+export function legalPath(locale: keyof typeof LEGAL_SLUGS, doc: LegalDoc): string {
+  const base = locale === "en" ? "/" : `/${locale}/`;
+  return `${base}${LEGAL_SLUGS[locale][doc]}/`;
+}
 
 export const ASSETS = {
   winMsi: "snook-legend-x86_64-pc-windows-msvc.msi",

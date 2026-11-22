@@ -333,6 +333,14 @@ const pt: Dict = {
     sub: "Arrume as bolas: é grátis e leva um minuto.",
     button: "Baixar o Snook Legend",
   },
+  legal: {
+    privacy: "Política de privacidade",
+    terms: "Termos de uso",
+    privacyDescription:
+      "Quais dados o Snook Legend e o seu servidor online guardam, para quê, com quem e como exercer os seus direitos.",
+    termsDescription: "As regras para jogar o Snook Legend online: contas, conduta, moedas, VIP e compras.",
+    other: "Veja também",
+  },
   footer: {
     tagline: "Sinuca de bola 8 em 3D, feita com carinho. Grátis e de código aberto.",
     game: "O jogo",

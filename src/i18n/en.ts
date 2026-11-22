@@ -331,6 +331,14 @@ const en = {
     sub: "Rack 'em up: it's free and takes a minute.",
     button: "Download Snook Legend",
   },
+  legal: {
+    privacy: "Privacy policy",
+    terms: "Terms of use",
+    privacyDescription:
+      "What Snook Legend and its online server keep, why, who sees it and how to exercise your rights.",
+    termsDescription: "The rules for playing Snook Legend online: accounts, conduct, coins, VIP and purchases.",
+    other: "See also",
+  },
   footer: {
     tagline: "3D eight-ball pool, made with care. Free and open source.",
     game: "The game",

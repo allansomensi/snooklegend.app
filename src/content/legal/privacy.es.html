@@ -1,0 +1,178 @@
+<!-- The privacy policy of the game, in Spanish. Placeholders, filled in by src/lib/legal.ts:
+     {{GAME}} {{CONTROLLER}} {{DOCUMENT}} {{ADDRESS}} {{CONTACT}} {{REPO}} {{UPDATED}};
+     what lies between the comments ?KEY and /KEY is left out when KEY is empty.
+     The legal text: change it with its date (LEGAL_UPDATED in src/lib/legal.ts). -->
+<h1>Política de privacidad de {{GAME}}</h1>
+<p class="muted">Última actualización: {{UPDATED}}</p>
+<p class="muted">Esta es una traducción. La <a href="/pt/privacidade/">versión en portugués</a> es el
+texto de referencia y prevalece en caso de cualquier diferencia.</p>
+
+<p>Esta política explica qué datos guardan el juego {{GAME}} y su servidor en línea, para qué,
+con quién se comparten y cómo puedes ejercer tus derechos, según la Ley General de Protección de
+Datos de Brasil (LGPD, Lei 13.709/2018) y el Estatuto Digital del Niño y del Adolescente (Lei
+15.211/2025). Forma parte de los <a href="/es/terminos/">términos de uso</a>.</p>
+
+<h2>Quién es el responsable</h2>
+<ul>
+  <li><b>Responsable de los datos:</b> {{CONTROLLER}}</li>
+  <!--?DOCUMENT--><li><b>Identificación fiscal (CPF/CNPJ):</b> {{DOCUMENT}}</li><!--/DOCUMENT-->
+  <!--?ADDRESS--><li><b>Dirección:</b> {{ADDRESS}}</li><!--/ADDRESS-->
+  <li><b>Contacto y encargado de datos:</b> {{CONTACT}}</li>
+</ul>
+<p>El responsable también actúa como encargado del tratamiento de datos personales (art. 41 de la
+LGPD): todo pedido sobre tus datos va al contacto de arriba.</p>
+
+<h2>Lo que no hacemos</h2>
+<ul>
+  <li>No vendemos datos personales.</li>
+  <li>No mostramos anuncios, no creamos perfiles publicitarios y no usamos herramientas de
+    seguimiento ni de análisis de terceros. Las páginas del juego no usan cookies.</li>
+  <li>Los datos de tarjeta y de pago nunca pasan por el juego ni por el servidor.</li>
+  <li>No pedimos a los jugadores su nombre real, fecha de nacimiento, teléfono, dirección, foto ni
+    documentos.</li>
+</ul>
+
+<h2>Jugar sin cuenta</h2>
+<p>Las partidas contra la computadora (incluidos el Circuito y los torneos contra la
+computadora), de a dos en la misma computadora y en red local no envían nada al servidor en línea
+mientras no entres en una cuenta. En red local, el nombre que escribes y los tiros van
+directamente a las otras computadoras de la partida. La configuración, el historial de las
+partidas locales y las medallas de los torneos contra la computadora aún no enviadas quedan solo
+en tu computadora.</p>
+<p>Fuera de Microsoft Store, el juego consulta a GitHub si hay una versión nueva; esa consulta no
+lleva ningún dato de tu cuenta.</p>
+
+<h2>Datos que se guardan cuando creas una cuenta y juegas en línea</h2>
+<ul>
+  <li><b>Cuenta:</b> nombre de usuario, país (si eliges uno), la imagen de perfil elegida entre
+    las del juego, el estado del perfil (si escribes uno), la fecha de creación, cuántas veces se
+    cambió el nombre y la contraseña, guardada solo como un <i>hash</i> Argon2 (nadie puede
+    leerla).</li>
+  <li><b>Rango de edad:</b> si tienes 18 años o más o menos de 18, cuando lo indicas para
+    activar el chat. En las cuentas de menores, también si el responsable autorizó el chat y la
+    fecha de esa autorización.</li>
+  <li><b>Correo de recuperación</b> (opcional): solo si lo indicas, para probar que la cuenta es
+    tuya si olvidas la contraseña.</li>
+  <li><b>Dirección IP:</b> se usa durante algunos minutos, en la memoria del servidor, para
+    limitar abusos (intentos de contraseña, cuentas en masa, exceso de mensajes). La IP del
+    registro se guarda con la cuenta, para investigar cuentas en masa y fraudes.</li>
+  <li><b>Sesión:</b> un código de acceso para entrar automáticamente. El servidor guarda solo un
+    <i>hash</i>; el código queda en el archivo de configuración de tu computadora.</li>
+  <li><b>Presencia:</b> si estás en línea y qué estás haciendo (en el salón, en una mesa, jugando,
+    en modo concentración), visible para los demás jugadores mientras estás en línea; la última
+    vez que te vieron (se muestra a los amigos); los días en que jugaste y, durante una semana,
+    las horas en que estuviste en línea, para las métricas del equipo.</li>
+  <li><b>Juego:</b> partidas (rival, resultado, reglas usadas y los tiros, para la repetición),
+    rating, experiencia y nivel, estadísticas y el análisis de tus tiros (por tronera, distancia y
+    tipo), logros, misiones, los resultados del desafío del día y de los ejercicios, torneos,
+    las medallas de los torneos contra la computadora, la final del Circuito, las partidas
+    diarias, las victorias de cada taco, amigos, solicitudes de amistad y bloqueos, regalos (con
+    su mensaje, si lo hay) y las notas de "buscando partida".</li>
+  <li><b>Fantasma:</b> cuando alguien juega contra el fantasma de un jugador, el servidor calcula
+    su estilo a partir de sus partidas recientes y envía solo números agregados (por ejemplo, el
+    porcentaje de acierto); el resultado queda en memoria hasta 30 minutos y no se guarda.</li>
+  <li><b>Chat:</b> los mensajes del salón y de las partidas quedan solo en la memoria del servidor
+    (los más recientes) y no se guardan. Cuando alguien es denunciado, los últimos mensajes de la
+    persona denunciada se adjuntan a la denuncia para que la moderación los evalúe.</li>
+  <li><b>Moderación:</b> denuncias, advertencias, silencios, suspensiones, notas del equipo y el
+    registro de todas las acciones del equipo.</li>
+  <li><b>Tienda:</b> monedas, artículos, historial de monedas y, en las compras con dinero hechas
+    fuera de Microsoft Store, el registro del pago (qué se compró, importe, moneda, fecha, los
+    identificadores de Stripe y el correo indicado en la compra). En las compras hechas en
+    Microsoft Store, el paquete recibido, la fecha y los identificadores de la compra y del pedido
+    dados por Microsoft; hasta que se confirma la compra, también la clave de Microsoft Store que
+    la identifica (se borra después). El servidor no recibe datos de tarjeta ni datos de tu cuenta
+    de Microsoft.</li>
+</ul>
+
+<h2>Para qué los usamos y con qué base legal</h2>
+<ul>
+  <li><b>Hacer funcionar el juego en línea</b> (cuentas, partidas, ranking, amigos, torneos,
+    tienda, repeticiones): ejecución del contrato que aceptas al crear la cuenta (art. 7, V, de la
+    LGPD).</li>
+  <li><b>Mantener el juego seguro y justo</b> (limitar abusos, investigar denuncias y trampas,
+    aplicar las reglas, métricas de uso): interés legítimo (art. 7, IX), siempre limitado a lo
+    necesario.</li>
+  <li><b>Proteger a niños y adolescentes</b> (rango de edad, chat desactivado por defecto,
+    autorización del responsable): cumplimiento de una obligación legal (art. 7, II, y art. 14 de
+    la LGPD; art. 20 de la Lei 15.211/2025) y consentimiento del responsable.</li>
+  <li><b>Cumplir obligaciones legales y fiscales</b> sobre las compras y atender órdenes de las
+    autoridades: obligación legal (art. 7, II) y ejercicio regular de derechos (art. 7, VI).</li>
+</ul>
+
+<h2>Niños y adolescentes</h2>
+<ul>
+  <li>El juego pregunta el rango de edad la primera vez que el jugador intenta escribir a otros
+    jugadores. Los menores de 18 años juegan en línea con el permiso de un responsable, y los niños
+    menores de 12 años solo con una cuenta creada o autorizada por el responsable, que da el
+    consentimiento del art. 14 de la LGPD.</li>
+  <li>El chat y las otras formas de escribir a otros jugadores empiezan desactivados para todos.
+    Quien tiene 18 años o más los activa al indicar su edad; en las cuentas de menores de 18 años,
+    solo el responsable los activa, en el propio juego; se guarda la fecha de esa autorización, y
+    el responsable puede desactivarlo todo de nuevo cuando quiera.</li>
+  <li>Los datos de niños y adolescentes se tratan en su interés superior, solo para que el juego
+    funcione con seguridad: sin anuncios, sin perfiles publicitarios y sin compartir más allá de lo
+    que se describe aquí. No hay cajas de recompensa (<i>loot boxes</i>) en el juego.</li>
+  <li>Los responsables pueden escribirnos para pedir acceso a los datos del menor, su corrección o
+    la eliminación de la cuenta.</li>
+</ul>
+
+<h2>Con quién los compartimos</h2>
+<p>Solo con quienes prestan servicios para que el juego funcione, y solo lo necesario:</p>
+<ul>
+  <li><b>Alojamiento del servidor y de la base de datos</b> (proveedores en la nube, que pueden
+    estar fuera de Brasil, por ejemplo en Estados Unidos).</li>
+  <li><b>Stripe</b>, en las compras con dinero hechas fuera de Microsoft Store. Introduces los
+    datos de pago directamente en la página de Stripe, según su política de privacidad.</li>
+  <li><b>Microsoft</b>, cuando el juego se instala o se compra en Microsoft Store, según la
+    política de privacidad de Microsoft. Para confirmar las compras hechas en Microsoft Store, el
+    servidor envía a Microsoft un identificador del jugador que no revela quién eres.</li>
+  <li><b>Autoridades</b>, cuando lo exija la ley o una orden judicial, o para comunicar posibles
+    delitos, sobre todo contra niños y adolescentes.</li>
+</ul>
+<p>Los demás jugadores ven tu nombre, país, imagen de perfil, estado, rating, nivel, estadísticas,
+logros e historial de partidas en el perfil y en el ranking, y ven tu presencia en línea como se
+describe arriba. Los moderadores ven lo necesario para moderar; solo los administradores ven los
+correos y los pagos.</p>
+
+<h2>Transferencia internacional</h2>
+<p>Los servidores pueden estar fuera de Brasil, por ejemplo en Estados Unidos. La transferencia se
+hace para cumplir el contrato contigo (art. 33, IX, de la LGPD) y con proveedores que adoptan
+cláusulas contractuales y medidas de seguridad para proteger los datos.</p>
+
+<h2>Por cuánto tiempo</h2>
+<ul>
+  <li>Los datos de la cuenta, mientras la cuenta exista. Las sesiones vencen tras 30 días sin
+    uso.</li>
+  <li>Las horas en que estuviste en línea, durante una semana. Los contadores de abuso por IP,
+    durante algunos minutos.</li>
+  <li>Los registros de compras, durante el plazo que exige la ley fiscal (en general 5
+    años).</li>
+  <li>Las denuncias y los registros de moderación, mientras sean necesarios para la seguridad del
+    juego o para la defensa de derechos, incluso en procesos.</li>
+</ul>
+
+<h2>Seguridad</h2>
+<p>Las contraseñas y los códigos de sesión se guardan solo como <i>hashes</i>, la conexión con el
+servidor está cifrada, el acceso del equipo a los datos está limitado por su función (moderador o
+administrador) y toda acción del equipo queda registrada. Si ocurre un incidente de seguridad que
+pueda causar un riesgo o daño relevante, avisaremos a los afectados y a la Autoridad Nacional de
+Protección de Datos de Brasil (ANPD), como exige la ley.</p>
+
+<h2>Tus derechos y cómo eliminar la cuenta</h2>
+<p>La LGPD (art. 18) te garantiza: confirmar si tratamos tus datos y acceder a ellos; corregir
+datos incompletos o erróneos; pedir la anonimización, el bloqueo o la eliminación de datos
+innecesarios o excesivos; la portabilidad; saber con quién los compartimos; ser informado sobre la
+posibilidad de no consentir y revocar el consentimiento; y oponerte a un tratamiento que no siga la
+ley. Para ejercer estos derechos, escribe al contacto de arriba con tu nombre de usuario;
+respondemos en un plazo de 15 días. También puedes reclamar ante la ANPD.</p>
+<p>En el propio juego cambias el país y el correo de recuperación y puedes eliminar la cuenta:
+<b>Perfil → Cuenta → Eliminar cuenta</b>. La eliminación es inmediata: se borran el nombre, la
+contraseña, el país, el correo, la IP, el rango de edad, las sesiones, los amigos, los bloqueos,
+los logros y las medallas. Las partidas ya jugadas siguen en el historial de los rivales, ligadas a
+una cuenta anónima, y los registros de compras se conservan sin el correo, durante el plazo
+legal.</p>
+
+<h2>Cambios en esta política</h2>
+<p>Cuando esta política cambie, se actualizará la fecha al principio de la página. Los cambios
+importantes también se avisan en el juego.</p>

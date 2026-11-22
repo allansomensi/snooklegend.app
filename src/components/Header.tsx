@@ -7,9 +7,14 @@ import { GITHUB_URL } from "@/lib/site";
 import { DownloadButton } from "./DownloadButton";
 import { GithubIcon } from "./icons";
 
-type Props = { t: Pick<Dict, "nav" | "hero" | "os">; locale: Locale };
+type Props = {
+  t: Pick<Dict, "nav" | "hero" | "os">;
+  locale: Locale;
+  /** This page in each language (the home page's when left out). */
+  paths?: Record<Locale, string>;
+};
 
-export function Header({ t, locale }: Props) {
+export function Header({ t, locale, paths }: Props) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -31,12 +36,15 @@ export function Header({ t, locale }: Props) {
     };
   }, [open]);
 
+  // The home page's sections, from any page (on the home page itself the
+  // browser just scrolls).
+  const home = LOCALE_INFO[locale].path;
   const links = [
-    { href: "#features", label: t.nav.features },
-    { href: "#play", label: t.nav.play },
-    { href: "#rules", label: t.nav.rules },
-    { href: "#gallery", label: t.nav.gallery },
-    { href: "#faq", label: t.nav.faq },
+    { href: `${home}#features`, label: t.nav.features },
+    { href: `${home}#play`, label: t.nav.play },
+    { href: `${home}#rules`, label: t.nav.rules },
+    { href: `${home}#gallery`, label: t.nav.gallery },
+    { href: `${home}#faq`, label: t.nav.faq },
   ];
 
   return (
@@ -81,7 +89,7 @@ export function Header({ t, locale }: Props) {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <LangSwitcher locale={locale} label={t.nav.language} />
+          <LangSwitcher locale={locale} label={t.nav.language} paths={paths} />
           <a
             href={GITHUB_URL}
             target="_blank"
@@ -140,7 +148,7 @@ export function Header({ t, locale }: Props) {
   );
 }
 
-function LangSwitcher({ locale, label }: { locale: Locale; label: string }) {
+function LangSwitcher({ locale, label, paths }: { locale: Locale; label: string; paths?: Record<Locale, string> }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -182,7 +190,7 @@ function LangSwitcher({ locale, label }: { locale: Locale; label: string }) {
           <a
             key={l}
             role="menuitem"
-            href={LOCALE_INFO[l].path}
+            href={paths?.[l] ?? LOCALE_INFO[l].path}
             hrefLang={LOCALE_INFO[l].htmlLang}
             lang={LOCALE_INFO[l].htmlLang}
             onClick={(e) => {
@@ -192,7 +200,8 @@ function LangSwitcher({ locale, label }: { locale: Locale; label: string }) {
                 // Private mode: the choice just isn't remembered.
               }
               e.preventDefault();
-              window.location.href = LOCALE_INFO[l].path + window.location.hash;
+              // The same page in that language (on the home page, at the same section).
+              window.location.href = paths ? paths[l] : LOCALE_INFO[l].path + window.location.hash;
             }}
             className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition ${
               l === locale ? "bg-white/[0.06] text-cream" : "text-cream/75 hover:bg-white/[0.05] hover:text-cream"

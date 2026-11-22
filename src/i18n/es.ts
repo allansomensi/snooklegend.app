@@ -333,6 +333,14 @@ const es: Dict = {
     sub: "Arma las bolas: es gratis y toma un minuto.",
     button: "Descargar Snook Legend",
   },
+  legal: {
+    privacy: "Política de privacidad",
+    terms: "Términos de uso",
+    privacyDescription:
+      "Qué datos guardan Snook Legend y su servidor en línea, para qué, con quién y cómo ejercer tus derechos.",
+    termsDescription: "Las reglas para jugar a Snook Legend en línea: cuentas, conducta, monedas, VIP y compras.",
+    other: "Ver también",
+  },
   footer: {
     tagline: "Pool de bola 8 en 3D, hecho con cariño. Gratis y de código abierto.",
     game: "El juego",

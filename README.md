@@ -27,6 +27,35 @@ it installed in a minute.
   system requirements and an FAQ; SEO metadata, Open Graph picture, `hreflang`,
   sitemap and structured data (`VideoGame`).
 
+## The terms of use and the privacy policy
+
+The legal pages live here, in the site's frame, in each language:
+
+| Page | English | Português | Español |
+|---|---|---|---|
+| Privacy policy | `/privacy/` | `/pt/privacidade/` | `/es/privacidad/` |
+| Terms of use | `/terms/` | `/pt/termos/` | `/es/terminos/` |
+
+The game and its server link to these addresses (the server's old `/privacidade`,
+`/terms`… redirect here): change them only with redirects. The texts are in
+`src/content/legal/` (Portuguese is the reference text; change the date in
+`LEGAL_UPDATED`, `src/lib/legal.ts`, with the text).
+
+Who provides the game is filled in while building, from environment variables
+(Vercel → the project → Settings → Environment Variables, for Production and
+Preview), so no personal data is kept in this repository:
+
+| Variable | What |
+|---|---|
+| `LEGAL_CONTROLLER` | the person or company who provides the game and controls the data |
+| `LEGAL_DOCUMENT` | their CPF or CNPJ (left out when empty) |
+| `LEGAL_ADDRESS` | their address (left out when empty) |
+| `LEGAL_CONTACT` | the e-mail (or web address) for support, refunds, appeals and privacy requests |
+
+Brazilian law on online sales (Decreto 7.962/2013) asks a seller to show their
+name, CPF or CNPJ, address and an electronic contact: set them all while the game
+sells anything. A change to them takes a new deployment.
+
 ## Running it
 
 Requires Node.js 20.9 or newer.
