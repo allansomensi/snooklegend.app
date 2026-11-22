@@ -51,9 +51,10 @@ const es: Dict = {
   play: {
     kicker: "Aquí mismo, ahora",
     title: "Haz un tiro.",
-    sub: "Una probada de la mesa, en tu navegador. Tira hacia atrás desde la blanca, apunta y suelta. El juego completo suma efecto, retroceso, seguimiento, saltos, massé y una sala en 3D alrededor.",
-    hint: "Tira hacia atrás y suelta para tirar",
-    hintTouch: "Tira hacia atrás con el dedo y suelta para tirar",
+    sub: "Una probada de la mesa, en tu navegador. Apunta el taco, tíralo hacia atrás y suelta. El juego completo suma efecto, retroceso, seguimiento, saltos, massé y una sala en 3D alrededor.",
+    hint: "Apunta el taco con el ratón, haz clic y tira hacia atrás, suelta para tirar",
+    hintTouch: "Toca donde quieres apuntar, tira hacia atrás y suelta para tirar",
+    hintKeys: "Shift: puntería fina · ← →: apuntar · mantén Espacio: fuerza · Esc: cancelar",
     potted: "Embocadas",
     shots: "Tiros",
     rack: "Armar de nuevo",
@@ -62,7 +63,7 @@ const es: Dict = {
     clearedSub: "¿Listo para el juego de verdad?",
     scratch: "¡La blanca cayó! Vuelve al punto de salida.",
     canvasLabel:
-      "Una pequeña mesa de pool jugable. Presiona, arrastra alejándote de la blanca y suelta para tirar. El botón Saque tira por ti.",
+      "Una pequeña mesa de pool jugable. Apunta con el ratón, haz clic, tira hacia atrás y suelta para tirar; o apunta con las flechas laterales y mantén Espacio. El botón Saque tira por ti.",
     soundOn: "Sonido activado",
     soundOff: "Sonido desactivado",
     download: "Descargar el juego completo",

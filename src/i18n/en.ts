@@ -49,9 +49,10 @@ const en = {
   play: {
     kicker: "Right here, right now",
     title: "Take a shot.",
-    sub: "A taste of the table, in your browser. Drag back from the cue ball, aim and let go. The game itself adds spin, draw, follow, jumps, massé and a 3D pool hall around it.",
-    hint: "Drag back and release to shoot",
-    hintTouch: "Drag back with your finger and lift to shoot",
+    sub: "A taste of the table, in your browser. Point the cue, pull it back and let go. The game itself adds spin, draw, follow, jumps, massé and a 3D pool hall around it.",
+    hint: "Point the cue with the mouse, press and pull back, release to strike",
+    hintTouch: "Touch where to aim, pull back and lift to strike",
+    hintKeys: "Shift: fine aim · ← →: aim · hold Space: power · Esc: cancel",
     potted: "Potted",
     shots: "Shots",
     rack: "Rack again",
@@ -60,7 +61,7 @@ const en = {
     clearedSub: "Ready for the real thing?",
     scratch: "Scratch! The cue ball is back on the head spot.",
     canvasLabel:
-      "A small playable pool table. Press, drag away from the cue ball and release to shoot. The Break button shoots for you.",
+      "A small playable pool table. Point with the mouse, press, pull back and release to shoot; or aim with the left and right arrows and hold Space. The Break button shoots for you.",
     soundOn: "Sound on",
     soundOff: "Sound off",
     download: "Get the full game",

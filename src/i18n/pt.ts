@@ -51,9 +51,10 @@ const pt: Dict = {
   play: {
     kicker: "Aqui mesmo, agora",
     title: "Dê uma tacada.",
-    sub: "Um gostinho da mesa, no seu navegador. Puxe para trás a partir da branca, mire e solte. O jogo de verdade tem efeito, puxada, seguida, pulo, massé e um salão em 3D em volta.",
-    hint: "Puxe para trás e solte para tacar",
-    hintTouch: "Puxe para trás com o dedo e solte para tacar",
+    sub: "Um gostinho da mesa, no seu navegador. Aponte o taco, puxe para trás e solte. O jogo de verdade tem efeito, puxada, seguida, pulo, massé e um salão em 3D em volta.",
+    hint: "Aponte o taco com o mouse, clique e puxe para trás, solte para tacar",
+    hintTouch: "Toque onde quer mirar, puxe para trás e solte para tacar",
+    hintKeys: "Shift: mira fina · ← →: mira · segure Espaço: força · Esc: cancela",
     potted: "Encaçapadas",
     shots: "Tacadas",
     rack: "Arrumar de novo",
@@ -62,7 +63,7 @@ const pt: Dict = {
     clearedSub: "Pronto para o jogo de verdade?",
     scratch: "A branca caiu! Ela volta para o ponto de saída.",
     canvasLabel:
-      "Uma pequena mesa de sinuca jogável. Pressione, arraste para longe da branca e solte para tacar. O botão Saída taca por você.",
+      "Uma pequena mesa de sinuca jogável. Aponte com o mouse, clique, puxe para trás e solte para tacar; ou mire com as setas para os lados e segure Espaço. O botão Saída taca por você.",
     soundOn: "Som ligado",
     soundOff: "Som desligado",
     download: "Baixar o jogo completo",

@@ -33,7 +33,9 @@ const FRICTION = 360; // rolling resistance, units/s²
 const DAMPING = 0.2; // a little air and cloth drag
 const E_BALL = 0.95;
 const E_CUSHION = 0.76;
-const PULL = 230; // how far to pull back for full power
+const PULL = 220; // how far the cue is pulled back for full power
+const CHARGE_TIME = 1.1; // seconds of holding Space for full power
+const FINE_AIM = 0.1; // how much slower the aim turns with Shift held
 
 type BallState = {
   n: number;
@@ -150,6 +152,13 @@ export function PoolTable({ t }: Props) {
           role="application"
           className="absolute inset-0 size-full cursor-crosshair touch-none select-none rounded-[2.2%/4%] outline-none focus-visible:ring-2 focus-visible:ring-gold-300 focus-visible:ring-offset-4 focus-visible:ring-offset-ink-950"
         />
+        {shots === 0 && !message && (
+          <div className="pointer-events-none absolute inset-x-0 top-[11%] hidden justify-center px-4 sm:flex">
+            <span className="rounded-full bg-ink-950/75 px-4 py-2 text-center text-[13px] font-medium text-cream/90 ring-1 ring-white/10 backdrop-blur sm:text-sm">
+              {touch ? t.hintTouch : t.hint}
+            </span>
+          </div>
+        )}
         {message && (
           <div className="pointer-events-none absolute inset-x-0 top-[12%] flex justify-center" aria-live="polite">
             <span className="rounded-full bg-ink-950/85 px-4 py-2 text-sm font-semibold text-gold-200 ring-1 ring-gold-400/30 backdrop-blur">
@@ -182,7 +191,7 @@ export function PoolTable({ t }: Props) {
             <BallChip key={n} n={n} size={26} />
           ))}
         </div>
-        <p className="text-sm text-fog">{touch ? t.hintTouch : t.hint}</p>
+        <p className="text-sm text-fog">{touch ? t.hintTouch : t.hintKeys}</p>
       </div>
     </div>
   );
@@ -213,12 +222,18 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
   let scratched = false;
   let staticLayer: HTMLCanvasElement | null = null;
 
-  // Aiming
+  // Aiming and the stroke
+  type Mode = "idle" | "pull" | "charge" | "stroke";
+  let mode: Mode = "idle";
   let pointer: { x: number; y: number } | null = null;
-  let drag: null | { d0: number; id: number } = null;
-  let power = 0;
-  let aim = 0; // angle, radians
+  let pointerAngle: number | null = null; // where the pointer was, for the fine aim
+  let aim = 0; // the direction of the shot, radians
+  let pull: null | { sx: number; sy: number; id: number } = null;
+  let power = 0; // 0..1 while pulling the cue back or holding Space
+  let stroke: null | { t: number; dur: number; from: number; p: number } = null;
+  let follow: null | { t: number; angle: number; x: number; y: number } = null;
   let keyboard = false;
+  const IDLE_GAP = R + 3; // between the cue tip and the cue ball, at rest
 
   // Sound
   let audio: AudioContext | null = null;
@@ -247,33 +262,66 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
     }
     aim = 0;
     power = 0;
+    mode = "idle";
+    pull = null;
+    stroke = null;
+    follow = null;
     shotRunning = false;
     scratched = false;
     dirty = true;
     wake();
   }
 
-  function shoot(p: number, angle: number) {
-    if (!canShoot() || p < 0.03) return;
+  /** How far the cue tip is from the cue ball right now. */
+  function cueGap() {
+    return mode === "pull" || mode === "charge" ? IDLE_GAP + power * PULL : IDLE_GAP;
+  }
+
+  /** Starts the stroke: the cue comes forward from where it is, then the cue ball goes. */
+  function strike(p: number) {
+    if (!canShoot() || mode === "stroke") return;
+    if (p < 0.02) {
+      cancel();
+      return;
+    }
+    ensureAudio();
+    stroke = { t: 0, dur: 0.14 - 0.08 * p, from: cueGap(), p };
+    mode = "stroke";
+    pull = null;
+    wake();
+  }
+
+  function launch(p: number) {
     const c = cue();
-    const speed = MAX_SPEED * Math.pow(p, 1.15);
-    c.vx = Math.cos(angle) * speed;
-    c.vy = Math.sin(angle) * speed;
+    const speed = MAX_SPEED * Math.pow(p, 1.2);
+    c.vx = Math.cos(aim) * speed;
+    c.vy = Math.sin(aim) * speed;
     shotRunning = true;
     scratched = false;
+    follow = { t: 0, angle: aim, x: c.x, y: c.y };
     power = 0;
     cb.onShot();
-    sound(Math.min(1, p * 1.2), 1800);
+    sound(Math.min(1, 0.25 + p), 1800);
+  }
+
+  function cancel() {
+    pull = null;
+    power = 0;
+    if (mode !== "stroke") mode = "idle";
     wake();
   }
 
   function breakShot() {
+    if (!canShoot() || mode !== "idle") return;
     const c = cue();
     const apex = balls.find((b) => b.n === RACK[0]);
-    if (!apex) return;
-    ensureAudio();
-    const angle = Math.atan2(apex.y - c.y, apex.x - c.x) + (Math.random() - 0.5) * 0.012;
-    shoot(1, angle);
+    if (!apex || !apex.on) return;
+    aim = Math.atan2(apex.y - c.y, apex.x - c.x) + (Math.random() - 0.5) * 0.012;
+    keyboard = true;
+    // The cue drawn all the way back, then the stroke.
+    mode = "charge";
+    power = 1;
+    strike(1);
   }
 
   // ── Physics ────────────────────────────────────────────────────────────────
@@ -394,6 +442,7 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
       scratched = false;
     }
     if (balls.every((b) => b.n === 0 || !b.on)) cb.onCleared();
+    if (pointer) aimAt(pointer, false);
   }
 
   // ── Sound: a tiny synthesised click ────────────────────────────────────────
@@ -682,15 +731,12 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
     ctx.fill();
   }
 
-  function drawCue(c: BallState, angle: number, p: number) {
+  function drawCue(cx: number, cy: number, angle: number, gap: number, alpha = 1) {
     const dx = Math.cos(angle);
     const dy = Math.sin(angle);
-    const gap = R + 6 + p * 95;
     const len = 560;
-    const tipX = c.x - dx * gap;
-    const tipY = c.y - dy * gap;
-    const buttX = tipX - dx * len;
-    const buttY = tipY - dy * len;
+    const tipX = cx - dx * gap;
+    const tipY = cy - dy * gap;
     const nx = -dy;
     const ny = dx;
     const poly = (fromT: number, toT: number, w0: number, w1: number, fill: string | CanvasGradient) => {
@@ -707,10 +753,12 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
       ctx.closePath();
       ctx.fill();
     };
-    // Shadow
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    // Shadow on the cloth
     ctx.save();
     ctx.translate(7, 11);
-    ctx.globalAlpha = 0.3;
+    ctx.globalAlpha = 0.3 * alpha;
     poly(0, 1, 3, 7, "#000");
     ctx.restore();
     const w = (t: number) => 3 + t * 4.2;
@@ -728,58 +776,84 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
     butt.addColorStop(1, "#160904");
     poly(0.64, 1, w(0.64), w(1), butt);
     poly(0.9, 0.92, w(0.9), w(0.92), "#e8bc5e");
-    void buttX;
-    void buttY;
+    ctx.restore();
   }
 
   function drawGuide(angle: number) {
     const c = cue();
     const hit = trace(angle);
+    const dirX = Math.cos(angle);
+    const dirY = Math.sin(angle);
     ctx.save();
-    ctx.strokeStyle = "rgba(255,255,255,0.55)";
-    ctx.lineWidth = 1.4;
+    ctx.strokeStyle = "rgba(255,255,255,0.6)";
+    ctx.lineWidth = 1.5;
     ctx.setLineDash([6, 7]);
     ctx.beginPath();
-    ctx.moveTo(c.x, c.y);
+    ctx.moveTo(c.x + dirX * R, c.y + dirY * R);
     ctx.lineTo(hit.x, hit.y);
     ctx.stroke();
     ctx.setLineDash([]);
-    // Ghost ball
-    ctx.strokeStyle = "rgba(255,255,255,0.6)";
+    // Ghost ball: where the cue ball will be at the contact
+    ctx.strokeStyle = "rgba(255,255,255,0.75)";
+    ctx.fillStyle = "rgba(255,255,255,0.08)";
     ctx.beginPath();
     ctx.arc(hit.x, hit.y, R, 0, Math.PI * 2);
+    ctx.fill();
     ctx.stroke();
     if (hit.hit) {
       const ox = hit.hit.x - hit.x;
       const oy = hit.hit.y - hit.y;
       const ol = Math.hypot(ox, oy) || 1;
-      ctx.strokeStyle = "rgba(239,207,130,0.85)";
-      ctx.lineWidth = 2;
+      const ux = ox / ol;
+      const uy = oy / ol;
+      // How thin the cut is: 0 for a full hit, 1 for a graze.
+      const tx = -uy;
+      const ty = ux;
+      const side = tx * dirX + ty * dirY;
+      const cut = Math.min(1, Math.abs(side));
+      // The object ball's path
+      ctx.strokeStyle = "rgba(239,207,130,0.95)";
+      ctx.lineWidth = 2.2;
       ctx.beginPath();
-      ctx.moveTo(hit.hit.x, hit.hit.y);
-      ctx.lineTo(hit.hit.x + (ox / ol) * 110, hit.hit.y + (oy / ol) * 110);
+      ctx.moveTo(hit.hit.x + ux * R, hit.hit.y + uy * R);
+      ctx.lineTo(hit.hit.x + ux * (R + 40 + 130 * (1 - cut)), hit.hit.y + uy * (R + 40 + 130 * (1 - cut)));
       ctx.stroke();
+      // The cue ball's path after the contact (at 90°)
+      if (cut > 0.04) {
+        const s = side >= 0 ? 1 : -1;
+        ctx.strokeStyle = "rgba(255,255,255,0.4)";
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(hit.x, hit.y);
+        ctx.lineTo(hit.x + tx * s * (20 + 70 * cut), hit.y + ty * s * (20 + 70 * cut));
+        ctx.stroke();
+      }
     }
     ctx.restore();
   }
 
   function drawPower(p: number) {
-    const bw = 300;
-    const bh = 10;
+    const bw = 420;
+    const bh = 12;
     const x = TW / 2 - bw / 2;
-    const y = TH - RAIL / 2 - bh / 2 + 6;
+    const y = TH - RAIL / 2 - bh / 2 + 4;
     ctx.save();
     ctx.setTransform(scale * dpr, 0, 0, scale * dpr, 0, 0);
-    ctx.fillStyle = "rgba(0,0,0,0.45)";
-    roundRect(ctx, x - 2, y - 2, bw + 4, bh + 4, 7);
+    ctx.fillStyle = "rgba(0,0,0,0.55)";
+    roundRect(ctx, x - 3, y - 3, bw + 6, bh + 6, 9);
     ctx.fill();
     const grad = ctx.createLinearGradient(x, 0, x + bw, 0);
     grad.addColorStop(0, "#3fc076");
-    grad.addColorStop(0.6, "#e8bc5e");
+    grad.addColorStop(0.55, "#e8bc5e");
     grad.addColorStop(1, "#d42a24");
     ctx.fillStyle = grad;
-    roundRect(ctx, x, y, Math.max(bh, bw * p), bh, 5);
+    ctx.shadowColor = p > 0.8 ? "rgba(212,42,36,0.8)" : "rgba(232,188,94,0.6)";
+    ctx.shadowBlur = 10;
+    roundRect(ctx, x, y, Math.max(bh, bw * p), bh, 6);
     ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = "rgba(0,0,0,0.35)";
+    for (let i = 1; i < 10; i++) ctx.fillRect(x + (bw * i) / 10 - 0.5, y + 2, 1, bh - 4);
     ctx.restore();
   }
 
@@ -801,12 +875,25 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
     }
     for (const b of balls) if (b.on) drawBall(b, b.x, b.y, R);
 
-    const showAim = canShoot() && (drag || (pointer && !drag) || keyboard);
-    if (showAim) {
-      drawGuide(aim);
-      drawCue(cue(), aim, power);
-      if (power > 0) drawPower(power);
+    // The cue going through after the strike
+    if (follow) {
+      const k = follow.t / 0.35;
+      drawCue(follow.x, follow.y, follow.angle, R - 1 - 16 * Math.sin(Math.min(1, k * 2) * (Math.PI / 2)), Math.max(0, 1 - k));
     }
+
+    const c = cue();
+    if (stroke) {
+      const k = Math.min(1, stroke.t / stroke.dur);
+      drawGuide(aim);
+      drawCue(c.x, c.y, aim, stroke.from + (R - 1 - stroke.from) * k * k);
+      drawPower(stroke.p);
+    } else if (canShoot() && (pointer || pull || keyboard || mode === "charge")) {
+      drawGuide(aim);
+      drawCue(c.x, c.y, aim, cueGap());
+      if (mode === "pull" || mode === "charge") drawPower(power);
+    }
+
+    canvas.style.cursor = mode === "pull" ? "grabbing" : canShoot() && mode === "idle" ? "crosshair" : "default";
   }
 
   // ── Loop ───────────────────────────────────────────────────────────────────
@@ -814,8 +901,26 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
     raf = 0;
     const dt = Math.min(0.033, (now - (last || now)) / 1000);
     last = now;
-    const wasMoving = moving();
-    if (wasMoving) {
+    if (mode === "charge") {
+      power = Math.min(1, power + dt / CHARGE_TIME);
+      dirty = true;
+    }
+    if (stroke) {
+      stroke.t += dt;
+      if (stroke.t >= stroke.dur) {
+        const p = stroke.p;
+        stroke = null;
+        mode = "idle";
+        launch(p);
+      }
+      dirty = true;
+    }
+    if (follow) {
+      follow.t += dt;
+      if (follow.t > 0.35) follow = null;
+      dirty = true;
+    }
+    if (moving()) {
       step(dt);
       for (const b of balls) {
         if (b.sink) {
@@ -839,7 +944,8 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
       render();
       dirty = false;
     }
-    if (visible && (moving() || drag)) raf = requestAnimationFrame(frame);
+    const busy = moving() || mode === "charge" || stroke !== null || follow !== null;
+    if (visible && busy) raf = requestAnimationFrame(frame);
     else last = 0;
   }
 
@@ -849,29 +955,45 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
   }
 
   // ── Input ──────────────────────────────────────────────────────────────────
+  // Point the cue with the mouse (it aims at the pointer), press and pull back:
+  // only the pull along the line of the shot counts, so the aim stays put.
+  // Release to strike. On a touch screen, the touch says where to aim.
+  // Keyboard: ← → aim (Shift: finer), hold Space for power, Esc cancels.
   const toTable = (e: PointerEvent) => {
     const rect = canvas.getBoundingClientRect();
     const k = TW / rect.width;
     return { x: (e.clientX - rect.left) * k - RAIL, y: (e.clientY - rect.top) * k - RAIL };
   };
 
-  function aimFrom(p: { x: number; y: number }) {
+  function aimAt(p: { x: number; y: number }, fine: boolean) {
     const c = cue();
-    const dx = c.x - p.x;
-    const dy = c.y - p.y;
-    if (Math.hypot(dx, dy) > 2) aim = Math.atan2(dy, dx);
+    const dx = p.x - c.x;
+    const dy = p.y - c.y;
+    if (Math.hypot(dx, dy) < R * 0.8) return;
+    const a = Math.atan2(dy, dx);
+    if (fine && pointerAngle !== null) {
+      let d = a - pointerAngle;
+      if (d > Math.PI) d -= 2 * Math.PI;
+      if (d < -Math.PI) d += 2 * Math.PI;
+      aim += d * FINE_AIM;
+    } else aim = a;
+    pointerAngle = a;
   }
 
   function onDown(e: PointerEvent) {
-    if (e.button !== 0 && e.pointerType === "mouse") return;
+    if (e.pointerType === "mouse" && e.button !== 0) {
+      if (mode === "pull") cancel(); // a right click while pulling back
+      return;
+    }
     ensureAudio();
     keyboard = false;
-    if (!canShoot()) return;
+    if (!canShoot() || mode !== "idle") return;
     const p = toTable(e);
     pointer = p;
-    aimFrom(p);
-    drag = { d0: Math.hypot(cue().x - p.x, cue().y - p.y), id: e.pointerId };
+    if (e.pointerType !== "mouse") aimAt(p, false);
+    pull = { sx: p.x, sy: p.y, id: e.pointerId };
     power = 0;
+    mode = "pull";
     canvas.setPointerCapture(e.pointerId);
     e.preventDefault();
     wake();
@@ -879,52 +1001,72 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
 
   function onMove(e: PointerEvent) {
     const p = toTable(e);
-    pointer = p;
-    if (!canShoot()) return;
-    aimFrom(p);
-    if (drag) {
-      const d = Math.hypot(cue().x - p.x, cue().y - p.y);
-      power = Math.max(0, Math.min(1, (d - drag.d0) / PULL));
+    if (mode === "pull" && pull && e.pointerId === pull.id) {
+      const d = (p.x - pull.sx) * -Math.cos(aim) + (p.y - pull.sy) * -Math.sin(aim);
+      power = Math.max(0, Math.min(1, d / PULL));
+      wake();
+      return;
     }
+    if (e.pointerType !== "mouse") return;
+    pointer = p;
+    if (mode !== "idle" || !canShoot()) return;
     keyboard = false;
+    aimAt(p, e.shiftKey);
     wake();
   }
 
   function onUp(e: PointerEvent) {
-    if (!drag || drag.id !== e.pointerId) return;
-    const p = power;
-    drag = null;
+    if (mode !== "pull" || !pull || pull.id !== e.pointerId) return;
     if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
-    if (e.pointerType !== "mouse") pointer = null;
-    if (p > 0.03) shoot(p, aim);
-    power = 0;
+    pull = null;
+    strike(power);
+  }
+
+  function onCancel(e: PointerEvent) {
+    if (pull && pull.id === e.pointerId) cancel();
+  }
+
+  function onLeave(e: PointerEvent) {
+    if (mode === "idle" && e.pointerType === "mouse") {
+      pointer = null;
+      pointerAngle = null;
+      wake();
+    }
+  }
+
+  function onKeyDown(e: KeyboardEvent) {
+    if (e.key === "Escape" && (mode === "pull" || mode === "charge")) {
+      e.preventDefault();
+      cancel();
+      return;
+    }
+    if (e.key === " ") e.preventDefault(); // never scroll the page from the table
+    if (!canShoot() || mode === "stroke") return;
+    const turn = ((e.shiftKey ? 0.08 : 0.7) * Math.PI) / 180;
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      e.preventDefault();
+      aim += e.key === "ArrowLeft" ? -turn : turn;
+    } else if (e.key === " " && !e.repeat && mode === "idle") {
+      ensureAudio();
+      mode = "charge";
+      power = 0;
+    } else if (e.key === "Enter" && mode === "idle") {
+      e.preventDefault();
+      strike(0.6);
+    } else return;
+    keyboard = true;
     wake();
   }
 
-  function onLeave() {
-    if (!drag) {
-      pointer = null;
-      wake();
+  function onKeyUp(e: KeyboardEvent) {
+    if (e.key === " " && mode === "charge") {
+      e.preventDefault();
+      strike(power);
     }
   }
 
-  function onKey(e: KeyboardEvent) {
-    if (!canShoot()) return;
-    const fine = e.shiftKey ? 0.2 : 1.5;
-    let handled = true;
-    if (e.key === "ArrowLeft") aim -= (fine * Math.PI) / 180;
-    else if (e.key === "ArrowRight") aim += (fine * Math.PI) / 180;
-    else if (e.key === "ArrowUp") power = Math.min(1, power + 0.05);
-    else if (e.key === "ArrowDown") power = Math.max(0, power - 0.05);
-    else if (e.key === " " || e.key === "Enter") {
-      ensureAudio();
-      shoot(power || 0.5, aim);
-    } else handled = false;
-    if (handled) {
-      e.preventDefault();
-      keyboard = true;
-      wake();
-    }
+  function onContextMenu(e: MouseEvent) {
+    e.preventDefault();
   }
 
   function onFocus() {
@@ -933,15 +1075,18 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
   }
   function onBlur() {
     keyboard = false;
+    if (mode === "charge") cancel();
     wake();
   }
 
   canvas.addEventListener("pointerdown", onDown);
   canvas.addEventListener("pointermove", onMove);
   canvas.addEventListener("pointerup", onUp);
-  canvas.addEventListener("pointercancel", onUp);
+  canvas.addEventListener("pointercancel", onCancel);
   canvas.addEventListener("pointerleave", onLeave);
-  canvas.addEventListener("keydown", onKey);
+  canvas.addEventListener("keydown", onKeyDown);
+  canvas.addEventListener("keyup", onKeyUp);
+  canvas.addEventListener("contextmenu", onContextMenu);
   canvas.addEventListener("focus", onFocus);
   canvas.addEventListener("blur", onBlur);
 
@@ -960,9 +1105,11 @@ function createEngine(canvas: HTMLCanvasElement, cb: EngineCallbacks) {
       canvas.removeEventListener("pointerdown", onDown);
       canvas.removeEventListener("pointermove", onMove);
       canvas.removeEventListener("pointerup", onUp);
-      canvas.removeEventListener("pointercancel", onUp);
+      canvas.removeEventListener("pointercancel", onCancel);
       canvas.removeEventListener("pointerleave", onLeave);
-      canvas.removeEventListener("keydown", onKey);
+      canvas.removeEventListener("keydown", onKeyDown);
+      canvas.removeEventListener("keyup", onKeyUp);
+      canvas.removeEventListener("contextmenu", onContextMenu);
       canvas.removeEventListener("focus", onFocus);
       canvas.removeEventListener("blur", onBlur);
       void audio?.close();
