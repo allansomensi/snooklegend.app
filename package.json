@@ -1,0 +1,33 @@
+{
+  "name": "snooklegend-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The website of Snook Legend, a 3D eight-ball pool game: snooklegend.app",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.9"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "preview": "npx --yes serve@14 out",
+    "lint": "eslint",
+    "check": "next typegen && tsc --noEmit && eslint"
+  },
+  "dependencies": {
+    "lucide-react": "1.77.0",
+    "next": "16.4.6",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "4.3.3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "tailwindcss": "4.3.3",
+    "typescript": "^5"
+  }
+}

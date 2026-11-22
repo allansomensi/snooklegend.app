@@ -1,0 +1,287 @@
+@import "tailwindcss";
+
+/* ── Design tokens: a dim pool hall ─────────────────────────────────────── */
+@theme {
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-display-face), var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-code), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-ink-950: #040907;
+  --color-ink-900: #07110c;
+  --color-ink-850: #0a1610;
+  --color-ink-800: #0d1b14;
+  --color-ink-700: #13261c;
+  --color-ink-600: #1b3326;
+
+  --color-felt-300: #6fd99a;
+  --color-felt-400: #3fc076;
+  --color-felt-500: #24a35b;
+  --color-felt-600: #188a4a;
+  --color-felt-700: #0f6c39;
+  --color-felt-800: #0b4f2a;
+
+  --color-gold-100: #fbf1d6;
+  --color-gold-200: #f5e1aa;
+  --color-gold-300: #efcf82;
+  --color-gold-400: #e8bc5e;
+  --color-gold-500: #d4a243;
+  --color-gold-600: #a87a2a;
+
+  --color-wood-400: #a0603a;
+  --color-wood-500: #7c4224;
+  --color-wood-600: #5a2d17;
+
+  --color-cream: #f5f0e6;
+  --color-mist: #a9b8af;
+  --color-fog: #74867b;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-glow: glow 5s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-14px) rotate(4deg); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes glow {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 0.9; }
+  }
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: dark;
+  --header-h: 4.25rem;
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--color-ink-950);
+}
+
+body {
+  background: var(--color-ink-950);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-gold-400) 45%, transparent);
+  color: var(--color-cream);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold-300);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Building blocks ────────────────────────────────────────────────────── */
+@utility container-page {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @variant sm { padding-inline: 1.5rem; }
+  @variant lg { padding-inline: 2rem; }
+}
+
+@utility text-gold {
+  background: linear-gradient(180deg, var(--color-gold-100) 0%, var(--color-gold-300) 45%, var(--color-gold-500) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility text-felt {
+  background: linear-gradient(180deg, #b6f5cf 0%, var(--color-felt-400) 60%, var(--color-felt-500) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility noise {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: var(--noise);
+    opacity: 0.045;
+    mix-blend-mode: overlay;
+    border-radius: inherit;
+  }
+}
+
+@utility felt {
+  background-color: var(--color-felt-700);
+  background-image:
+    radial-gradient(120% 90% at 50% 35%, rgb(255 255 255 / 0.14), transparent 60%),
+    var(--noise),
+    linear-gradient(180deg, var(--color-felt-600), var(--color-felt-800));
+  background-blend-mode: normal, soft-light, normal;
+}
+
+@utility card {
+  position: relative;
+  border-radius: 1.5rem;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.055), rgb(255 255 255 / 0.015)),
+    color-mix(in oklab, var(--color-ink-850) 85%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.07),
+    inset 0 0 0 1px rgb(255 255 255 / 0.06),
+    0 20px 50px -24px rgb(0 0 0 / 0.7);
+}
+
+@utility kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-gold-300);
+  &::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-gold-400));
+  }
+}
+
+/* Buttons */
+@utility btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  white-space: nowrap;
+  border-radius: 999px;
+  font-weight: 650;
+  letter-spacing: -0.005em;
+  transition: transform 0.25s var(--ease-out-expo), box-shadow 0.25s var(--ease-out-expo), background-color 0.2s, color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  &:active { transform: translateY(1px) scale(0.985); }
+  &:disabled { opacity: 0.5; pointer-events: none; }
+}
+
+@utility btn-felt {
+  color: #fff;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0) 55%),
+    linear-gradient(180deg, var(--color-felt-500), var(--color-felt-700));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    inset 0 -2px 0 rgb(0 0 0 / 0.25),
+    0 0 0 1px rgb(111 217 154 / 0.35),
+    0 10px 30px -8px rgb(36 163 91 / 0.65),
+    0 0 60px -10px rgb(36 163 91 / 0.45);
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.3);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.4),
+      inset 0 -2px 0 rgb(0 0 0 / 0.25),
+      0 0 0 1px rgb(111 217 154 / 0.5),
+      0 16px 40px -10px rgb(36 163 91 / 0.8),
+      0 0 80px -10px rgb(36 163 91 / 0.6);
+  }
+}
+
+@utility btn-gold {
+  color: #2b1a05;
+  background: linear-gradient(180deg, var(--color-gold-200), var(--color-gold-400) 55%, var(--color-gold-500));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.6),
+    inset 0 -2px 0 rgb(0 0 0 / 0.15),
+    0 10px 30px -10px rgb(232 188 94 / 0.6);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.6), 0 16px 40px -12px rgb(232 188 94 / 0.75);
+  }
+}
+
+@utility btn-ghost {
+  color: var(--color-cream);
+  background: rgb(255 255 255 / 0.045);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
+  backdrop-filter: blur(10px);
+  &:hover {
+    background: rgb(255 255 255 / 0.09);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.2);
+  }
+}
+
+/* Scroll-in reveal (only when scripts run, so nothing hides without them) */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.9s var(--ease-out-expo),
+    transform 0.9s var(--ease-out-expo),
+    translate 0.5s var(--ease-out-expo),
+    box-shadow 0.5s var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms), var(--reveal-delay, 0ms), 0ms, 0ms;
+}
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] { opacity: 1; transform: none; }
+}
+
+/* Native dialogs */
+dialog::backdrop {
+  background: rgb(2 6 4 / 0.78);
+  backdrop-filter: blur(6px);
+}
+dialog[open] {
+  animation: dialog-in 0.45s var(--ease-out-expo);
+}
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+}
+
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+
+.scrollbar-none { scrollbar-width: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* The contact point wandering over the cue ball */
+@keyframes tip-wander {
+  0%, 100% { transform: translate(-50%, -50%) translate(0, 0); }
+  20% { transform: translate(-50%, -50%) translate(0, 34%); }
+  40% { transform: translate(-50%, -50%) translate(-30%, 10%); }
+  60% { transform: translate(-50%, -50%) translate(0, -36%); }
+  80% { transform: translate(-50%, -50%) translate(32%, 8%); }
+}
