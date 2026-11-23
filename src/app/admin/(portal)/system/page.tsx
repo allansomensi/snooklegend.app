@@ -34,6 +34,54 @@ function Kv({ rows }: { rows: [string, ReactNode][] }) {
   );
 }
 
+/** Card payments: off, in Stripe's test mode (nothing is charged), or on. */
+function StripeRow({ s }: { s: System }) {
+  const { t } = useLocale();
+  if (!s.stripe) return <HealthRow ok={false} warnOnly text={t("Card payments (Stripe) are off")} />;
+  if (s.stripe_test) {
+    return (
+      <HealthRow ok={false} warnOnly text={t("Card payments (Stripe) are in test mode: no card is really charged")}
+        side={t("test key (sk_test_)")} />
+    );
+  }
+  return <HealthRow ok text={t("Card payments (Stripe) are on")} />;
+}
+
+/**
+ * Purchases in the Microsoft Store: the Store's game decides whether it sells
+ * (its package, built with MSSTORE_PURCHASES on or off); the server only
+ * needs its settings to credit them. Both are shown.
+ */
+function StoreRow({ s }: { s: System }) {
+  const { t } = useLocale();
+  const game = s.msstore_game;
+  const seen = game ? <>{t("Store game seen")} <TimeAgo at={game.seen_at} /></> : null;
+  if (game && !game.sales) {
+    return (
+      <HealthRow ok={false} warnOnly side={seen}
+        text={s.msstore
+          ? t("Microsoft Store purchases are off: the Store's game sells nothing (the server is ready for them)")
+          : t("Microsoft Store purchases are off: the Store's game sells nothing")} />
+    );
+  }
+  if (game && game.sales) {
+    return s.msstore ? (
+      <HealthRow ok side={seen} text={t("Microsoft Store purchases are on")} />
+    ) : (
+      <HealthRow ok={false} side={seen}
+        text={t("The Store's game sells add-ons, but the server has no Store settings: purchases are not credited")} />
+    );
+  }
+  // No Store game since the server started (or one older than 0.11.1,
+  // which doesn't say): only the server's side is known.
+  return (
+    <HealthRow ok={false} warnOnly side={t("no Store game since the restart")}
+      text={s.msstore
+        ? t("The server is ready for Microsoft Store purchases; whether the Store's game sells is not known yet")
+        : t("Microsoft Store purchases are off")} />
+  );
+}
+
 function SystemView({ s, staff, at, onRefresh }: { s: System; staff: UsersPage; at: number; onRefresh: () => void }) {
   const { t, tf, tn, lang, fmtNum, fmtDate, fmtDuration, fmtMinutes, fmtBytes } = useLocale();
   const perRules = usePerRules();
@@ -64,8 +112,8 @@ function SystemView({ s, staff, at, onRefresh }: { s: System; staff: UsersPage; 
             <HealthRow ok={!s.draining} text={s.draining ? t("Restarting: no new games") : t("Taking new games")} />
             <HealthRow ok={!oneAddress} warnOnly
               text={oneAddress ? t("Every player comes from one address: set SNOOK_LEGEND_CLIENT_IP_HEADER") : t("Players' addresses are told apart")} />
-            <HealthRow ok={s.stripe} warnOnly text={s.stripe ? t("Card payments (Stripe) are on") : t("Card payments (Stripe) are off")} />
-            <HealthRow ok={s.msstore} warnOnly text={s.msstore ? t("Microsoft Store purchases are on") : t("Microsoft Store purchases are off")} />
+            <StripeRow s={s} />
+            <StoreRow s={s} />
             <HealthRow ok={s.pending_writes <= 50} warnOnly text={tn(s.pending_writes, "{n} write waiting", "{n} writes waiting")} />
             <HealthRow ok text={tf("Only version {p} of the game is let in", { p: s.oldest_protocol === s.protocol ? s.protocol : s.oldest_protocol + "–" + s.protocol })} />
           </div>

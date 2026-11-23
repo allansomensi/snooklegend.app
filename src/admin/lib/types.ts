@@ -286,7 +286,12 @@ export interface System {
   persistent: boolean;
   draining: boolean;
   stripe: boolean;
+  /** Stripe with a test key: payments work, but nothing is charged. */
+  stripe_test?: boolean;
   msstore: boolean;
+  /** The last Microsoft Store game seen since the server started: whether
+   * its package sells add-ons (MSSTORE_PURCHASES), and when it connected. */
+  msstore_game?: { sales: boolean; seen_at: number } | null;
   settings: {
     shot_clock_secs: number;
     reconnect_grace_secs: number;
