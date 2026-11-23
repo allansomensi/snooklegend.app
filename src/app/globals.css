@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* The staff portal (/admin) has its own styles. */
+@source not "./admin";
+@source not "../admin";
 
 /* ── Design tokens: a dim pool hall ─────────────────────────────────────── */
 @theme {

@@ -27,12 +27,51 @@ it installed in a minute.
   system requirements and an FAQ; SEO metadata, Open Graph picture, `hreflang`,
   sitemap and structured data (`VideoGame`).
 
-## The staff portal
+## The staff portal (`/admin`)
 
-[`admin/`](admin/) is the game's staff portal
-([admin.snooklegend.app](https://admin.snooklegend.app)): its own Next.js app,
-with its own checks and its own Vercel project (Root Directory `admin`). See
-[`admin/README.md`](admin/README.md).
+[snooklegend.app/admin](https://snooklegend.app/admin/) is the game's staff
+portal: moderation, the lounge, events, the economy, metrics and the server,
+for the game's moderators and administrators (what each page and action does,
+and the roles: the game's [`docs/ADMIN.md`](https://github.com/allansomensi/snook-legend/blob/main/docs/ADMIN.md)).
+It is part of this app (`src/app/admin/`, its code in `src/admin/`), with a
+root layout of its own: none of the website's scripts (no analytics), its own
+styles, `noindex`. It talks to the game server's staff API (`/admin/api`,
+Rust, on Render) from the browser.
+
+- **Signing in:** with a game account (moderator or administrator). The session
+  is a bearer token kept for the tab only (`sessionStorage`, never a cookie, so
+  there is no CSRF surface); it lasts 8 hours. When it ends, every page sends to
+  `/admin/login`, and back to the same page after signing in again.
+- **The API:** `src/admin/lib/api.ts` calls `NEXT_PUBLIC_API_URL` + `/admin/api`
+  with the token; errors carry the server's own words, translated. The server
+  answers browsers only from this site's origin (`SNOOK_LEGEND_ADMIN_ORIGIN` on
+  the server: CORS, no credentials). Data: TanStack Query (Live and the chat
+  refresh every 10 s, the dashboard every minute).
+- **Security:** `src/proxy.ts` gives every `/admin` page a strict Content
+  Security Policy with a fresh nonce (only the portal's own scripts run; the
+  only server it talks to is the API); `next.config.ts` adds the other headers
+  (no frames, no referrer, never in a search engine). The website's pages are
+  untouched: prerendered, served from the CDN.
+- **Languages:** Português (Brasil), English and Español. English is the key:
+  every text goes through `t("…")`, `tf("…", {…})`, `tn(n, "…", "…")` or
+  `msg("…")`; `src/admin/i18n/pt-BR.json` and `es.json` hold the translations,
+  and `npm test` checks that every text has both, with the same placeholders.
+- **Addresses:** every page, tab and filter has its own
+  (`/admin/players/ana/moderation/`, `/admin/reports/?status=open`…).
+- **Flags:** `public/flags.png` is the game's flag atlas
+  (`crates/client/assets/flags.png`), in the order of `src/admin/lib/countries.ts`
+  (`COUNTRIES` in the game's `crates/proto/src/countries.rs`). Copy both again
+  when the game adds a country.
+
+To run it against a local game server (from the game's repository; the
+account in `SNOOK_LEGEND_ADMINS` must exist already, made in the game):
+
+```bash
+SNOOK_LEGEND_IN_MEMORY=1 SNOOK_LEGEND_ADMIN_ORIGIN=http://localhost:3000 SNOOK_LEGEND_ADMINS=yourname cargo run -p snook_legend_server
+```
+
+and here, with `NEXT_PUBLIC_API_URL=http://localhost:7878` in `.env.local`
+(see `.env.example`), `npm run dev` and open http://localhost:3000/admin/.
 
 ## The terms of use and the privacy policy
 
@@ -83,15 +122,15 @@ npm run check
 
 ## Building
 
-The site is a static export: `npm run build` writes plain HTML, CSS and JS to
-`out/`, which any static host can serve.
+`npm run build` prerenders the website's pages (plain HTML, served from the CDN)
+and builds the portal's, rendered per request; `npm start` serves the result.
 
 ```bash
 npm run build
 ```
 
 ```bash
-npm run preview
+npm start
 ```
 
 While building, the latest release is read from the GitHub API (set `GITHUB_TOKEN`
@@ -100,12 +139,16 @@ to avoid its rate limit). Without network access, the release in
 
 ## Deploying
 
-The site is deployed by **Vercel** from this repository (Git integration, the
-Next.js preset; nothing else to configure): every push to `main` is published at
+The site and the staff portal are deployed by **Vercel** from this repository
+(Git integration, the Next.js preset): every push to `main` is published at
 [snooklegend.app](https://snooklegend.app), and every pull request gets a preview.
+One environment variable: `NEXT_PUBLIC_API_URL` = `https://api.snooklegend.app`
+(the game server, for the portal). On the game server, `SNOOK_LEGEND_ADMIN_ORIGIN`
+= `https://snooklegend.app` lets the portal call the staff API (a preview's
+address is a different origin: its portal can't, by design).
 
-`.github/workflows/ci.yml` checks each push and pull request (types, lint, a
-build; the same for the staff portal in `admin/`). It can also keep the site in step with the game's releases:
+`.github/workflows/ci.yml` checks each push and pull request (types, lint, the
+portal's tests, a build). It can also keep the site in step with the game's releases:
 
 - **Daily rebuild:** in Vercel, the project → Settings → Git → **Deploy Hooks**,
   create one for `main`, and save its URL as the repository secret
@@ -120,7 +163,9 @@ public repositories) avoids GitHub's rate limit when the build reads the release
 Without it the build still works, and falls back to the release in
 `src/lib/release.ts` if GitHub says no.
 
-Any other static host works too: build command `npm run build`, output folder `out`.
+The website's pages are prerendered at build time; the portal's pages are
+rendered per request (Vercel's functions). Any host that runs Next.js works
+(`npm run build`, `npm start`).
 
 ### Analytics
 
@@ -160,9 +205,12 @@ A new language: copy `src/i18n/en.ts`, translate it, add it to `LOCALES` and
 
 ## Stack
 
-[Next.js](https://nextjs.org) 16 (App Router, static export), React 19,
-TypeScript, [Tailwind CSS](https://tailwindcss.com) 4,
-[Lucide](https://lucide.dev) icons and Vercel Web Analytics. Fonts: Bricolage Grotesque, Geist and Geist Mono.
+[Next.js](https://nextjs.org) 16 (App Router; the website prerendered, the
+portal rendered per request with a nonce-based CSP), React 19, TypeScript
+(strict), [Tailwind CSS](https://tailwindcss.com) 4, [Lucide](https://lucide.dev)
+icons and Vercel Web Analytics; for the portal,
+[TanStack Query](https://tanstack.com/query), [Radix UI](https://www.radix-ui.com)
+(dialogs and menus) and [Vitest](https://vitest.dev). Fonts: Bricolage Grotesque, Geist and Geist Mono.
 
 ## License
 
