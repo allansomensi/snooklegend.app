@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { LOCALE_INFO, LOCALES } from "@/i18n";
+import { rankingPath } from "@/lib/ranking";
 import { LEGAL_DOCS, legalPath, SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
@@ -23,5 +24,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       alternates: { languages: alternates },
     }));
   });
-  return [...home, ...legal];
+  // The world ranking: it changes all day.
+  const rankingLanguages = Object.fromEntries(LOCALES.map((l) => [LOCALE_INFO[l].htmlLang, SITE_URL + rankingPath(l)]));
+  const ranking: MetadataRoute.Sitemap = LOCALES.map((l) => ({
+    url: SITE_URL + rankingPath(l),
+    changeFrequency: "daily" as const,
+    priority: 0.7,
+    alternates: { languages: rankingLanguages },
+  }));
+  return [...home, ...ranking, ...legal];
 }

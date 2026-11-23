@@ -8,6 +8,7 @@ import {
   RELEASES_URL,
   TRANSLATIONS_URL,
 } from "@/lib/site";
+import { rankingPath } from "@/lib/ranking";
 import { GithubIcon } from "./icons";
 import { LiveVersion } from "./LiveVersion";
 
@@ -30,6 +31,7 @@ export function Footer({
       title: t.footer.game,
       links: [
         { href: `${home}#download`, label: l.download },
+        { href: rankingPath(locale), label: l.ranking },
         { href: `${home}#features`, label: l.features },
         { href: `${home}#rules`, label: l.rules },
         { href: `${home}#faq`, label: l.faq },

@@ -3,6 +3,7 @@
 import { Check, ChevronDown, Globe, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { LOCALE_INFO, LOCALES, type Dict, type Locale } from "@/i18n";
+import { rankingPath } from "@/lib/ranking";
 import { GITHUB_URL } from "@/lib/site";
 import { DownloadButton } from "./DownloadButton";
 import { GithubIcon } from "./icons";
@@ -40,6 +41,7 @@ export function Header({ t, locale, paths }: Props) {
   // browser just scrolls).
   const home = LOCALE_INFO[locale].path;
   const links = [
+    { href: rankingPath(locale), label: t.nav.ranking },
     { href: `${home}#features`, label: t.nav.features },
     { href: `${home}#play`, label: t.nav.play },
     { href: `${home}#rules`, label: t.nav.rules },

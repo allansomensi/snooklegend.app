@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { getDict, LOCALE_INFO, LOCALES, type Locale } from "@/i18n";
+import { rankingPath } from "./ranking";
 import { legalPath, SITE_URL, type LegalDoc } from "./site";
 
 export const VIEWPORT: Viewport = {
@@ -83,6 +84,31 @@ export function buildLegalMetadata(locale: Locale, doc: LegalDoc): Metadata {
       images: [{ url: "/og.jpg", width: 1200, height: 630, alt: t.meta.ogAlt }],
     },
     twitter: { card: "summary", title: `${title} · Snook Legend`, description },
+    robots: { index: true, follow: true },
+  };
+}
+
+/** The world ranking's metadata (on top of its language's, from the layout). */
+export function buildRankingMetadata(locale: Locale): Metadata {
+  const t = getDict(locale);
+  const info = LOCALE_INFO[locale];
+  const languages: Record<string, string> = { "x-default": rankingPath("en") };
+  for (const l of LOCALES) languages[LOCALE_INFO[l].htmlLang] = rankingPath(l);
+  const { title, description } = t.ranking;
+  return {
+    title,
+    description,
+    alternates: { canonical: rankingPath(locale), languages },
+    openGraph: {
+      type: "website",
+      url: rankingPath(locale),
+      siteName: "Snook Legend",
+      title: `${title} · Snook Legend`,
+      description,
+      locale: info.og,
+      images: [{ url: "/og.jpg", width: 1200, height: 630, alt: t.meta.ogAlt }],
+    },
+    twitter: { card: "summary_large_image", title: `${title} · Snook Legend`, description, images: ["/og.jpg"] },
     robots: { index: true, follow: true },
   };
 }
