@@ -8,7 +8,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { LANGS } from "@/admin/i18n";
 import { api, ApiError } from "@/admin/lib/api";
 import { useDebounced, useMe } from "@/admin/lib/hooks";
-import { NAV, NAV_ITEMS, sectionOf } from "@/admin/lib/nav";
+import { NAV_ITEMS, navFor, navItemsFor, sectionOf } from "@/admin/lib/nav";
 import { session } from "@/admin/lib/session";
 import type { Overview, UsersPage } from "@/admin/lib/types";
 import { useDialogs } from "../providers/dialogs";
@@ -76,6 +76,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
 function Sidebar({ section }: { section: string }) {
   const { t, tn, tf, fmtNum } = useLocale();
+  const me = useMe();
   const counts = useCounts();
   const reachable = !(counts.error instanceof ApiError && counts.error.status === 0);
   const o = counts.data;
@@ -90,7 +91,7 @@ function Sidebar({ section }: { section: string }) {
         </div>
       </Link>
       <nav>
-        {NAV.map((n, k) => {
+        {navFor(me.role).map((n, k) => {
           if ("group" in n) return <div key={k} className="nav-group">{t(n.group)}</div>;
           const c = n.count === "reports" ? reports : 0;
           const Icon = n.icon;
@@ -275,6 +276,7 @@ function SearchBox() {
 
 function ShortcutsDialog({ onClose }: { onClose: () => void }) {
   const { t, tf } = useLocale();
+  const me = useMe();
   const row = (label: string, ...keys: string[]) => (
     <div className="sc" key={label}>
       <span>{label}</span>
@@ -288,7 +290,7 @@ function ShortcutsDialog({ onClose }: { onClose: () => void }) {
         {row(t("Search players"), "/")}
         {row(t("This list"), "?")}
         {row(t("Close a dialog or the replay"), "Esc")}
-        {NAV_ITEMS.map((n) => row(tf("Go to {page}", { page: t(n.label) }), "g", n.key))}
+        {navItemsFor(me.role).map((n) => row(tf("Go to {page}", { page: t(n.label) }), "g", n.key))}
         {row(t("Replay: play or pause"), t("Space"))}
         {row(t("Replay: previous or next stroke"), "←", "→")}
         {row(t("Replay: one frame back or forward"), ",", ".")}
@@ -300,6 +302,7 @@ function ShortcutsDialog({ onClose }: { onClose: () => void }) {
 /** "/" searches, "?" lists the shortcuts, "g" then a letter goes to a page. */
 function useShortcuts() {
   const router = useRouter();
+  const me = useMe();
   const dialogs = useDialogs();
   const viewer = useViewer();
   const pendingG = useRef(0);
@@ -314,11 +317,11 @@ function useShortcuts() {
       if (e.key === "g") { pendingG.current = Date.now(); return; }
       if (Date.now() - pendingG.current < 1200) {
         pendingG.current = 0;
-        const n = NAV_ITEMS.find((x) => x.key === e.key.toLowerCase());
+        const n = navItemsFor(me.role).find((x) => x.key === e.key.toLowerCase());
         if (n) { e.preventDefault(); router.push("/admin/" + n.id); }
       }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [router, dialogs, viewer.isOpen]);
+  }, [router, dialogs, viewer.isOpen, me.role]);
 }

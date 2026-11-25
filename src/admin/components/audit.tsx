@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  Ban, CalendarDays, Coins, Flag, Gift, Info, Key, Lock, Megaphone, MessageSquare, MicOff, Pencil, Pin, RefreshCw, Shield, Star,
-  StickyNote, Trash2, Trophy, TriangleAlert, Undo2, UserX, LogOut, type LucideIcon,
+  Ban, CalendarDays, Coins, Download, Flag, Gavel, Gift, Info, Key, Lock, Mail, Megaphone, MessageSquare, MicOff, Pencil, Percent, Pin, PinOff, RefreshCw,
+  Scale, Shield, SlidersHorizontal, Square, Star, StickyNote, Trash2, Trophy, TriangleAlert, Undo2, UserX, LogOut, WholeWord, Wrench, type LucideIcon,
 } from "lucide-react";
 import { msg } from "@/admin/i18n";
 import type { AuditEntry } from "@/admin/lib/types";
@@ -42,6 +42,28 @@ export const AUDIT: Record<string, [string, LucideIcon, string]> = {
   "tournament-cancel": ["danger", Trophy, msg("Tournament called off")],
   event: ["success", CalendarDays, msg("Event scheduled")],
   "event-cancel": ["danger", CalendarDays, msg("Event called off")],
+  // 0.12: the inbox and moderation.
+  message: ["info", Mail, msg("Message sent")],
+  rating: ["warning", Scale, msg("Rating adjusted")],
+  gift: ["success", Gift, msg("Present given")],
+  "gift-batch": ["success", Gift, msg("Presents to many")],
+  "match-void": ["danger", Undo2, msg("Game annulled")],
+  "match-end": ["danger", Square, msg("Live game ended")],
+  "banned-word": ["warning", WholeWord, msg("Banned word added")],
+  "banned-word-remove": ["", WholeWord, msg("Banned word removed")],
+  "chat-pin": ["info", Pin, msg("Chat line pinned")],
+  "chat-unpin": ["", PinOff, msg("Chat line unpinned")],
+  // 0.12: operations and the economy.
+  setting: ["warning", SlidersHorizontal, msg("Setting changed")],
+  "setting-reset": ["", SlidersHorizontal, msg("Setting reset")],
+  promotion: ["success", Percent, msg("Promotion scheduled")],
+  "promotion-edit": ["info", Percent, msg("Promotion changed")],
+  "promotion-cancel": ["danger", Percent, msg("Promotion called off")],
+  maintenance: ["warning", Wrench, msg("Maintenance scheduled")],
+  "maintenance-cancel": ["", Wrench, msg("Maintenance called off")],
+  auction: ["success", Gavel, msg("Auction opened")],
+  "auction-cancel": ["danger", Gavel, msg("Auction called off")],
+  export: ["", Download, msg("Data exported")],
 };
 
 export const auditLook = (action: string): [string, LucideIcon] => {
@@ -52,9 +74,9 @@ export const auditLook = (action: string): [string, LucideIcon] => {
 /** The actions whose target is a player (the others name an event, a
  * report, a payment, a place…, shown as plain text). */
 export const PLAYER_ACTIONS = new Set(["ban", "unban", "mute", "unmute", "kick", "warn", "note", "logout-all", "role", "password-reset", "coins", "item",
-  "vip", "revoke", "rename", "clear-status", "remove-seek", "chat-delete"]);
+  "vip", "revoke", "rename", "clear-status", "remove-seek", "chat-delete", "message", "rating", "gift", "match-void", "match-end"]);
 
-const PLACES: Record<string, string> = { lounge: msg("the lounge"), board: msg("the board") };
+const PLACES: Record<string, string> = { lounge: msg("the lounge"), board: msg("the board"), batch: msg("many players") };
 
 export function useAuditWords() {
   const { t } = useLocale();

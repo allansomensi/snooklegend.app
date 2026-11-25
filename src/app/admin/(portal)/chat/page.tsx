@@ -1,6 +1,7 @@
 "use client";
 
-import { EyeOff, MessageSquare, MicOff, Trash2, TriangleAlert } from "lucide-react";
+import { EyeOff, MessageSquare, MicOff, Pin, PinOff, Trash2, TriangleAlert } from "lucide-react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePlayerActions } from "@/admin/components/player-dialogs";
 import { useRefresh } from "@/admin/components/providers";
@@ -13,6 +14,7 @@ import { api, seg } from "@/admin/lib/api";
 import { useApi, useDebouncedParam, useIsAdmin, useQueryParams } from "@/admin/lib/hooks";
 import type { ChatLine } from "@/admin/lib/types";
 import "@/admin/styles/moderation.css";
+import "@/admin/styles/ops.css";
 
 export default function ChatPage() {
   const { t } = useLocale();
@@ -26,6 +28,7 @@ export default function ChatPage() {
   const [who, setWho] = useDebouncedParam("q");
   const term = get("q").toLowerCase();
   const q = useApi<{ lines: ChatLine[] }>("/chat", { refetchInterval: 10000 });
+  const pinned = useApi<{ line: ChatLine | null }>("/chat/pinned", { refetchInterval: 10000 });
 
   const clear = async () => {
     const ok = await dialogs.confirm({
@@ -39,7 +42,7 @@ export default function ChatPage() {
   return (
     <div>
       <PageHead title={t("Lounge chat")} sub={t("The latest lines, newest first · refreshes every 10 seconds")}>
-        <Updated at={updatedAt(q)} live onRefresh={() => void q.refetch()} />
+        <Updated at={updatedAt(q, pinned)} live onRefresh={() => { void q.refetch(); void pinned.refetch(); }} />
         {admin ? <Btn label={t("Clear the chat")} kind="danger-soft" icon={Trash2} busy={clearing} onClick={() => void clear()} /> : null}
       </PageHead>
       <div className="toolbar">
@@ -55,11 +58,13 @@ export default function ChatPage() {
             .slice()
             .reverse()
             .filter((l) => (showDeleted || !l.deleted) && (!term || (l.from || "").toLowerCase().includes(term) || (l.text || "").toLowerCase().includes(term)));
+          const pin = pinned.data?.line || null;
           return (
             <Card>
+              <PinnedLine line={pin} />
               {lines.length ? (
                 <div className="chat-log" role="log" aria-label={t("Lounge chat")}>
-                  {lines.map((l) => <Line key={l.id} l={l} />)}
+                  {lines.map((l) => <Line key={l.id} l={l} pinned={pin?.id === l.id} />)}
                 </div>
               ) : (
                 <Empty icon={MessageSquare} title={t("Nothing said yet")} text={term ? t("No line matches.") : t("The lounge chat is quiet.")} />
@@ -72,7 +77,48 @@ export default function ChatPage() {
   );
 }
 
-function Line({ l }: { l: ChatLine }) {
+/** A line's text with the players it names ("@ana") lit, each a link. */
+function LineText({ l }: { l: ChatLine }) {
+  const names = new Map((l.mentions || []).map((n) => [n.toLowerCase(), n]));
+  if (!names.size) return <span className="text">{l.text}</span>;
+  const parts: ReactNode[] = [];
+  let last = 0;
+  for (const m of l.text.matchAll(/@([A-Za-z0-9_]{3,16})/g)) {
+    const real = names.get(m[1].toLowerCase());
+    if (!real) continue;
+    parts.push(l.text.slice(last, m.index));
+    parts.push(<Link key={m.index} className="mention" href={playerHref(real)}>@{m[1]}</Link>);
+    last = m.index + m[0].length;
+  }
+  parts.push(l.text.slice(last));
+  return <span className="text">{parts}</span>;
+}
+
+/** The line pinned at the top of the lounge's chat, for everyone. */
+function PinnedLine({ line }: { line: ChatLine | null }) {
+  const { t, fmtDate } = useLocale();
+  const { attempt } = useToasts();
+  const refresh = useRefresh();
+  const dialogs = useDialogs();
+  const [busy, run] = useBusy();
+  if (!line) return null;
+  const unpin = async () => {
+    const ok = await dialogs.confirm({ title: t("Take the pinned line down?"), text: t("It stays in the chat, no longer at the top."), confirm: t("Unpin"), tone: "warning" });
+    if (ok && (await run(() => attempt(() => api("/chat/unpin", { method: "POST" }), t("Line unpinned."))))) void refresh();
+  };
+  return (
+    <div className="pinned-line" role="note" aria-label={t("Pinned line")}>
+      <Pin className="icon" aria-hidden />
+      <div className="grow">
+        <div className="hint">{t("Pinned at the top of the lounge's chat for everyone")} · {fmtDate(line.at)}</div>
+        <b>{line.from}: </b><LineText l={line} />
+      </div>
+      <Btn label={t("Unpin")} kind="sm" icon={PinOff} busy={busy} onClick={() => void unpin()} />
+    </div>
+  );
+}
+
+function Line({ l, pinned }: { l: ChatLine; pinned: boolean }) {
   const { t, fmtClock, fmtDate } = useLocale();
   const admin = useIsAdmin();
   const dialogs = useDialogs();
@@ -100,8 +146,20 @@ function Line({ l }: { l: ChatLine }) {
     }
   };
 
+  const pin = async () => {
+    const ok = await dialogs.confirm({
+      title: t("Pin this line at the top of the chat?"),
+      text: t("Every player in the lounge sees it above the chat until it is unpinned or deleted. It replaces the line pinned before."),
+      confirm: t("Pin"),
+      tone: "info",
+      icon: Pin,
+      details: <div className="preview-box"><b>{l.from}: </b>{l.text}</div>,
+    });
+    if (ok && (await attempt(() => api("/chat/" + seg(l.id) + "/pin", { method: "POST" }), t("Line pinned.")))) void refresh();
+  };
+
   return (
-    <div className={"chat-line " + (l.kind || "") + (l.deleted ? " deleted" : "")}>
+    <div className={"chat-line " + (l.kind || "") + (l.deleted ? " deleted" : "") + (pinned ? " pinned" : "")}>
       <span className="time" title={fmtDate(l.at)}>{fmtClock(l.at)}</span>
       <div className="msg">
         {player ? (
@@ -109,7 +167,8 @@ function Line({ l }: { l: ChatLine }) {
         ) : (
           <b className="from">{l.from}</b>
         )}
-        <span className="text">{l.text}</span>
+        <LineText l={l} />
+        {pinned ? <span> <Badge kind="accent" icon={Pin}>{t("Pinned")}</Badge></span> : null}
         {l.deleted ? (
           <span>
             {" "}
@@ -119,6 +178,7 @@ function Line({ l }: { l: ChatLine }) {
       </div>
       {player ? (
         <div className="line-actions">
+          {!l.deleted && !pinned ? <Btn label={t("Pin at the top")} kind="sm ghost" icon={Pin} iconOnly onClick={() => void pin()} /> : null}
           {!l.deleted ? <Btn label={t("Delete")} kind="sm ghost" icon={Trash2} iconOnly onClick={() => void del(false)} /> : null}
           {admin && l.deleted !== "removed" ? <Btn label={t("Remove without a trace")} kind="sm ghost" icon={EyeOff} iconOnly onClick={() => void del(true)} /> : null}
           <Btn label={t("Warn")} kind="sm ghost" icon={TriangleAlert} iconOnly onClick={() => actions.note(person, "warning", () => {})} />
