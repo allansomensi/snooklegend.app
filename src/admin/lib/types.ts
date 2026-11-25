@@ -167,6 +167,9 @@ export interface UserDetail {
   renames?: ProfileChange[];
   /** Ratings put right by the staff (0.12). */
   rating_adjustments?: RatingAdjustment[];
+  /** Their doubles records under each of the rules (0.12; read with
+   * `parseDoublesRatings`). */
+  doubles_ratings?: unknown;
 }
 
 export interface Overview {
@@ -908,4 +911,125 @@ export interface CalendarRange {
   to: number;
   now: number;
   items: CalendarItem[];
+}
+
+// -------------------------------------------- 0.12's modes (admin/modes.rs)
+
+/** Two of a kind: a doubles game's teams, a team's players (the team's
+ * first player first). */
+export type Pair<T> = [T, T];
+
+/** A doubles game being played (or just over) in this server. */
+export interface LiveDoubles {
+  /** The lounge's room. */
+  id: number;
+  teams: Pair<Pair<string>>;
+  rated: boolean;
+  rules: RulesId;
+  shots: number;
+  finished: boolean;
+}
+
+/** A stored doubles game. `teams`, `countries`, `player_ids`, `deltas`:
+ * `[team][player]`. */
+export interface DoublesGame {
+  id: number;
+  /** The room it was played in (the live game's id). */
+  room: number | null;
+  teams: Pair<Pair<string>>;
+  countries: Pair<Pair<string>>;
+  player_ids: Pair<Pair<number>>;
+  /** The team that won. */
+  winner: 0 | 1;
+  reason: string;
+  rated: boolean;
+  rules: RulesId;
+  deltas: Pair<Pair<number>>;
+  shots: number;
+  ended_at: number;
+  /** A replay was kept. */
+  replay: boolean;
+  voided_at: number | null;
+}
+
+/** A stored doubles game with its replay (`GET /doubles/{id}`). */
+export interface DoublesDetail extends DoublesGame {
+  /** null without a replay. */
+  strokes: number | null;
+  /** The replay as the game keeps it (seed, breaker, rules, strokes). */
+  replay_data: Record<string, unknown> | null;
+}
+
+export interface DoublesPage {
+  live: LiveDoubles[];
+  games: DoublesGame[];
+  /** The next page's `before`; null at the end. */
+  next: number | null;
+}
+
+/** A player's doubles record under one of the rules. */
+export interface DoublesRecord {
+  rating: number;
+  peak_rating: number;
+  games: number;
+  wins: number;
+}
+export type DoublesRatings = Record<RulesId, DoublesRecord>;
+
+/** A line of a week's table against the clock: a player's best. */
+export interface ClockRow {
+  place: number;
+  user_id: number;
+  username: string;
+  country: string;
+  ms: number;
+  /** "0:45.2" */
+  time: string;
+  at: number;
+}
+
+export interface ClockWeek {
+  week: number;
+  this_week: number;
+  starts_at: number;
+  ends_at: number;
+  /** The players in the week's table (all of them, not just those sent). */
+  players: number;
+  /** The coins of the first three as set now. */
+  prizes: number[];
+  board: ClockRow[];
+}
+
+/** An attempt against the clock. `ms` (the clock plus 10 s a foul),
+ * `shots` and `fouls`: null when not cleared, refused or never sent. */
+export interface ClockAttempt {
+  id: number;
+  username: string;
+  /** The day (UTC, days since 1970) it was started on. */
+  day: number;
+  started_ms: number;
+  finished_ms: number | null;
+  ms: number | null;
+  time: string | null;
+  shots: number | null;
+  fouls: number | null;
+  /** The week it counted in, and when. */
+  week: number | null;
+  at: number | null;
+  /** In its week's ranking (and not taken off). */
+  counted: boolean;
+  removed_at: number | null;
+  removed_reason: string | null;
+}
+
+export interface ClockAttempts {
+  username: string;
+  this_week: { week: number; best_ms: number | null; place: number | null };
+  attempts: ClockAttempt[];
+}
+
+/** The answer to taking an attempt off: their best of its week now. */
+export interface ClockRemoved {
+  attempt: ClockAttempt;
+  best_ms: number | null;
 }
