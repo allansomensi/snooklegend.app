@@ -86,5 +86,5 @@ export function strokeWords({ t, tf }: Translator) {
     return out;
   }
 
-  return { pocketName, summary, details };
+  return { pocketName, foulText, summary, details };
 }

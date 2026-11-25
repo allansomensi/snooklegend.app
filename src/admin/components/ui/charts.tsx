@@ -16,6 +16,10 @@ export interface Series {
   /** c-accent, c-success or c-info. */
   cls: string;
   format?: (v: number) => string;
+  /** A class per column (bars only): columns of different kinds. */
+  classes?: string[];
+  /** The legend's keys when the columns have classes of their own. */
+  keys?: [string, string][];
 }
 
 /** Bars (and optionally a line) over evenly spaced columns, in SVG, with a
@@ -48,10 +52,19 @@ export function Chart({ labels, titles, bars, line, every = 6, height = 200, uni
   return (
     <div className="chart-wrap">
       <div className="legend">
-        <span className="key">
-          <i className={"sw-bar " + bars.cls} />
-          {bars.name}
-        </span>
+        {bars.keys ? (
+          bars.keys.map(([name, cls]) => (
+            <span key={name} className="key">
+              <i className={"sw-bar " + cls} />
+              {name}
+            </span>
+          ))
+        ) : (
+          <span className="key">
+            <i className={"sw-bar " + bars.cls} />
+            {bars.name}
+          </span>
+        )}
         {line ? (
           <span className="key">
             <i className={"sw-line " + line.cls} />
@@ -74,7 +87,7 @@ export function Chart({ labels, titles, bars, line, every = 6, height = 200, uni
         {bars.values.map((v, k) => {
           if (!(v > 0)) return null;
           const h = Math.max(1.5, y(0) - y(v));
-          return <rect key={k} x={x(k) - bw / 2} y={y(0) - h} width={bw} height={h} rx={Math.min(3, bw / 3)} className={"col " + bars.cls} />;
+          return <rect key={k} x={x(k) - bw / 2} y={y(0) - h} width={bw} height={h} rx={Math.min(3, bw / 3)} className={"col " + (bars.classes?.[k] || bars.cls)} />;
         })}
         {line ? (
           <>

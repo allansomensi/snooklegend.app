@@ -1,6 +1,8 @@
 "use client";
 
-import { Activity, Eye, ListOrdered, Star, Table, Trophy, Users } from "lucide-react";
+import { Activity, Eye, ListOrdered, Square, Star, Table, Trophy, Users } from "lucide-react";
+import { usePlayerActions } from "@/admin/components/player-dialogs";
+import { useRefresh } from "@/admin/components/providers";
 import { useRouter } from "next/navigation";
 import { Doing, TournamentCard } from "@/admin/components/live/tournament-card";
 import { useLocale } from "@/admin/components/providers/locale";
@@ -9,7 +11,7 @@ import {
   Avatar, Badge, Btn, Card, Country, DataTable, Empty, Kpi, PageHead, PersonLink, RoleBadge, RulesBadge, Tabs, Updated, clickable, playerHref, usePerRules,
 } from "@/admin/components/ui/bits";
 import { Loaded, updatedAt } from "@/admin/components/ui/loaded";
-import { useApi, useDebouncedParam, useQueryParams } from "@/admin/lib/hooks";
+import { useApi, useDebouncedParam, useIsAdmin, useQueryParams } from "@/admin/lib/hooks";
 import { gamesByRules, recordOf } from "@/admin/lib/rules";
 import type { Live, System } from "@/admin/lib/types";
 
@@ -68,6 +70,9 @@ export default function LivePage() {
 function GamesTab({ d }: { d: Live }) {
   const { t, fmtNum } = useLocale();
   const viewer = useViewer();
+  const admin = useIsAdmin();
+  const actions = usePlayerActions();
+  const refresh = useRefresh();
   return (
     <Card>
       {d.rooms.length ? (
@@ -92,7 +97,13 @@ function GamesTab({ d }: { d: Live }) {
               <td className="num">{fmtNum(r.shots)}</td>
               <td>{r.finished ? <Badge>{t("Finished")}</Badge> : <Badge kind="success dot">{t("Playing")}</Badge>}</td>
               <td className="actions-cell">
-                <Btn label={t("Watch")} kind="sm" icon={Eye} onClick={() => viewer.open("/live/" + r.id + "/view")} />
+                <span className="row">
+                  <Btn label={t("Watch")} kind="sm" icon={Eye} onClick={() => viewer.open("/live/" + r.id + "/view")} />
+                  {admin && !r.finished ? (
+                    <Btn label={t("End a stuck game")} kind="sm ghost" icon={Square} iconOnly
+                      onClick={() => actions.endLive({ id: r.id, players: r.players }, !!r.tournament, () => void refresh())} />
+                  ) : null}
+                </span>
               </td>
             </tr>
           ))}

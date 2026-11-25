@@ -1,6 +1,7 @@
 "use client";
 
-import { Ban, Check, Download, MicOff, Play, TriangleAlert, Undo2 } from "lucide-react";
+import { Ban, Check, Download, ListOrdered, MicOff, Play, TriangleAlert, Undo2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { api, seg } from "@/admin/lib/api";
@@ -156,6 +157,12 @@ function GameBlock({ r }: { r: Report }) {
         <Btn label={live ? t("Watch so far") : t("Watch")} kind="sm primary" icon={Play}
           onClick={() => viewer.open(live ? "/live/" + g.id + "/view" : "/replay/" + g.id + "/view")} />
         {live ? null : <Btn label={t("Download")} kind="sm ghost" icon={Download} iconOnly onClick={() => void attempt(() => downloadReplay(g.id))} />}
+        {live ? null : (
+          <Link className="btn sm ghost" href={"/admin/matches/" + g.id}>
+            <ListOrdered className="icon" aria-hidden />
+            {t("Shot by shot")}
+          </Link>
+        )}
       </div>
     </div>
   );
