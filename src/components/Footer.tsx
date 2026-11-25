@@ -9,6 +9,7 @@ import {
   TRANSLATIONS_URL,
 } from "@/lib/site";
 import { rankingPath } from "@/lib/ranking";
+import { pagePath } from "@/lib/routes";
 import { GithubIcon } from "./icons";
 import { LiveVersion } from "./LiveVersion";
 
@@ -32,8 +33,10 @@ export function Footer({
       links: [
         { href: `${home}#download`, label: l.download },
         { href: rankingPath(locale), label: l.ranking },
+        { href: pagePath(locale, "tournaments"), label: l.tournaments },
+        { href: pagePath(locale, "rules"), label: l.guide },
+        { href: pagePath(locale, "rating"), label: l.rating },
         { href: `${home}#features`, label: l.features },
-        { href: `${home}#rules`, label: l.rules },
         { href: `${home}#faq`, label: l.faq },
       ],
     },
@@ -50,6 +53,7 @@ export function Footer({
     {
       title: t.footer.project,
       links: [
+        { href: pagePath(locale, "supporters"), label: l.supporters },
         { href: GITHUB_URL, label: l.github, ext: true },
         { href: TRANSLATIONS_URL, label: l.translations, ext: true },
         { href: LICENSE_URL, label: l.license, ext: true },

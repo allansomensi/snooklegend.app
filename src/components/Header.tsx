@@ -4,6 +4,7 @@ import { Check, ChevronDown, Globe, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { LOCALE_INFO, LOCALES, type Dict, type Locale } from "@/i18n";
 import { rankingPath } from "@/lib/ranking";
+import { pagePath } from "@/lib/routes";
 import { GITHUB_URL } from "@/lib/site";
 import { DownloadButton } from "./DownloadButton";
 import { GithubIcon } from "./icons";
@@ -42,9 +43,9 @@ export function Header({ t, locale, paths }: Props) {
   const home = LOCALE_INFO[locale].path;
   const links = [
     { href: rankingPath(locale), label: t.nav.ranking },
+    { href: pagePath(locale, "tournaments"), label: t.nav.tournaments },
+    { href: pagePath(locale, "rules"), label: t.nav.rules },
     { href: `${home}#features`, label: t.nav.features },
-    { href: `${home}#play`, label: t.nav.play },
-    { href: `${home}#rules`, label: t.nav.rules },
     { href: `${home}#gallery`, label: t.nav.gallery },
     { href: `${home}#faq`, label: t.nav.faq },
   ];
@@ -129,7 +130,7 @@ export function Header({ t, locale, paths }: Props) {
         }`}
       >
         <nav className="container-page flex flex-col gap-1 pb-6 pt-2" aria-label={t.nav.menu}>
-          {[...links, { href: "#download", label: t.nav.download }].map((l) => (
+          {[...links, { href: `${home}#play`, label: t.nav.play }, { href: `${home}#download`, label: t.nav.download }].map((l) => (
             <a
               key={l.href}
               href={l.href}

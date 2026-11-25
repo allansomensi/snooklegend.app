@@ -1,9 +1,10 @@
 import { BookOpen, Check, Globe } from "lucide-react";
-import type { Dict } from "@/i18n";
+import type { Dict, Locale } from "@/i18n";
+import { pagePath } from "@/lib/routes";
 import { SectionHeading } from "./Section";
 import { Shot } from "./Shot";
 
-export function Rules({ t, shotsDir }: { t: Dict; shotsDir: string }) {
+export function Rules({ t, shotsDir, locale }: { t: Dict; shotsDir: string; locale: Locale }) {
   const r = t.rules;
   return (
     <section id="rules" aria-labelledby="rules-title" className="defer-render relative py-24 [--defer-size:1500px] sm:py-32">
@@ -40,7 +41,12 @@ export function Rules({ t, shotsDir }: { t: Dict; shotsDir: string }) {
             <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-gold-400/15 text-gold-300 ring-1 ring-gold-400/25">
               <BookOpen className="size-5" />
             </span>
-            <p className="text-[15px] leading-relaxed text-mist">{r.note}</p>
+            <div>
+              <p className="text-[15px] leading-relaxed text-mist">{r.note}</p>
+              <a href={pagePath(locale, "rules")} className="mt-3 inline-block font-semibold text-gold-300 transition hover:text-gold-200">
+                {r.guide} →
+              </a>
+            </div>
           </div>
           <div className="overflow-hidden rounded-2xl ring-1 ring-white/10">
             <Shot dir={shotsDir} name="08-rules" alt={t.gallery.items[7]} sizes="(max-width: 1024px) 100vw, 640px" />

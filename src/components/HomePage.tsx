@@ -47,16 +47,29 @@ export async function HomePage({ locale }: { locale: Locale }) {
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   };
 
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: t.faq.items.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  };
+  const siteLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Snook Legend",
+    url: SITE_URL + LOCALE_INFO[locale].path,
+    inLanguage: htmlLang,
+  };
+
   return (
     <PlatformProvider t={{ modal: t.modal, download: t.download, os: t.os }} release={release} locale={htmlLang}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, siteLd, faqLd]).replace(/</g, "\\u003c") }} />
       <Header t={{ nav: t.nav, hero: t.hero, os: t.os }} locale={locale} />
       <main id="main">
         <Hero t={t} locale={htmlLang} shotsDir={shotsDir} />
         <Stats t={t} />
         <Features t={t} shotsDir={shotsDir} />
         <PlaySection t={t} />
-        <Rules t={t} shotsDir={shotsDir} />
+        <Rules t={t} shotsDir={shotsDir} locale={locale} />
         <Opponents t={t} />
         <section id="gallery" aria-labelledby="gallery-title" className="defer-render relative py-24 [--defer-size:1800px] sm:py-32">
           <div className="container-page">
