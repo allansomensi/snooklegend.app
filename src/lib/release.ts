@@ -52,11 +52,12 @@ async function fetchLatest(): Promise<ReleaseInfo> {
   if (token) headers.Authorization = `Bearer ${token}`;
 
   const url = `https://api.github.com/repos/${REPO}/releases/latest`;
-  let res = await fetch(url, { headers, signal: AbortSignal.timeout(15000) });
+  // Kept an hour: the pages made again at run time (ISR) don't ask GitHub each time.
+  let res = await fetch(url, { headers, signal: AbortSignal.timeout(15000), next: { revalidate: 3600 } });
   if ((res.status === 401 || res.status === 403) && headers.Authorization) {
     // A token that doesn't work here: the release is public, so ask without it.
     delete headers.Authorization;
-    res = await fetch(url, { headers, signal: AbortSignal.timeout(15000) });
+    res = await fetch(url, { headers, signal: AbortSignal.timeout(15000), next: { revalidate: 3600 } });
   }
   if (!res.ok) throw new Error(`GitHub answered ${res.status}`);
   const rel = (await res.json()) as GhRelease;
@@ -68,7 +69,7 @@ async function fetchLatest(): Promise<ReleaseInfo> {
   const sums = rel.assets.find((a) => a.name === ASSETS.checksums);
   if (sums) {
     try {
-      const text = await fetch(sums.browser_download_url, { signal: AbortSignal.timeout(15000) }).then((r) =>
+      const text = await fetch(sums.browser_download_url, { signal: AbortSignal.timeout(15000), next: { revalidate: 3600 } }).then((r) =>
         r.ok ? r.text() : "",
       );
       for (const line of text.split("\n")) {

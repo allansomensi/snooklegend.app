@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { getDict, LOCALE_INFO, LOCALES, type Locale } from "@/i18n";
 import { rankingPath } from "./ranking";
+import { languagesOf } from "./routes";
 import { legalPath, SITE_URL, type LegalDoc } from "./site";
 
 export const VIEWPORT: Viewport = {
@@ -59,6 +60,59 @@ export function buildMetadata(locale: Locale): Metadata {
     },
     robots: { index: true, follow: true },
     formatDetection: { telephone: false },
+  };
+}
+
+/**
+ * A page's metadata (on top of its language's, from the layout): its title
+ * (the layout's template adds " · Snook Legend"), description, canonical
+ * address and the same page in the other languages, and its cards for
+ * social networks. `image: false` leaves the picture to an
+ * `opengraph-image` next to the page.
+ */
+export function pageMetadata({
+  locale,
+  pathOf,
+  title,
+  description,
+  type = "website",
+  image = { url: "/og.jpg", width: 1200, height: 630 },
+  index = true,
+}: {
+  locale: Locale;
+  pathOf: (l: Locale) => string;
+  title: string;
+  description: string;
+  type?: "website" | "article" | "profile";
+  image?: { url: string; width: number; height: number; alt?: string } | false;
+  index?: boolean;
+}): Metadata {
+  const t = getDict(locale);
+  const info = LOCALE_INFO[locale];
+  const full = `${title} · Snook Legend`;
+  const images = image ? [{ ...image, alt: image.alt ?? t.meta.ogAlt }] : undefined;
+  return {
+    title,
+    description,
+    alternates: { canonical: pathOf(locale), languages: languagesOf(pathOf) },
+    openGraph: {
+      type,
+      url: pathOf(locale),
+      siteName: "Snook Legend",
+      title: full,
+      description,
+      locale: info.og,
+      alternateLocale: LOCALES.filter((l) => l !== locale).map((l) => LOCALE_INFO[l].og),
+      ...(images ? { images } : {}),
+    },
+    twitter: {
+      // A small square picture (a player's) makes a summary card; a wide one, a large card.
+      card: image && image.width < 600 ? "summary" : "summary_large_image",
+      title: full,
+      description,
+      ...(images ? { images: images.map((i) => i.url) } : {}),
+    },
+    robots: index ? { index: true, follow: true } : { index: false, follow: true },
   };
 }
 
