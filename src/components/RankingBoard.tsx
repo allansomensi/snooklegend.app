@@ -13,6 +13,7 @@ import {
   type RankingEntry,
   type Rules,
 } from "@/lib/ranking";
+import { playerPath } from "@/lib/routes";
 import { Flag } from "./Flag";
 
 type T = Dict["ranking"];
@@ -185,7 +186,7 @@ export function RankingBoard({ t, locale }: { t: T; locale: Locale }) {
           </Message>
         ) : (
           <>
-            {podium.length > 0 && <Podium entries={podium} t={t} />}
+            {podium.length > 0 && <Podium entries={podium} t={t} locale={locale} />}
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <label className="relative block w-full sm:max-w-xs">
                 <span className="sr-only">{t.search}</span>
@@ -207,7 +208,7 @@ export function RankingBoard({ t, locale }: { t: T; locale: Locale }) {
               </p>
             </div>
             {rest.length > 0 ? (
-              <Table entries={rest} t={t} />
+              <Table entries={rest} t={t} locale={locale} />
             ) : (
               q && (
                 <Message>
@@ -255,14 +256,19 @@ function Loading({ t, slow }: { t: T; slow: boolean }) {
 }
 
 /** A name in its league's colour (red for the staff), with a crown for VIP. */
-function Name({ e, t, className = "" }: { e: RankingEntry; t: T; className?: string }) {
+function Name({ e, t, locale, className = "" }: { e: RankingEntry; t: T; locale: Locale; className?: string }) {
   const color = e.admin ? ADMIN_RED : tierOf(e.rating).color;
   return (
     <span className={`inline-flex min-w-0 items-center gap-2 ${className}`}>
       <Flag code={e.country} height={14} />
-      <span className="truncate font-semibold" style={{ color }} title={e.username}>
+      <a
+        href={playerPath(locale, e.username)}
+        className="truncate rounded font-semibold decoration-current/40 underline-offset-4 hover:underline"
+        style={{ color }}
+        title={e.username}
+      >
         {e.username}
-      </span>
+      </a>
       {e.vip && <Crown className="size-4 shrink-0 text-gold-400" aria-label={t.vip} />}
       {e.admin && (
         <span className="shrink-0 rounded-full bg-[#ff5245]/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#ff8a80]">
@@ -293,7 +299,7 @@ const MEDALS = [
 ];
 
 /** The top three, the first in the middle and highest. */
-function Podium({ entries, t }: { entries: RankingEntry[]; t: T }) {
+function Podium({ entries, t, locale }: { entries: RankingEntry[]; t: T; locale: Locale }) {
   return (
     <ol className="grid gap-4 sm:grid-cols-3 sm:items-end">
       {entries.map((e, i) => {
@@ -326,7 +332,7 @@ function Podium({ entries, t }: { entries: RankingEntry[]; t: T }) {
               </div>
               {first && <p className="mt-3 font-display text-sm font-bold tracking-widest text-gold-300">#1</p>}
               <div className={`${first ? "mt-2" : "mt-4"} flex justify-center`}>
-                <Name e={e} t={t} className="max-w-full text-lg" />
+                <Name e={e} t={t} locale={locale} className="max-w-full text-lg" />
               </div>
               <p
                 className={`mt-2 font-display font-extrabold tracking-tight text-cream sm:mt-3 ${first ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl"}`}
@@ -347,7 +353,7 @@ function Podium({ entries, t }: { entries: RankingEntry[]; t: T }) {
   );
 }
 
-function Table({ entries, t }: { entries: RankingEntry[]; t: T }) {
+function Table({ entries, t, locale }: { entries: RankingEntry[]; t: T; locale: Locale }) {
   return (
     <div className="mt-4 overflow-hidden rounded-3xl bg-ink-900/80 ring-1 ring-white/[0.07]">
       <table className="w-full border-collapse text-left">
@@ -385,7 +391,7 @@ function Table({ entries, t }: { entries: RankingEntry[]; t: T }) {
                   {e.rank}
                 </td>
                 <td className="max-w-0 px-3 py-3.5">
-                  <Name e={e} t={t} className="max-w-full text-[15px]" />
+                  <Name e={e} t={t} locale={locale} className="max-w-full text-[15px]" />
                   <span className="mt-1 block md:hidden">
                     <League rating={e.rating} t={t} />
                   </span>
