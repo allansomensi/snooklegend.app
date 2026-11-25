@@ -1,0 +1,51 @@
+[
+ {
+  "username": "ana",
+  "country": "BR",
+  "since": 1782040000,
+  "months": 5,
+  "vip": true
+ },
+ {
+  "username": "carla",
+  "country": "ES",
+  "since": 1763896000,
+  "months": 12,
+  "vip": false
+ },
+ {
+  "username": "kai",
+  "country": "NZ",
+  "since": 1792408000,
+  "months": 1,
+  "vip": true
+ },
+ {
+  "username": "lucia",
+  "country": "MX",
+  "since": 1787224000,
+  "months": 3,
+  "vip": true
+ },
+ {
+  "username": "hans",
+  "country": "DE",
+  "since": 1774264000,
+  "months": 8,
+  "vip": true
+ },
+ {
+  "username": "ines",
+  "country": "PT",
+  "since": 1789816000,
+  "months": 2,
+  "vip": false
+ },
+ {
+  "username": "joao",
+  "country": "BR",
+  "since": 1776856000,
+  "months": 7,
+  "vip": true
+ }
+]

@@ -1,0 +1,114 @@
+{
+ "id": 43,
+ "name": "Black Friday Arena",
+ "rules": "brazilian",
+ "format": "arena",
+ "size": 64,
+ "state": "running",
+ "starts_at": 1794997600,
+ "ends_at": 1795001200,
+ "rated": false,
+ "entry_fee": 50,
+ "prize_pool": 1400,
+ "prizes": [
+  700,
+  420,
+  280
+ ],
+ "item_prize": "frame_fire",
+ "champion": null,
+ "runner_up": null,
+ "players": [
+  {
+   "username": "diego",
+   "country": "AR",
+   "seed": null
+  },
+  {
+   "username": "ana",
+   "country": "BR",
+   "seed": null
+  },
+  {
+   "username": "lucia",
+   "country": "MX",
+   "seed": null
+  },
+  {
+   "username": "kai",
+   "country": "NZ",
+   "seed": null
+  },
+  {
+   "username": "joao",
+   "country": "BR",
+   "seed": null
+  },
+  {
+   "username": "pia",
+   "country": "IT",
+   "seed": null
+  },
+  {
+   "username": "oscar",
+   "country": "CL",
+   "seed": null
+  },
+  {
+   "username": "nadia",
+   "country": "EG",
+   "seed": null
+  }
+ ],
+ "rounds": [],
+ "standings": [
+  {
+   "username": "diego",
+   "points": 22,
+   "games": 9,
+   "streak": 3
+  },
+  {
+   "username": "ana",
+   "points": 18,
+   "games": 8,
+   "streak": 1
+  },
+  {
+   "username": "lucia",
+   "points": 14,
+   "games": 10,
+   "streak": 0
+  },
+  {
+   "username": "kai",
+   "points": 12,
+   "games": 7,
+   "streak": 2
+  },
+  {
+   "username": "joao",
+   "points": 8,
+   "games": 6,
+   "streak": 0
+  },
+  {
+   "username": "pia",
+   "points": 4,
+   "games": 5,
+   "streak": 0
+  },
+  {
+   "username": "oscar",
+   "points": 2,
+   "games": 3,
+   "streak": 0
+  },
+  {
+   "username": "nadia",
+   "points": 0,
+   "games": 2,
+   "streak": 0
+  }
+ ]
+}

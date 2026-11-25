@@ -356,3 +356,34 @@ details > summary::-webkit-details-marker { display: none; }
   60% { transform: translate(-50%, -50%) translate(0, -36%); }
   80% { transform: translate(-50%, -50%) translate(32%, 8%); }
 }
+
+/* ── A VIP player's profile: a gold frame, slowly catching the light ─────── */
+@property --vip-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.vip-frame {
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(180deg, #1a1408, #0b100c 70%) padding-box,
+    conic-gradient(from var(--vip-angle), #f5e1aa, #a87a2a 18%, #fbf1d6 32%, #d4a243 50%, #6b4a16 66%, #efcf82 82%, #f5e1aa) border-box;
+  box-shadow:
+    0 30px 80px -34px rgb(232 188 94 / 0.5),
+    0 0 0 1px rgb(0 0 0 / 0.4),
+    inset 0 1px 0 rgb(255 255 255 / 0.08);
+  animation: vip-turn 14s linear infinite;
+}
+.vip-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    radial-gradient(60% 90% at 12% 0%, rgb(232 188 94 / 0.2), transparent 62%),
+    radial-gradient(45% 70% at 100% 100%, rgb(212 162 67 / 0.12), transparent 70%),
+    repeating-linear-gradient(135deg, rgb(255 255 255 / 0.018) 0 2px, transparent 2px 14px);
+}
+@keyframes vip-turn {
+  to { --vip-angle: 360deg; }
+}

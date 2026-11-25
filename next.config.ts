@@ -11,6 +11,13 @@ const nextConfig: NextConfig = {
   // One 404 page for the whole site (there are several root layouts).
   experimental: { globalNotFound: true },
   reactStrictMode: true,
+  async redirects() {
+    return [
+      // A player's page in Portuguese is `/jogador/<name>/` (the address the
+      // game shares); the one the other pages' scheme would give goes there.
+      { source: "/pt/jogador/:name", destination: "/jogador/:name/", permanent: true },
+    ];
+  },
   async headers() {
     const common = [
       { key: "X-Content-Type-Options", value: "nosniff" },

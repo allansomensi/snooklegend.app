@@ -1,0 +1,295 @@
+{
+ "username": "ana",
+ "country": "BR",
+ "avatar": "pic_crown",
+ "vip": true,
+ "supporter": true,
+ "role": "player",
+ "created_at": 1760440000,
+ "last_seen_days": 0,
+ "level": 23,
+ "frame": "frame_gold",
+ "cue": "cue_dragon",
+ "cue_rarity": "legendary",
+ "ratings": [
+  {
+   "rules": "brazilian",
+   "rating": 1652,
+   "peak": 1702,
+   "tier": "expert",
+   "games": 120,
+   "wins": 70,
+   "rank": 12
+  },
+  {
+   "rules": "official",
+   "rating": 1500,
+   "peak": 1500,
+   "tier": "expert",
+   "games": 0,
+   "wins": 0,
+   "rank": null
+  }
+ ],
+ "achievements": [
+  {
+   "code": "golden_break",
+   "name": "Golden break",
+   "description": "Win a rated game by sinking only the 8-ball on the break.",
+   "unlocked_at": 1795000000,
+   "medal": "ruby",
+   "secret": true
+  },
+  {
+   "code": "rating_1500",
+   "name": "Expert",
+   "description": "Reach a rating of 1500.",
+   "unlocked_at": 1794395200,
+   "medal": "silver",
+   "secret": false
+  },
+  {
+   "code": "wins_100",
+   "name": "Centurion",
+   "description": "Win 100 rated games.",
+   "unlocked_at": 1793790400,
+   "medal": "gold",
+   "secret": false
+  },
+  {
+   "code": "games_100",
+   "name": "Hustler",
+   "description": "Play 100 rated games.",
+   "unlocked_at": 1793185600,
+   "medal": "silver",
+   "secret": false
+  },
+  {
+   "code": "tournament_win",
+   "name": "Champion",
+   "description": "Win a tournament.",
+   "unlocked_at": 1792580800,
+   "medal": "gold",
+   "secret": false
+  },
+  {
+   "code": "streak_5",
+   "name": "Hot hand",
+   "description": "Win 5 rated games in a row.",
+   "unlocked_at": 1791976000,
+   "medal": "silver",
+   "secret": false
+  },
+  {
+   "code": "games_1",
+   "name": "First break",
+   "description": "Play your first rated game.",
+   "unlocked_at": 1791371200,
+   "medal": "bronze",
+   "secret": false
+  },
+  {
+   "code": "wins_1",
+   "name": "First blood",
+   "description": "Win a rated game.",
+   "unlocked_at": 1790766400,
+   "medal": "bronze",
+   "secret": false
+  },
+  {
+   "code": "runout_1",
+   "name": "Break and run",
+   "description": "Win a rated game from the break without your opponent getting a shot.",
+   "unlocked_at": 1790161600,
+   "medal": "silver",
+   "secret": false
+  },
+  {
+   "code": "veteran_365",
+   "name": "First anniversary",
+   "description": "Have an account for a year.",
+   "unlocked_at": 1789556800,
+   "medal": "gold",
+   "secret": false
+  },
+  {
+   "code": "ladder_champion",
+   "name": "Champion of the tour",
+   "description": "Beat all fifteen opponents of the computer tour.",
+   "unlocked_at": 1788952000,
+   "medal": "diamond",
+   "secret": false
+  },
+  {
+   "code": "event_spring_2027",
+   "name": "Spring fling",
+   "description": "A new event the site doesn't know yet.",
+   "unlocked_at": 1788347200,
+   "medal": null,
+   "secret": false
+  }
+ ],
+ "trophies": [
+  {
+   "kind": "tournament",
+   "name": "Saturday Cup",
+   "players": 16,
+   "at": 1794740800,
+   "tournament_id": 42
+  },
+  {
+   "kind": "tournament",
+   "name": "Halloween Arena",
+   "players": 38,
+   "at": 1792840000,
+   "tournament_id": 40
+  },
+  {
+   "kind": "ladder",
+   "name": "Computer tour",
+   "players": null,
+   "at": 1789816000,
+   "tournament_id": null
+  }
+ ],
+ "recent": [
+  {
+   "id": 9001,
+   "at": 1795000000,
+   "rules": "official",
+   "rated": true,
+   "opponent": "bob",
+   "opponent_country": "PT",
+   "won": true,
+   "delta": 6,
+   "reason": "eight_in_wrong_pocket"
+  },
+  {
+   "id": 9000,
+   "at": 1794994600,
+   "rules": "brazilian",
+   "rated": true,
+   "opponent": "carla",
+   "opponent_country": "ES",
+   "won": false,
+   "delta": -5,
+   "reason": "abandoned"
+  },
+  {
+   "id": 8999,
+   "at": 1794989200,
+   "rules": "brazilian",
+   "rated": true,
+   "opponent": "diego",
+   "opponent_country": "AR",
+   "won": true,
+   "delta": 13,
+   "reason": "pocketed_eight"
+  },
+  {
+   "id": 8998,
+   "at": 1794983800,
+   "rules": "official",
+   "rated": true,
+   "opponent": "emma",
+   "opponent_country": "US",
+   "won": false,
+   "delta": -7,
+   "reason": "pocketed_eight"
+  },
+  {
+   "id": 8997,
+   "at": 1794978400,
+   "rules": "brazilian",
+   "rated": false,
+   "opponent": "fumiko",
+   "opponent_country": "JP",
+   "won": true,
+   "delta": null,
+   "reason": "eight_in_wrong_pocket"
+  },
+  {
+   "id": 8996,
+   "at": 1794973000,
+   "rules": "brazilian",
+   "rated": true,
+   "opponent": "gustavo",
+   "opponent_country": "BR",
+   "won": true,
+   "delta": 5,
+   "reason": "abandoned"
+  },
+  {
+   "id": 8995,
+   "at": 1794967600,
+   "rules": "official",
+   "rated": true,
+   "opponent": "hans",
+   "opponent_country": "DE",
+   "won": true,
+   "delta": 13,
+   "reason": "pocketed_eight"
+  },
+  {
+   "id": 8994,
+   "at": 1794962200,
+   "rules": "brazilian",
+   "rated": true,
+   "opponent": "ines",
+   "opponent_country": "PT",
+   "won": false,
+   "delta": -14,
+   "reason": "eight_pocketed_on_foul"
+  },
+  {
+   "id": 8993,
+   "at": 1794956800,
+   "rules": "brazilian",
+   "rated": true,
+   "opponent": "bob",
+   "opponent_country": "PT",
+   "won": true,
+   "delta": 4,
+   "reason": "abandoned"
+  },
+  {
+   "id": 8992,
+   "at": 1794951400,
+   "rules": "official",
+   "rated": false,
+   "opponent": "carla",
+   "opponent_country": "ES",
+   "won": true,
+   "delta": null,
+   "reason": "pocketed_eight"
+  },
+  {
+   "id": 8991,
+   "at": 1794946000,
+   "rules": "brazilian",
+   "rated": true,
+   "opponent": "diego",
+   "opponent_country": "AR",
+   "won": false,
+   "delta": -4,
+   "reason": "abandoned"
+  },
+  {
+   "id": 8990,
+   "at": 1794940600,
+   "rules": "brazilian",
+   "rated": true,
+   "opponent": "emma",
+   "opponent_country": "US",
+   "won": false,
+   "delta": -8,
+   "reason": "eight_in_wrong_pocket"
+  }
+ ],
+ "career": {
+  "games": 140,
+  "wins": 80,
+  "break_and_runs": 3,
+  "best_streak": 7
+ }
+}

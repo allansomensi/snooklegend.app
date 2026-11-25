@@ -1,0 +1,208 @@
+{
+ "id": 42,
+ "name": "Saturday Cup",
+ "rules": "official",
+ "format": "knockout",
+ "size": 16,
+ "state": "finished",
+ "starts_at": 1794740800,
+ "ends_at": 1794746200,
+ "rated": true,
+ "entry_fee": 100,
+ "prize_pool": 3400,
+ "prizes": [
+  2380,
+  1020
+ ],
+ "item_prize": "cue_phoenix",
+ "champion": "ana",
+ "runner_up": "fumiko",
+ "players": [
+  {
+   "username": "ana",
+   "country": "BR",
+   "seed": 1
+  },
+  {
+   "username": "bob",
+   "country": "PT",
+   "seed": 2
+  },
+  {
+   "username": "carla",
+   "country": "ES",
+   "seed": 3
+  },
+  {
+   "username": "diego",
+   "country": "AR",
+   "seed": 4
+  },
+  {
+   "username": "emma",
+   "country": "US",
+   "seed": 5
+  },
+  {
+   "username": "fumiko",
+   "country": "JP",
+   "seed": 6
+  },
+  {
+   "username": "gustavo",
+   "country": "BR",
+   "seed": 7
+  },
+  {
+   "username": "hans",
+   "country": "DE",
+   "seed": 8
+  },
+  {
+   "username": "ines",
+   "country": "PT",
+   "seed": 9
+  },
+  {
+   "username": "joao",
+   "country": "BR",
+   "seed": 10
+  },
+  {
+   "username": "kai",
+   "country": "NZ",
+   "seed": 11
+  },
+  {
+   "username": "lucia",
+   "country": "MX",
+   "seed": 12
+  },
+  {
+   "username": "mateo",
+   "country": "CO",
+   "seed": 13
+  },
+  {
+   "username": "nadia",
+   "country": "EG",
+   "seed": 14
+  }
+ ],
+ "rounds": [
+  [
+   {
+    "a": "ana",
+    "b": null,
+    "winner": "ana",
+    "match_id": null,
+    "score": ""
+   },
+   {
+    "a": "hans",
+    "b": "ines",
+    "winner": "ines",
+    "match_id": 8002,
+    "score": ""
+   },
+   {
+    "a": "diego",
+    "b": "mateo",
+    "winner": "diego",
+    "match_id": 8004,
+    "score": ""
+   },
+   {
+    "a": "emma",
+    "b": "lucia",
+    "winner": "lucia",
+    "match_id": 8006,
+    "score": ""
+   },
+   {
+    "a": "bob",
+    "b": null,
+    "winner": "bob",
+    "match_id": null,
+    "score": ""
+   },
+   {
+    "a": "gustavo",
+    "b": "joao",
+    "winner": "gustavo",
+    "match_id": 8010,
+    "score": ""
+   },
+   {
+    "a": "carla",
+    "b": "nadia",
+    "winner": "carla",
+    "match_id": 8012,
+    "score": ""
+   },
+   {
+    "a": "fumiko",
+    "b": "kai",
+    "winner": "fumiko",
+    "match_id": 8014,
+    "score": "2-1"
+   }
+  ],
+  [
+   {
+    "a": "ana",
+    "b": "ines",
+    "winner": "ana",
+    "match_id": 8110,
+    "score": ""
+   },
+   {
+    "a": "diego",
+    "b": "lucia",
+    "winner": "lucia",
+    "match_id": 8112,
+    "score": ""
+   },
+   {
+    "a": "bob",
+    "b": "gustavo",
+    "winner": "gustavo",
+    "match_id": 8114,
+    "score": ""
+   },
+   {
+    "a": "carla",
+    "b": "fumiko",
+    "winner": "fumiko",
+    "match_id": 8116,
+    "score": ""
+   }
+  ],
+  [
+   {
+    "a": "ana",
+    "b": "lucia",
+    "winner": "ana",
+    "match_id": 8120,
+    "score": ""
+   },
+   {
+    "a": "gustavo",
+    "b": "fumiko",
+    "winner": "fumiko",
+    "match_id": 8122,
+    "score": ""
+   }
+  ],
+  [
+   {
+    "a": "ana",
+    "b": "fumiko",
+    "winner": "ana",
+    "match_id": 8130,
+    "score": ""
+   }
+  ]
+ ],
+ "standings": []
+}

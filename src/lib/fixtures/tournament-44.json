@@ -1,0 +1,104 @@
+{
+ "id": 44,
+ "name": "Friday Night Eight",
+ "rules": "brazilian",
+ "format": "knockout",
+ "size": 8,
+ "state": "running",
+ "starts_at": 1794998200,
+ "ends_at": null,
+ "rated": true,
+ "entry_fee": 0,
+ "prize_pool": 800,
+ "prizes": [
+  560,
+  240
+ ],
+ "item_prize": null,
+ "champion": null,
+ "runner_up": null,
+ "players": [
+  {
+   "username": "ana",
+   "country": "BR",
+   "seed": 1
+  },
+  {
+   "username": "bob",
+   "country": "PT",
+   "seed": 2
+  },
+  {
+   "username": "carla",
+   "country": "ES",
+   "seed": 3
+  },
+  {
+   "username": "diego",
+   "country": "AR",
+   "seed": 4
+  },
+  {
+   "username": "emma",
+   "country": "US",
+   "seed": 5
+  },
+  {
+   "username": "fumiko",
+   "country": "JP",
+   "seed": 6
+  },
+  {
+   "username": "gustavo",
+   "country": "BR",
+   "seed": 7
+  },
+  {
+   "username": "hans",
+   "country": "DE",
+   "seed": 8
+  }
+ ],
+ "rounds": [
+  [
+   {
+    "a": "ana",
+    "b": "hans",
+    "winner": "ana",
+    "match_id": 8301,
+    "score": ""
+   },
+   {
+    "a": "emma",
+    "b": "diego",
+    "winner": "diego",
+    "match_id": 8302,
+    "score": ""
+   },
+   {
+    "a": "bob",
+    "b": "gustavo",
+    "winner": null,
+    "match_id": 8303,
+    "score": ""
+   },
+   {
+    "a": "fumiko",
+    "b": "carla",
+    "winner": "carla",
+    "match_id": 8304,
+    "score": ""
+   }
+  ],
+  [
+   {
+    "a": "ana",
+    "b": "diego",
+    "winner": null,
+    "match_id": 8311,
+    "score": ""
+   }
+  ]
+ ],
+ "standings": []
+}
