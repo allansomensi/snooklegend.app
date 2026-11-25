@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  checkSetting, clashes, countdownParts, exportRange, heatLevel, itemsOnDay, monthGrid, offsetLabel, sameValue, seriesKeys, seriesValue,
+  checkSetting, clashes, prizeSplit, countdownParts, exportRange, heatLevel, itemsOnDay, monthGrid, offsetLabel, sameValue, seriesKeys, seriesValue,
   sinkParts, toDateInput, topWithRest, weekOrder, zoneOffset,
 } from "./ops";
 import type { CalendarItem, CoinDay } from "./types";
@@ -169,5 +169,17 @@ describe("shades and countdowns", () => {
   it("count down in days, hours, minutes and seconds", () => {
     expect(countdownParts(90061)).toEqual([1, 1, 1, 1]);
     expect(countdownParts(-5)).toEqual([0, 0, 0, 0]);
+  });
+});
+
+describe("a tournament's prizes", () => {
+  it("are the usual shares", () => {
+    expect(prizeSplit(1000, 0, 0)).toEqual([700, 200]);
+    expect(prizeSplit(0, 5000, 0)).toEqual([3500, 1500]);
+  });
+
+  it("follow the champion's share", () => {
+    expect(prizeSplit(1000, 5000, 70)).toEqual([4200, 1800]);
+    expect(prizeSplit(900, 0, 100)).toEqual([900, 0]);
   });
 });

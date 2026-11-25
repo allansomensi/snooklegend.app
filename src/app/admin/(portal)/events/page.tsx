@@ -1,6 +1,7 @@
 "use client";
 
-import { CalendarDays, Coins, Star, X } from "lucide-react";
+import { CalendarDays, Coins, Star, Trophy, X } from "lucide-react";
+import Link from "next/link";
 import { EventDialog } from "@/admin/components/events/event-dialog";
 import { EVENT_STATUS, eventKind, eventWhat } from "@/admin/components/events/event-words";
 import { useRefresh } from "@/admin/components/providers";
@@ -43,6 +44,7 @@ export default function EventsPage() {
           <div>
             <PageHead title={t("Events")} sub={t("Experience or coins that count more for a while, and themed tournaments")}>
               <Updated at={updatedAt(q)} onRefresh={() => void q.refetch()} />
+              <Link className="btn" href="/admin/tournaments"><Trophy className="icon" aria-hidden />{t("Official tournaments")}</Link>
               {admin ? (
                 <Btn label={t("New event")} kind="primary" icon={CalendarDays}
                   onClick={() => dialogs.open((close) => <EventDialog limits={d.limits} onClose={close} />)} />

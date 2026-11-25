@@ -5,10 +5,12 @@ import { useId, useRef, useState, type ReactNode } from "react";
 import { useRefresh } from "@/admin/components/providers";
 import { useLocale } from "@/admin/components/providers/locale";
 import { useToasts } from "@/admin/components/providers/toasts";
-import { Segmented, Spinner } from "@/admin/components/ui/bits";
+import { ItemLabel, ItemPicker, fromCatalog, useCatalog } from "@/admin/components/items";
+import { Btn, Segmented, Spinner } from "@/admin/components/ui/bits";
 import { Modal } from "@/admin/components/ui/modal";
 import { api } from "@/admin/lib/api";
 import { charCount, nowSecs } from "@/admin/lib/format";
+import { prizeSplit } from "@/admin/lib/ops";
 import { RULES } from "@/admin/lib/rules";
 import type { EventLimits, GameEvent, RulesId } from "@/admin/lib/types";
 import { eventWhat, fromLocalInput, nextAt, toLocalInput, zoneLabel } from "./event-words";
@@ -31,13 +33,21 @@ function defaultTimes(kind: Kind, format: Format, keepStart?: number): [number, 
   return [minuteNow(), minuteNow() + 86400];
 }
 
-export function EventDialog({ limits, onClose }: { limits: EventLimits; onClose: () => void }) {
+export function EventDialog({ limits, onClose, tournament: only, houseCut = 10 }: {
+  limits: EventLimits;
+  onClose: () => void;
+  /** Only an official tournament (the Official tournaments page). */
+  tournament?: boolean;
+  /** The house's share of the entry fees, percent (for the prize pool shown). */
+  houseCut?: number;
+}) {
   const l = useLocale();
-  const { t, tf, fmtNum, fmtDate, fmtDuration } = l;
+  const { t, tf, tn, fmtNum, fmtDate, fmtDuration, fmtMinutes } = l;
+  const catalog = useCatalog();
   const { toast } = useToasts();
   const refresh = useRefresh();
   const uid = useId();
-  const [kind, setKind] = useState<Kind>("xp");
+  const [kind, setKind] = useState<Kind>(only ? "tournament" : "xp");
   const [mult, setMult] = useState(2);
   const [format, setFormat] = useState<Format>("arena");
   const [size, setSize] = useState(limits.knockout_sizes.includes(8) ? 8 : limits.knockout_sizes[0]);
@@ -46,7 +56,10 @@ export function EventDialog({ limits, onClose }: { limits: EventLimits; onClose:
   const [rated, setRated] = useState(true);
   const [fee, setFee] = useState("0");
   const [prize, setPrize] = useState("0");
-  const [[starts, ends], setTimes] = useState<[string, string]>(() => defaultTimes("xp", "arena").map(toLocalInput) as [string, string]);
+  const [share, setShare] = useState("0");
+  const [itemPrize, setItemPrize] = useState("");
+  const [pickItem, setPickItem] = useState(false);
+  const [[starts, ends], setTimes] = useState<[string, string]>(() => defaultTimes(only ? "tournament" : "xp", "arena").map(toLocalInput) as [string, string]);
   const [error, setError] = useState<{ text: string; where?: "fee" | "prize" } | null>(null);
   const [sending, setSending] = useState(false);
   const feeRef = useRef<HTMLInputElement>(null);
@@ -74,7 +87,18 @@ export function EventDialog({ limits, onClose }: { limits: EventLimits; onClose:
   const b = fromLocalInput(ends);
   const name = tour ? t("Name") : t("Title");
   const placeholder = tour ? t("Halloween Cup") : kind === "coins" ? t("Coins weekend") : t("Double XP weekend");
-  const shape = { kind, multiplier: mult, format, size, rules, rated, entry_fee: Number(fee) || 0, prize: Number(prize) || 0, starts_at: a, ends_at: b };
+  const shareN = share.trim() === "" ? 0 : Number(share);
+  const shape = { kind, multiplier: mult, format, size, rules, rated, entry_fee: Number(fee) || 0, prize: Number(prize) || 0, starts_at: a, ends_at: b, champion_share: shareN, item_prize: itemPrize };
+  const earned = (catalog.data?.catalog || []).filter((i) => i.how === "earned").map(fromCatalog);
+  const prizeItem = catalog.data?.catalog.find((i) => i.code === itemPrize);
+  // The prize pool if every seat is taken (an arena: as many as a knockout of 16).
+  const seats = format === "knockout" ? size : 16;
+  const fees = Math.floor(((Number(fee) || 0) * seats * (100 - houseCut)) / 100);
+  const [first, second] = prizeSplit(fees, Number(prize) || 0, shareN);
+  const setArena = (min: number) => {
+    const s0 = fromLocalInput(starts) || defaultTimes("tournament", "arena")[0];
+    setSecs(s0, s0 + min * 60);
+  };
 
   const presets: [string, () => void][] = tour
     ? [
@@ -114,6 +138,10 @@ export function EventDialog({ limits, onClose }: { limits: EventLimits; onClose:
     else if (b <= start) problem = { text: t("The event must end after it starts.") };
     else if (tour && entryFee === null) problem = { text: tf("The entry fee must be a whole number from 0 to {max}.", { max: fmtNum(limits.max_entry_fee) }), where: "fee" };
     else if (tour && housePrize === null) problem = { text: tf("The house's prize must be a whole number from 0 to {max}.", { max: fmtNum(limits.max_prize) }), where: "prize" };
+    else if (tour && shareN !== 0 && !(Number.isInteger(shareN) && shareN >= 50 && shareN <= 100)) problem = { text: t("The champion's share is 50% to 100% of the prizes.") };
+    else if (tour && format === "arena" && limits.arena_minutes && (b - start < limits.arena_minutes[0] * 60 || b - start > limits.arena_minutes[1] * 60)) {
+      problem = { text: tf("An arena lasts from {min} to {max}.", { min: fmtMinutes(limits.arena_minutes[0]), max: fmtMinutes(limits.arena_minutes[1]) }) };
+    }
     if (problem) {
       setError(problem);
       if (problem.where === "fee") feeRef.current?.focus();
@@ -124,7 +152,10 @@ export function EventDialog({ limits, onClose }: { limits: EventLimits; onClose:
     try {
       await api("/events", {
         method: "POST",
-        body: { kind, title: title.trim(), multiplier: mult, starts_at: start, ends_at: b, format, size, rules, rated, entry_fee: tour ? entryFee : 0, prize: tour ? housePrize : 0 },
+        body: {
+          kind, title: title.trim(), multiplier: mult, starts_at: start, ends_at: b, format, size, rules, rated, entry_fee: tour ? entryFee : 0, prize: tour ? housePrize : 0,
+          ...(tour ? { champion_share: shareN, item_prize: itemPrize } : {}),
+        },
       });
       toast(t("Event scheduled."));
       void refresh();
@@ -146,7 +177,7 @@ export function EventDialog({ limits, onClose }: { limits: EventLimits; onClose:
 
   return (
     <Modal
-      title={t("New event")}
+      title={only ? t("New official tournament") : t("New event")}
       text={tf("Times in your time zone ({zone}).", { zone: zoneLabel() })}
       icon={CalendarDays}
       wide
@@ -168,7 +199,7 @@ export function EventDialog({ limits, onClose }: { limits: EventLimits; onClose:
         </>
       }
     >
-      {field(t("Kind of event"), (
+      {only ? null : field(t("Kind of event"), (
         <Segmented<Kind> name={t("Kind of event")} value={kind} onChange={chooseKind}
           options={[["xp", t("Experience")], ["coins", t("Coins from games")], ["tournament", t("Themed tournament")]]} />
       ))}
@@ -208,7 +239,13 @@ export function EventDialog({ limits, onClose }: { limits: EventLimits; onClose:
           ))}
           {format === "knockout"
             ? field(t("Seats"), <Segmented<number> name={t("Seats")} value={size} onChange={setSize} options={limits.knockout_sizes.map((s) => [s, String(s)])} />)
-            : null}
+            : field(t("Arena length"), (
+              <div className="chips" role="group" aria-label={t("Arena length")}>
+                {[30, 60, 90, 120, 180].filter((m) => !limits.arena_minutes || (m >= limits.arena_minutes[0] && m <= limits.arena_minutes[1])).map((m) => (
+                  <button key={m} type="button" className={"chip" + (b - a === m * 60 ? " on" : "")} onClick={() => setArena(m)}>{fmtMinutes(m)}</button>
+                ))}
+              </div>
+            ), { hint: limits.arena_minutes ? tf("From the start to the end: {min} to {max}.", { min: fmtMinutes(limits.arena_minutes[0]), max: fmtMinutes(limits.arena_minutes[1]) }) : null })}
           <label className="check">
             <input type="checkbox" checked={rated} onChange={(e) => setRated(e.target.checked)} />
             {t("Rated")}
@@ -223,8 +260,27 @@ export function EventDialog({ limits, onClose }: { limits: EventLimits; onClose:
                 max={limits.max_prize} step={100} value={prize} onChange={(e) => setPrize(e.target.value)} />
             ), { id: uid + "-prize" })}
           </div>
+          {field(t("The champion's share"), (
+            <div className="row">
+              <Segmented<string> name={t("The champion's share")} value={["0", "60", "70", "80", "100"].includes(share) ? share : "custom"}
+                onChange={(v) => setShare(v === "custom" ? "75" : v)} options={[["0", t("Usual")], ["60", "60%"], ["70", "70%"], ["80", "80%"], ["100", "100%"], ["custom", t("Other")]]} />
+              {["0", "60", "70", "80", "100"].includes(share) ? null : (
+                <input className="input num w-num" type="number" min={50} max={100} aria-label={t("The champion's share")} value={share} onChange={(e) => setShare(e.target.value)} />
+              )}
+            </div>
+          ), { hint: shareN ? tf("The champion gets {n}% of the prizes, the runner-up the rest.", { n: shareN }) : t("The usual: 70% and 20% of the fees after the house's cut; 70% and 30% of the house's prize.") })}
+          {field(t("An item for the champion"), (
+            <div className="stack">
+              <div className="row">
+                {itemPrize ? <ItemLabel code={itemPrize} name={prizeItem?.name} rarity={prizeItem?.rarity} /> : <span className="faint">{t("None")}</span>}
+                <Btn label={pickItem ? t("Done") : t("Choose…")} kind="sm" onClick={() => setPickItem((x) => !x)} disabled={!catalog.data} />
+                {itemPrize ? <Btn label={t("Remove")} kind="sm ghost" onClick={() => setItemPrize("")} /> : null}
+              </div>
+              {pickItem ? <ItemPicker label={t("An item for the champion")} items={earned} value={itemPrize} onChange={(v) => setItemPrize(String(v))} height={200} /> : null}
+            </div>
+          ), { hint: t("Only an item that is only won (never sold): the champion keeps it in their collection.") })}
           <div className="hint">
-            {t("The house's prize goes 70% to the champion and 30% to the runner-up, on top of the entry fees. The tournament opens for sign-up two hours before it starts, in Tournaments.")}
+            {t("The tournament opens for sign-up two hours before it starts, in Tournaments; signed-up players are reminded in their inbox 10 minutes before. The house's prize is paid only to players who won at the table.")}
           </div>
         </div>
       )}
@@ -235,6 +291,15 @@ export function EventDialog({ limits, onClose }: { limits: EventLimits; onClose:
         {a && b && b > a ? (
           <div className="muted">{tf("{from} → {to} ({length})", { from: fmtDate(a), to: fmtDate(b), length: fmtDuration(b - a) })}</div>
         ) : null}
+        {tour && (fees || Number(prize)) ? (
+          <div className="muted">
+            {tf("Prize pool with {n}: {pool} coins · champion {first}, runner-up {second}", {
+              n: tn(seats, "{n} player", "{n} players"), pool: fmtNum(fees + (Number(prize) || 0)), first: fmtNum(first), second: fmtNum(second),
+            })}
+            {" "}{tf("(the house keeps {n}% of the fees)", { n: houseCut })}
+          </div>
+        ) : null}
+        {tour && prizeItem ? <div className="muted">{tf("The champion also wins {item}", { item: prizeItem.name })}</div> : null}
       </div>
       {error ? (
         <div className="alert danger" role="alert">

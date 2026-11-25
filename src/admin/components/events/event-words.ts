@@ -17,7 +17,7 @@ export const EVENT_STATUS: Record<string, [string, string]> = {
   cancelled: [msg("Called off"), "danger"],
 };
 
-export type EventShape = Pick<GameEvent, "kind" | "multiplier" | "rules" | "format" | "size" | "rated" | "entry_fee" | "prize" | "starts_at" | "ends_at">;
+export type EventShape = Pick<GameEvent, "kind" | "multiplier" | "rules" | "format" | "size" | "rated" | "entry_fee" | "prize" | "starts_at" | "ends_at" | "champion_share" | "item_prize">;
 
 /** What an event does, in a line. */
 export function eventWhat(e: EventShape, l: Translator & Formatters) {
@@ -30,6 +30,8 @@ export function eventWhat(e: EventShape, l: Translator & Formatters) {
       e.rated ? t("rated") : t("casual"),
       e.entry_fee ? tf("entry {n} coins", { n: fmtNum(e.entry_fee) }) : t("free entry"),
       e.prize ? tf("the house adds {n} coins", { n: fmtNum(e.prize) }) : null,
+      e.champion_share ? tf("{n}% to the champion", { n: e.champion_share }) : null,
+      e.item_prize ? tf("item for the champion: {item}", { item: e.item_prize }) : null,
     ].filter(Boolean).join(" · ");
   }
   return tf("{what} ×{n}", { what: t(eventKind(e.kind)[0]), n: e.multiplier });

@@ -228,3 +228,19 @@ export function countdownParts(secs: number): [number, number, number, number] {
   const s = Math.max(0, Math.floor(secs));
   return [Math.floor(s / DAY), Math.floor((s % DAY) / 3600), Math.floor((s % 3600) / 60), s % 60];
 }
+
+// ----------------------------------------------------------- tournaments
+
+/** A tournament's prizes [champion, runner-up] from the entry fees left
+ * after the house's cut and the house's prize: with a champion's share
+ * (50–100 %), that share of both and the rest; else the usual, 70 % and
+ * 20 % of the fees, 70 % and 30 % of the house's prize. */
+export function prizeSplit(fees: number, house: number, share: number): [number, number] {
+  if (share >= 50) {
+    const pool = fees + house;
+    const first = Math.floor((pool * share) / 100);
+    return [first, pool - first];
+  }
+  const h = Math.floor(house * 0.7);
+  return [Math.floor(fees * 0.7) + h, Math.floor(fees * 0.2) + (house - h)];
+}

@@ -122,3 +122,73 @@
   .chat-line.pinned { background: var(--accent-soft); }
   .mention { color: var(--accent); font-weight: 650; }
 }
+
+/* The live settings. */
+@layer components {
+  .anchor { position: relative; top: -70px; }
+  .grow-0 { flex: 0 1 280px; }
+  .settings-list { display: grid; }
+  .setting-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 340px); gap: 18px; padding: 14px 18px; border-bottom: 1px solid var(--border); align-items: start; }
+  .setting-row:last-child { border-bottom: 0; }
+  .setting-row.dirty { background: var(--accent-soft); }
+  .sr-about { display: grid; gap: 4px; min-width: 0; }
+  .sr-name { font-weight: 650; }
+  .sr-text { color: var(--text-2); font-size: 13px; }
+  .sr-meta { gap: 8px; font-size: 12px; }
+  .sr-control { display: grid; gap: 6px; justify-items: stretch; }
+  .sr-control .error-text { font-size: 12px; color: var(--danger); }
+  .stack-tight { display: grid; gap: 4px; justify-items: end; }
+  .stack-tight .input, .stack-tight .textarea { width: 100%; }
+  .switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; }
+  .switch input { appearance: none; width: 38px; height: 22px; border-radius: 11px; background: var(--surface-3); border: 1px solid var(--border-strong); position: relative; cursor: pointer; margin: 0; transition: background .15s; }
+  .switch input::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--text-2); transition: transform .15s, background .15s; }
+  .switch input:checked { background: var(--accent); border-color: var(--accent); }
+  .switch input:checked::after { transform: translateX(16px); background: var(--on-accent); }
+  .switch input:disabled { opacity: .6; cursor: not-allowed; }
+  @media (max-width: 760px) { .setting-row { grid-template-columns: 1fr; gap: 10px; } }
+}
+@layer components { .w-num { width: 110px !important; flex: none; } }
+
+/* Maintenance's countdown, an auction's numbers. */
+@layer components {
+  .countdown { display: flex; gap: 14px; flex-wrap: wrap; align-items: baseline; font-size: 13px; color: var(--text-2); }
+  .countdown b { font-size: 30px; font-variant-numeric: tabular-nums; color: var(--text); margin-right: 3px; }
+  .maintenance-card { border-top: 3px solid var(--warning); }
+  .auction-numbers { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .auction-numbers > div { display: grid; gap: 2px; }
+  .auction-numbers b { font-size: 18px; font-variant-numeric: tabular-nums; }
+  table.data.compact td, table.data.compact th { padding: 6px 10px; }
+}
+
+/* The analytics' charts: a palette for stacked series, a heatmap. */
+@layer components {
+  :root, :root[data-theme="dark"] {
+    --p1: #e7b955; --p2: #49b37a; --p3: #6fa8e8; --p4: #c07ae0; --p5: #e5813a; --p6: #4fc1c6; --p7: #e2685a; --p8: #9a8c7a; --ink: #f1e8da;
+  }
+  :root[data-theme="light"] {
+    --p1: #a87412; --p2: #1f8a55; --p3: #2a6cb8; --p4: #8a3fb0; --p5: #c2601c; --p6: #18868b; --p7: #c43d2e; --p8: #7d6f60; --ink: #221a12;
+  }
+  svg.chart .col.p1, .legend .p1 { fill: var(--p1); background: var(--p1); }
+  svg.chart .col.p2, .legend .p2 { fill: var(--p2); background: var(--p2); }
+  svg.chart .col.p3, .legend .p3 { fill: var(--p3); background: var(--p3); }
+  svg.chart .col.p4, .legend .p4 { fill: var(--p4); background: var(--p4); }
+  svg.chart .col.p5, .legend .p5 { fill: var(--p5); background: var(--p5); }
+  svg.chart .col.p6, .legend .p6 { fill: var(--p6); background: var(--p6); }
+  svg.chart .col.p7, .legend .p7 { fill: var(--p7); background: var(--p7); }
+  svg.chart .col.p8, .legend .p8 { fill: var(--p8); background: var(--p8); }
+  svg.chart .line.c-ink { stroke: var(--ink); stroke-dasharray: 4 3; }
+  .legend .c-ink { background: var(--ink); }
+  svg.chart .grid-line.zero { stroke: var(--border-strong); stroke-width: 1.5; }
+  table.heatmap { border-collapse: separate; border-spacing: 2px; font-size: 11px; width: 100%; min-width: 640px; }
+  table.heatmap th { color: var(--text-3); font-weight: 600; padding: 2px 4px; text-align: center; white-space: nowrap; }
+  table.heatmap th[scope="row"] { text-align: right; padding-right: 8px; }
+  td.hm { height: 26px; text-align: center; border-radius: 4px; font-variant-numeric: tabular-nums; color: var(--text-2); }
+  td.hm.l0 { background: var(--surface-2); color: transparent; }
+  td.hm.l1 { background: color-mix(in srgb, var(--accent) 14%, var(--surface-2)); }
+  td.hm.l2 { background: color-mix(in srgb, var(--accent) 30%, var(--surface-2)); }
+  td.hm.l3 { background: color-mix(in srgb, var(--accent) 48%, var(--surface-2)); color: var(--text); }
+  td.hm.l4 { background: color-mix(in srgb, var(--accent) 68%, var(--surface-2)); color: var(--on-accent); }
+  td.hm.l5 { background: var(--accent); color: var(--on-accent); font-weight: 700; }
+  .heat-scale { display: inline-flex; gap: 2px; align-items: center; font-size: 11px; color: var(--text-3); }
+  .heat-scale i { width: 16px; height: 10px; border-radius: 2px; display: inline-block; }
+}
