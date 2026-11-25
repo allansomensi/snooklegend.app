@@ -131,8 +131,8 @@ function runnerUpOf(rounds: Match[][]): string | null {
   return (f.a === f.winner ? f.b : f.a) ?? null;
 }
 
-export function fetchTournaments(limit = 50) {
-  return getJson(`/api/tournaments?limit=${limit}`, parseTournaments);
+export function fetchTournaments(limit = 50, revalidate?: number) {
+  return getJson(`/api/tournaments?limit=${limit}`, parseTournaments, revalidate ? { revalidate } : {});
 }
 
 export function fetchTournament(id: number) {

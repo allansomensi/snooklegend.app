@@ -4,8 +4,9 @@ import { Document } from "@/components/Document";
 import { isLocale } from "@/i18n";
 import { buildMetadata, VIEWPORT } from "@/lib/metadata";
 
-// English lives at "/", the other languages under their own path.
-export const dynamicParams = false;
+// English lives at "/", the other languages under their own path. Each page
+// says whether other addresses are made on demand (`dynamicParams`): the
+// players' and tournaments' pages are, the rest aren't.
 export function generateStaticParams() {
   return [{ lang: "pt" }, { lang: "es" }];
 }

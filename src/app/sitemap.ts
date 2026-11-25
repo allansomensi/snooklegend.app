@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // From the game server, failing soft: the sitemap is made all the same.
   const [players, tournaments] = await Promise.all([
     topPlayers().catch(() => []),
-    fetchTournaments(30)
+    fetchTournaments(30, 3600)
       .then((r) => (r.ok ? r.data : []))
       .catch(() => []),
   ]);
