@@ -1,11 +1,12 @@
 "use client";
 
-import { Activity, ChartColumn, Clock, Globe, ListOrdered, Trophy, Undo2, Users } from "lucide-react";
+import { Activity, ChartColumn, ChartNoAxesCombined, Clock, Download, Globe, ListOrdered, Trophy, Undo2, Users } from "lucide-react";
+import Link from "next/link";
 import { useLocale } from "@/admin/components/providers/locale";
 import { AlertBox, Card, CardHead, Country, DataTable, Empty, Kpi, PageHead, Updated, usePerRules } from "@/admin/components/ui/bits";
 import { BarList, Chart } from "@/admin/components/ui/charts";
 import { Loaded, updatedAt } from "@/admin/components/ui/loaded";
-import { useApi } from "@/admin/lib/hooks";
+import { useApi, useIsAdmin } from "@/admin/lib/hooks";
 import { gamesByRules } from "@/admin/lib/rules";
 import type { Metrics } from "@/admin/lib/types";
 import "@/admin/styles/business.css";
@@ -18,6 +19,7 @@ export default function MetricsPage() {
 function MetricsView({ d, at, onRefresh }: { d: Metrics; at: number; onRefresh: () => void }) {
   const { t, tf, tn, lang, fmtNum, fmtPct, fmtDay, fmtDayLong, money } = useLocale();
   const perRules = usePerRules();
+  const admin = useIsAdmin();
   const m = d.metrics;
   const q = d.queue;
   const hours = m.hours || [];
@@ -55,6 +57,8 @@ function MetricsView({ d, at, onRefresh }: { d: Metrics; at: number; onRefresh: 
     <div className="stack">
       <PageHead title={t("Metrics")} sub={t("How many play, how long they stay, what they pay · refreshes every minute")}>
         <Updated at={at} onRefresh={onRefresh} />
+        <Link className="btn" href="/admin/analytics"><ChartNoAxesCombined className="icon" aria-hidden />{t("Analytics")}</Link>
+        {admin ? <Link className="btn" href="/admin/exports?kind=daily"><Download className="icon" aria-hidden />{t("Export CSV")}</Link> : null}
       </PageHead>
       {d.draining ? <AlertBox tone="warning" title={t("The server is restarting")} text={t("No new games start; the games in progress move to the next server.")} /> : null}
       <div className="kpis">

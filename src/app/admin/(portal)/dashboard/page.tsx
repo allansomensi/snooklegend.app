@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, ChartColumn, CircleCheck, Coins, FileText, Flag, ListOrdered, Trophy, User, Users } from "lucide-react";
+import { Activity, CalendarRange, ChartColumn, ChartNoAxesCombined, CircleCheck, Coins, FileText, Flag, Gavel, ListOrdered, Percent, Trophy, User, Users, Wrench } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { AuditMini } from "@/admin/components/audit";
 import { useLocale } from "@/admin/components/providers/locale";
@@ -11,7 +11,9 @@ import {
 import { Chart } from "@/admin/components/ui/charts";
 import { Loaded, updatedAt } from "@/admin/components/ui/loaded";
 import { useApi, useMe } from "@/admin/lib/hooks";
-import type { AuditEntry, Metrics, Overview, Report } from "@/admin/lib/types";
+import { healthTone } from "@/admin/lib/ops";
+import type { AuditEntry, CalendarRange as Range, CoinAnalytics, Maintenances, Metrics, Overview, Report } from "@/admin/lib/types";
+import { msg } from "@/admin/i18n";
 
 export default function DashboardPage() {
   const overview = useApi<Overview>("/overview", { refetchInterval: 60000 });
@@ -53,6 +55,7 @@ function Dashboard({ o, m, reports, audit, at, onRefresh }: { o: Overview; m: Me
         {o.online >= 4 && o.addresses === 1 ? (
           <AlertBox tone="warning" title={t("Every player comes from one address")} text={t("Set SNOOK_LEGEND_CLIENT_IP_HEADER (see DEPLOY.md), or the limits per address will turn players away.")} />
         ) : null}
+        <MaintenanceAlert />
         {open > 0 ? (
           <AlertBox tone="info" title={tn(open, "{n} report waiting", "{n} reports waiting")} text={t("Players are waiting for an answer.")}
             action={<Btn label={t("Review")} kind="sm" onClick={() => router.push("/admin/reports")} />} />
@@ -71,6 +74,7 @@ function Dashboard({ o, m, reports, audit, at, onRefresh }: { o: Overview; m: Me
         <Kpi label={t("Revenue in 30 days")} value={revenue.length ? money(revenue[0][1], revenue[0][0]) : "—"}
           sub={revenue.length > 1 ? tf("and {n} other currencies", { n: revenue.length - 1 }) : revenue.length ? tn(revenue[0][2], "{n} payment", "{n} payments") : t("no payments")}
           icon={Coins} tone="warning" href="/admin/economy" />
+        <EconomyKpi />
       </div>
       <div className="grid-aside section">
         <div className="stack">
@@ -98,6 +102,7 @@ function Dashboard({ o, m, reports, audit, at, onRefresh }: { o: Overview; m: Me
           </Card>
         </div>
         <div className="stack">
+          <ComingUp />
           <Card>
             <CardHead title={t("Open reports")}>
               <Btn label={t("See all")} kind="sm ghost" onClick={() => router.push("/admin/reports")} />
@@ -137,5 +142,71 @@ function Dashboard({ o, m, reports, audit, at, onRefresh }: { o: Overview; m: Me
         </div>
       </div>
     </div>
+  );
+}
+
+/** A maintenance planned: when the server stops. */
+function MaintenanceAlert() {
+  const { t, tf, fmtDate, ago } = useLocale();
+  const router = useRouter();
+  const q = useApi<Maintenances>("/maintenance", { refetchInterval: 60000 });
+  const m = q.data?.maintenance.find((x) => x.status === "scheduled" || x.status === "due" || x.status === "started");
+  if (!m) return null;
+  return (
+    <AlertBox tone="warning" title={tf("Maintenance {when}", { when: ago(m.at) })} text={fmtDate(m.at) + (m.message ? " · " + m.message : "")}
+      action={<Btn label={t("Open")} kind="sm" icon={Wrench} onClick={() => router.push("/admin/maintenance")} />} />
+  );
+}
+
+const HEALTH_WORD: Record<string, string> = {
+  healthy: msg("Healthy"), watch: msg("Watch"), inflating: msg("Inflating"), deflating: msg("Deflating"), unknown: msg("Not known"),
+};
+
+/** The coin economy's health this week. */
+function EconomyKpi() {
+  const { t, fmtNum, fmtPct } = useLocale();
+  const q = useApi<CoinAnalytics>("/analytics/coins?days=7");
+  const d = q.data;
+  return (
+    <Kpi label={t("Coin economy")} value={d ? t(HEALTH_WORD[d.health] || d.health) : "—"}
+      sub={d ? (d.net_7d > 0 ? "+" : "") + fmtNum(d.net_7d) + " · " + fmtPct(d.net_7d_percent, 2) + " " + t("in 7 days") : null}
+      icon={ChartNoAxesCombined} tone={d ? healthTone(d.health) : ""} href="/admin/analytics" />
+  );
+}
+
+const KIND_ICON: Record<string, typeof Trophy> = { promotion: Percent, auction: Gavel, maintenance: Wrench, tournament: Trophy, weekly_cup: Trophy };
+
+/** What starts or runs in the next 7 days (the calendar). */
+function ComingUp() {
+  const { t, fmtDate, ago } = useLocale();
+  const router = useRouter();
+  const q = useApi<Range>("/calendar", { refetchInterval: 300000 });
+  const d = q.data;
+  const list = d ? d.items.filter((i) => i.status !== "cancelled" && i.status !== "ended" && i.kind !== "vip_item" && i.starts_at < d.now + 7 * 86400).slice(0, 6) : [];
+  return (
+    <Card>
+      <CardHead title={t("This week")}>
+        <Btn label={t("Calendar")} kind="sm ghost" icon={CalendarRange} onClick={() => router.push("/admin/calendar")} />
+      </CardHead>
+      {list.length ? (
+        <div className="mini-list">
+          {list.map((i) => {
+            const Icon = KIND_ICON[i.kind] || CalendarRange;
+            return (
+              <div key={i.kind + i.starts_at + String(i.id)} className="mi">
+                <span className={"tl-dot " + (i.status === "live" ? "success" : "info")}><Icon className="icon" aria-hidden /></span>
+                <div className="mi-main">
+                  <b className="ellipsis">{i.title}</b>
+                  <span className="mi-sub">{fmtDate(i.starts_at)}</span>
+                </div>
+                <span className="mi-side">{i.status === "live" ? t("Running") : ago(i.starts_at)}</span>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <Empty icon={CalendarRange} title={d ? t("Nothing scheduled") : t("Loading…")} />
+      )}
+    </Card>
   );
 }
