@@ -23,6 +23,8 @@ it installed in a minute.
 - **In English, Portuguese and Spanish** (`/`, `/pt/`, `/es/`), with the game's own
   screenshots in each language. A first visit from a Portuguese or Spanish browser
   goes to its language; the choice in the menu is remembered.
+- Players' profiles, the official tournaments, an illustrated rules guide, a
+  rating calculator and the supporters (see below).
 - Features, both sets of rules, the fifteen opponents, a screenshot gallery,
   system requirements and an FAQ; SEO metadata, Open Graph picture, `hreflang`,
   sitemap and structured data (`VideoGame`).
@@ -72,6 +74,44 @@ SNOOK_LEGEND_IN_MEMORY=1 SNOOK_LEGEND_ADMIN_ORIGIN=http://localhost:3000 SNOOK_L
 
 and here, with `NEXT_PUBLIC_API_URL=http://localhost:7878` in `.env.local`
 (see `.env.example`), `npm run dev` and open http://localhost:3000/admin/.
+
+## Players, tournaments, the rules and the rating
+
+Pages made from the game server's public API (`NEXT_PUBLIC_API_URL` + `/api/…`),
+rendered when first asked for and then kept a minute (ISR): a visitor gets the
+last good page at once, and a server that doesn't answer keeps it in place.
+
+| Page | English | Português | Español | Data |
+|---|---|---|---|---|
+| A player's profile | `/player/<name>/` | `/jogador/<name>/` | `/es/jugador/<name>/` | `GET /api/players/{name}` |
+| The tournaments | `/tournaments/` | `/pt/torneios/` | `/es/torneos/` | `GET /api/tournaments` |
+| A tournament (and its sharing picture) | `/tournaments/<id>/` | `/pt/torneios/<id>/` | `/es/torneos/<id>/` | `GET /api/tournaments/{id}` |
+| Supporters | `/supporters/` | `/pt/apoiadores/` | `/es/mecenas/` | `GET /api/supporters` |
+| The rules guide, illustrated | `/rules/` | `/pt/regras/` | `/es/reglas/` | `src/content/rules/` |
+| The rating calculator | `/rating/` | `/pt/rating/` | `/es/rating/` | `src/lib/rating.ts` |
+
+A player's page in Portuguese is `/jogador/<name>/` (the address the game
+shares); `/pt/jogador/<name>/` redirects there. The addresses are in
+`src/lib/routes.ts`; the readers of the API's answers, with tests and
+fixtures, in `src/lib/` (`player.ts`, `tournaments.ts`, `supporters.ts`).
+
+- **From the game:** the rules texts, the profile pictures, the names of the
+  cues, frames and achievements (with their Portuguese and Spanish names from
+  the game's translations): `python3 scripts/sync-game-data.py ../snook-legend`.
+  The rating formula (`src/lib/rating.ts`) is a port of the game's
+  `crates/core/src/rating.rs`: change both together (the tests hold numbers
+  worked out by the Rust code).
+- **Without the server:** `node scripts/mock-api.mjs` serves the fixtures on
+  port 7878 (players `ana` and `bob`, tournaments 42, 43 and 44).
+
+## The staff portal on a phone
+
+The portal installs as an app (Add to Home Screen): `src/app/admin/manifest.webmanifest`
+(scope `/admin/`), icons in `public/admin-icons/` (`node scripts/make-admin-icons.mjs`
+makes them from `src/app/admin/icon.svg`), and a small service worker
+(`src/app/admin/sw.js`) that keeps no page and nothing from the API: without a
+connection it shows `/admin/offline.html`. The Content Security Policy allows
+only the portal's own manifest and worker (`manifest-src`, `worker-src`).
 
 ## The terms of use and the privacy policy
 
@@ -192,6 +232,7 @@ that include custom events):
 | Links, file names, the Microsoft Store page | `src/lib/site.ts` |
 | Colours, fonts, buttons | `src/app/globals.css` (`@theme`) |
 | Sections of the page | `src/components/HomePage.tsx` |
+| The rules guide's animated tables | `src/lib/scenes.ts`, `src/components/RuleScene.tsx` |
 | The playable table | `src/components/PoolTable.tsx` |
 | Pictures (from the game's repository) | `python3 scripts/make-assets.py ../snook-legend` |
 
