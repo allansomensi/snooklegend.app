@@ -33,7 +33,7 @@ export function PlayerDoubles({ d }: { d: UserDetail }) {
   const games = q.data?.pages.flatMap((p) => p.games) ?? [];
   const live = q.data?.pages[0].live ?? [];
   return (
-    <div className="stack">
+    <div className="stack modes-page">
       <Card>
         <CardHead title={t("Doubles ratings")} sub={t("Their own, apart from the singles ratings")}>
           <Link className="btn sm ghost" href={"/admin/doubles?player=" + encodeURIComponent(name)}>{t("In the doubles list")}</Link>

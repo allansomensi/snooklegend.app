@@ -77,7 +77,7 @@ function Game({ g }: { g: DoublesDetail }) {
   if (g.voided_at) facts.push([t("Annulled"), fmtDate(g.voided_at)]);
 
   return (
-    <div className="stack">
+    <div className="stack modes-page">
       <PageHead
         title={<span className="row">{tf("Doubles game #{id}", { id: g.id })}<RulesBadge rules={g.rules} long /><DoublesStatus g={g} /></span>}
         sub={tf("Ended {when} · {how} · {n}", { when: fmtDate(g.ended_at), how: gameEnd(g.reason), n: tn(g.shots, "{n} stroke", "{n} strokes") })}

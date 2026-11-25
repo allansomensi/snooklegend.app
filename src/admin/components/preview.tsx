@@ -21,7 +21,10 @@ export function useActionWords() {
   return (a?: InboxAction | null): string | null => {
     if (!a || a.to === "none") return null;
     switch (a.to) {
-      case "replay": return tf("Watch game #{id}", { id: a.match_id ?? "?" });
+      // A doubles game's id comes made negative.
+      case "replay": return a.match_id !== undefined && a.match_id !== null && a.match_id < 0
+        ? tf("Watch doubles game #{id}", { id: -a.match_id })
+        : tf("Watch game #{id}", { id: a.match_id ?? "?" });
       case "equip": return tf("Equip now ({item})", { item: a.code || "?" });
       case "collection": return tf("The collection ({item})", { item: a.code || "?" });
       case "tournament": return t("Join the tournament");

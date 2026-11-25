@@ -30,7 +30,7 @@ export default function TimeAttackPage() {
     refetchInterval: 60000,
   });
   return (
-    <div>
+    <div className="modes-page">
       <PageHead title={t("Against the clock")} sub={t("Each player's best of the week, quickest first, as the game shows it (banned and deleted players left out)")}>
         {q.data ? <Updated at={q.dataUpdatedAt} onRefresh={() => void q.refetch()} /> : null}
       </PageHead>
@@ -50,18 +50,20 @@ function Week({ w, stale, limit, onWeek, onAll }: { w: ClockWeek; stale: boolean
     <div className="stack">
       <Card>
         <div className="card-body row between">
+          <div className="week-head">
+            <b className="week-name">{tf("{from} to {to}", { from: fmtDateOnly(w.starts_at), to: fmtDateOnly(lastDay) })}</b>
+            <span className="faint">{tf("Week {n} · Monday to Sunday, UTC", { n: w.week })}</span>
+          </div>
           <div className="week-picker" role="group" aria-label={t("Week")}>
             <Btn label={t("The week before")} kind="sm" icon={ChevronLeft} iconOnly onClick={() => go(w.week - 1)} />
-            <span className="week-name">{tf("{from} to {to}", { from: fmtDateOnly(w.starts_at), to: fmtDateOnly(lastDay) })}</span>
-            <Btn label={t("The week after")} kind="sm" icon={ChevronRight} iconOnly disabled={w.week >= w.this_week} onClick={() => go(w.week + 1)} />
             <input className="input" type="date" aria-label={t("A day of the week to show")} value={weekDate(w.week)}
               onChange={(e) => {
                 const n = weekOfDate(e.target.value);
                 if (n !== null) go(n);
               }} />
+            <Btn label={t("The week after")} kind="sm" icon={ChevronRight} iconOnly disabled={w.week >= w.this_week} onClick={() => go(w.week + 1)} />
             {current ? <Badge kind="success dot">{t("This week")}</Badge> : <Btn label={t("This week")} kind="sm" icon={CalendarClock} onClick={() => onWeek(null)} />}
           </div>
-          <span className="faint">{tf("Week {n} · Monday to Sunday, UTC", { n: w.week })}</span>
         </div>
       </Card>
 
@@ -86,7 +88,7 @@ function Week({ w, stale, limit, onWeek, onAll }: { w: ClockWeek; stale: boolean
               {w.board.map((r) => (
                 <tr key={r.user_id || r.username}>
                   <td className="num"><span className={"place" + (r.place <= 3 ? " p" + r.place : "")}>{r.place}</span></td>
-                  <td><span className="row nowrap"><PersonLink name={r.username} /><Flag code={r.country} /></span></td>
+                  <td><span className="who"><PersonLink name={r.username} /><Flag code={r.country} /></span></td>
                   <td className="num"><span className="clock-time">{r.time}</span></td>
                   <td className="nowrap">{fmtDate(r.at)}</td>
                   <td className="num">{prize(r.place) ? tf("{n} coins", { n: fmtNum(prize(r.place)) }) : <span className="faint">—</span>}</td>

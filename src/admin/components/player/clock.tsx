@@ -44,7 +44,7 @@ function Attempts({ list, best, more, onMore, stale }: {
   const { t, tf, tn, fmtNum } = useLocale();
   const s = attemptStats(list);
   return (
-    <div className="stack">
+    <div className="stack modes-page">
       <div className="kpis">
         <Kpi label={t("This week")} value={best.best_ms !== null ? <span className="clock-time">{clockTime(best.best_ms)}</span> : "—"}
           sub={best.place ? tf("place {n} in the table", { n: fmtNum(best.place) }) : t("not in this week's table")} icon={Trophy} tone="success"
@@ -94,7 +94,7 @@ function AttemptTable({ list }: { list: ClockAttempt[] }) {
   const admin = useIsAdmin();
   const actions = useModeActions();
   return (
-    <DataTable headers={[t("Started"), { label: t("Time"), cls: "num" }, { label: t("Strokes"), cls: "num" }, { label: t("Fouls"), cls: "num" }, t("Week"), t("Status"), ""]}>
+    <DataTable headers={[t("Started"), { label: t("Time on the clock"), cls: "num" }, { label: t("Strokes"), cls: "num" }, { label: t("Fouls"), cls: "num" }, t("Week"), t("Status"), ""]}>
       {list.map((a) => {
         const status = attemptStatus(a);
         return (

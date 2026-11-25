@@ -1,11 +1,14 @@
 /* 0.12's modes: doubles games and against the clock. */
 @layer components {
+  /* A wide table scrolls inside its card instead of widening the page. */
+  .modes-page .stack, .stack.modes-page { grid-template-columns: minmax(0, 1fr); }
   /* A team: its two players, joined. */
-  .team { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
+  .team { display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap; white-space: nowrap; min-width: 0; }
   .team .amp { color: var(--text-3); font-size: 12px; }
   .team.won .name { font-weight: 650; }
-  .vs { color: var(--text-3); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; padding: 0 2px; }
   .teams-cell { display: grid; gap: 4px; }
+  .teams-cell .row { flex-wrap: nowrap; gap: 8px; }
+  table.data.doubles td.actions-cell .row { flex-wrap: nowrap; justify-content: flex-end; gap: 4px; }
   .teams-cell .team.won::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--success); flex: none; }
 
   /* A doubles game's team, with its two players. */
@@ -20,6 +23,7 @@
   /* What annulling gives back, in the dialog. */
   .given-back { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; padding: 10px 12px; border-radius: 10px;
     background: var(--surface-2); border: 1px solid var(--border); font-size: 13px; }
+  .given-back .gb-title { grid-column: 1 / -1; font-size: 11px; font-weight: 650; letter-spacing: .05em; text-transform: uppercase; color: var(--text-3); }
   .given-back .gb { display: flex; justify-content: space-between; gap: 8px; }
 
   /* The rules' card: the doubles record under the singles one. */
@@ -32,9 +36,11 @@
   .rules-card .rc-doubles .rc-d-link { margin-left: auto; }
 
   /* Against the clock: the week chosen, its table. */
-  .week-picker { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .who { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .week-picker { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
   .week-picker .input { width: auto; }
-  .week-picker .week-name { font-weight: 650; padding: 0 4px; white-space: nowrap; }
+  .week-head { display: grid; gap: 2px; min-width: 0; }
+  .week-head .week-name { font-size: 16px; font-weight: 650; }
   .clock-time { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 650; }
   .place { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 13px; font-weight: 700; font-size: 12.5px;
     font-variant-numeric: tabular-nums; background: var(--surface-2); color: var(--text-2); }

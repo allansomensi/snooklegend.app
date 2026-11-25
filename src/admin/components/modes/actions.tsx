@@ -37,7 +37,8 @@ export function useModeActions() {
             { a: teamName(g.teams[0]), b: teamName(g.teams[1]) })}
           fields={[
             { type: "node", name: "given-back", node: (
-              <div className="given-back" aria-label={t("Given back")}>
+              <div className="given-back" role="group" aria-label={t("Given back")}>
+                <span className="gb-title">{t("Given back")}</span>
                 {back.map((b) => (
                   <span key={b.name} className="gb">
                     <span>{b.name}</span>

@@ -80,7 +80,7 @@ export default function DoublesPage() {
           empty={<Card><Empty icon={Users} title={player ? tf("{name} isn't playing doubles now", { name: player }) : t("No doubles game now")} /></Card>}>
           {first.live.length ? [<Card key="live"><LiveDoublesTable games={first.live} /></Card>] : []}
         </Section>
-        <Section title={t("Finished")} sub={t("Newest first")}
+        <Section title={t("Finished games")} sub={t("Newest first")}
           empty={<Card><Empty icon={Trophy} title={t("No doubles game yet")} text={player ? t("They haven't finished a doubles game.") : t("Finished doubles games show up here.")} /></Card>}>
           {games.length ? [
             <Card key="games" className={q.isFetching && !q.isFetchingNextPage ? "loading-soft" : ""}>
@@ -97,7 +97,7 @@ export default function DoublesPage() {
   }
 
   return (
-    <div>
+    <div className="modes-page">
       <PageHead title={t("Doubles")} sub={t("Two against two: the games being played and those finished")}>
         {q.data ? <Updated at={q.dataUpdatedAt} live onRefresh={() => void q.refetch()} /> : null}
       </PageHead>

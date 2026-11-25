@@ -59,7 +59,7 @@ export function DoublesTable({ games, player }: { games: DoublesGame[]; player?:
   );
   if (player) {
     return (
-      <DataTable headers={[t("When"), t("Rules"), t("Partner"), t("Opponents"), t("Result"), t("How it ended"), { label: t("Rating"), cls: "num" }, ""]}>
+      <DataTable className="doubles" headers={[t("When"), t("Rules"), t("Partner"), t("Opponents"), t("Result"), t("How it ended"), { label: t("Rating"), cls: "num" }, ""]}>
         {games.map((g) => {
           const s = sideOf(g, player);
           return (
@@ -88,7 +88,7 @@ export function DoublesTable({ games, player }: { games: DoublesGame[]; player?:
     );
   }
   return (
-    <DataTable headers={["#", t("When"), t("Rules"), t("Teams"), t("How it ended"), { label: t("Strokes"), cls: "num" }, t("Status"), ""]}>
+    <DataTable className="doubles" headers={["#", t("When"), t("Rules"), t("Teams"), t("How it ended"), { label: t("Strokes"), cls: "num" }, t("Status"), ""]}>
       {games.map((g) => (
         <tr key={g.id}>
           <td className="mono"><Link href={doublesHref(g.id)}>{g.id}</Link></td>
@@ -97,7 +97,7 @@ export function DoublesTable({ games, player }: { games: DoublesGame[]; player?:
           <td>
             <div className="teams-cell">
               {[0, 1].map((k) => (
-                <span key={k} className="row nowrap">
+                <span key={k} className="row">
                   <Team team={g.teams[k]} won={g.winner === k} />
                   {g.rated ? <span className="faint">{g.deltas[k].map((d) => (d > 0 ? "+" : "") + fmtNum(d)).join(" / ")}</span> : null}
                 </span>
@@ -130,11 +130,10 @@ export function LiveDoublesTable({ games }: { games: LiveDoubles[] }) {
           <td className="mono">{g.id}</td>
           <td><RulesBadge rules={g.rules} /></td>
           <td>
-            <span className="row">
+            <div className="teams-cell">
               <Team team={g.teams[0]} />
-              <span className="vs">{t("vs")}</span>
               <Team team={g.teams[1]} />
-            </span>
+            </div>
           </td>
           <td className="num">{fmtNum(g.shots)}</td>
           <td>
