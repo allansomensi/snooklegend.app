@@ -1,6 +1,6 @@
 import {
   Activity, CalendarDays, CalendarRange, ChartColumn, ChartNoAxesCombined, Coins, Download, FileText, Flag, Gavel, Gift, LayoutDashboard, Megaphone,
-  MessageSquare, Percent, Server, SlidersHorizontal, Target, Trophy, Users, Wrench, WholeWord, type LucideIcon,
+  MessageSquare, Percent, Server, SlidersHorizontal, Target, Timer, Trophy, Users, UsersRound, Wrench, WholeWord, type LucideIcon,
 } from "lucide-react";
 import { msg } from "@/admin/i18n";
 import type { Role } from "./types";
@@ -28,6 +28,9 @@ export const NAV: NavEntry[] = [
   { id: "chat", label: msg("Lounge chat"), icon: MessageSquare, key: "c" },
   { id: "words", label: msg("Banned words"), icon: WholeWord, key: "w" },
   { id: "fairplay", label: msg("Fair play"), icon: Target, key: "f" },
+  { group: msg("Game modes") },
+  { id: "doubles", label: msg("Doubles"), icon: UsersRound, key: "2" },
+  { id: "time-attack", label: msg("Against the clock"), icon: Timer, key: "q" },
   { group: msg("Community") },
   { id: "community", label: msg("Board & announcements"), icon: Megaphone, key: "b" },
   { id: "events", label: msg("Events"), icon: CalendarDays, key: "v" },

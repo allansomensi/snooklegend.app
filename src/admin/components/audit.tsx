@@ -2,7 +2,7 @@
 
 import {
   Ban, CalendarDays, Coins, Download, Flag, Gavel, Gift, Info, Key, Lock, Mail, Megaphone, MessageSquare, MicOff, Pencil, Percent, Pin, PinOff, RefreshCw,
-  Scale, Shield, SlidersHorizontal, Square, Star, StickyNote, Trash2, Trophy, TriangleAlert, Undo2, UserX, LogOut, WholeWord, Wrench, type LucideIcon,
+  Scale, Shield, SlidersHorizontal, Square, Star, StickyNote, Timer, Trash2, Trophy, TriangleAlert, Undo2, UserX, LogOut, WholeWord, Wrench, type LucideIcon,
 } from "lucide-react";
 import { msg } from "@/admin/i18n";
 import type { AuditEntry } from "@/admin/lib/types";
@@ -64,6 +64,9 @@ export const AUDIT: Record<string, [string, LucideIcon, string]> = {
   auction: ["success", Gavel, msg("Auction opened")],
   "auction-cancel": ["danger", Gavel, msg("Auction called off")],
   export: ["", Download, msg("Data exported")],
+  // 0.12: the modes.
+  "doubles-void": ["danger", Undo2, msg("Doubles game annulled")],
+  "time-attack-remove": ["danger", Timer, msg("Time taken off the ranking")],
 };
 
 export const auditLook = (action: string): [string, LucideIcon] => {
@@ -74,7 +77,7 @@ export const auditLook = (action: string): [string, LucideIcon] => {
 /** The actions whose target is a player (the others name an event, a
  * report, a payment, a place…, shown as plain text). */
 export const PLAYER_ACTIONS = new Set(["ban", "unban", "mute", "unmute", "kick", "warn", "note", "logout-all", "role", "password-reset", "coins", "item",
-  "vip", "revoke", "rename", "clear-status", "remove-seek", "chat-delete", "message", "rating", "gift", "match-void", "match-end"]);
+  "vip", "revoke", "rename", "clear-status", "remove-seek", "chat-delete", "message", "rating", "gift", "match-void", "match-end", "doubles-void", "time-attack-remove"]);
 
 const PLACES: Record<string, string> = { lounge: msg("the lounge"), board: msg("the board"), batch: msg("many players") };
 

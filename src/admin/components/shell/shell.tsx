@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ChevronDown, Globe, Keyboard, ListOrdered, LogOut, Menu as MenuIcon, Moon, Search, Sun, User as UserIcon, Play } from "lucide-react";
+import { ChevronDown, Globe, Keyboard, ListOrdered, LogOut, Menu as MenuIcon, Moon, Search, Sun, User as UserIcon, Play, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -196,6 +196,11 @@ function SearchBox() {
       key: "match",
       node: <span className="row"><ListOrdered className="icon" aria-hidden />{tf("Game #{id}, shot by shot", { id: game[1] })}</span>,
       go: () => router.push("/admin/matches/" + game[1]),
+    });
+    items.push({
+      key: "doubles",
+      node: <span className="row"><UsersRound className="icon" aria-hidden />{tf("Doubles game #{id}", { id: game[1] })}</span>,
+      go: () => router.push("/admin/doubles/" + game[1]),
     });
   }
   const data = term && term === q.trim() ? found.data : undefined;

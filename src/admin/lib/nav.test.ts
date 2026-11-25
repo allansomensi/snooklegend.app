@@ -12,6 +12,8 @@ describe("the sidebar", () => {
     const mod = navItemsFor("moderator").map((n) => n.id);
     expect(mod).toContain("words");
     expect(mod).toContain("calendar");
+    expect(mod).toContain("doubles");
+    expect(mod).toContain("time-attack");
     expect(mod).not.toContain("gifts");
     expect(mod).not.toContain("exports");
     expect(navItemsFor("admin").map((n) => n.id)).toEqual(NAV_ITEMS.map((n) => n.id));
@@ -29,6 +31,8 @@ describe("the sidebar", () => {
   it("knows the section of an address", () => {
     expect(sectionOf("/admin/players/ana/inbox")).toBe("players");
     expect(sectionOf("/admin/matches/9001")).toBe("matches");
+    expect(sectionOf("/admin/doubles/120")).toBe("doubles");
+    expect(sectionOf("/admin/time-attack")).toBe("time-attack");
     expect(sectionOf("/admin")).toBe("dashboard");
   });
 });

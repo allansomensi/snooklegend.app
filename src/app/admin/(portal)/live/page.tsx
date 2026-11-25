@@ -1,6 +1,7 @@
 "use client";
 
-import { Activity, Eye, ListOrdered, Square, Star, Table, Trophy, Users } from "lucide-react";
+import { Activity, Eye, ListOrdered, Square, Star, Table, Trophy, Users, UsersRound } from "lucide-react";
+import Link from "next/link";
 import { usePlayerActions } from "@/admin/components/player-dialogs";
 import { useRefresh } from "@/admin/components/providers";
 import { useRouter } from "next/navigation";
@@ -30,6 +31,7 @@ export default function LivePage() {
           <div>
             <PageHead title={t("Live")} sub={t("What happens on the server right now · refreshes every 10 seconds")}>
               <Updated at={updatedAt(live, system)} live onRefresh={() => { void live.refetch(); void system.refetch(); }} />
+              <Link className="btn" href="/admin/doubles"><UsersRound className="icon" aria-hidden />{t("Doubles")}</Link>
             </PageHead>
             <div className="kpis">
               <Kpi label={t("Online now")} value={fmtNum(s.online)} sub={perRules(s.online_by_rules)} icon={Users} tone="success" />

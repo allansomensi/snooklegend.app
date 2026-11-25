@@ -1,6 +1,7 @@
 "use client";
 
-import { Activity, CalendarRange, ChartColumn, ChartNoAxesCombined, CircleCheck, Coins, FileText, Flag, Gavel, ListOrdered, Percent, Trophy, User, Users, Wrench } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Activity, CalendarRange, ChartColumn, ChartNoAxesCombined, CircleCheck, Coins, FileText, Flag, Gavel, ListOrdered, Percent, Timer, Trophy, User, Users, UsersRound, Wrench } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { AuditMini } from "@/admin/components/audit";
 import { useLocale } from "@/admin/components/providers/locale";
@@ -10,7 +11,9 @@ import {
 } from "@/admin/components/ui/bits";
 import { Chart } from "@/admin/components/ui/charts";
 import { Loaded, updatedAt } from "@/admin/components/ui/loaded";
+import { api } from "@/admin/lib/api";
 import { useApi, useMe } from "@/admin/lib/hooks";
+import { parseClockWeek, parseDoublesPage } from "@/admin/lib/modes";
 import { healthTone } from "@/admin/lib/ops";
 import type { AuditEntry, CalendarRange as Range, CoinAnalytics, Maintenances, Metrics, Overview, Report } from "@/admin/lib/types";
 import { msg } from "@/admin/i18n";
@@ -75,6 +78,8 @@ function Dashboard({ o, m, reports, audit, at, onRefresh }: { o: Overview; m: Me
           sub={revenue.length > 1 ? tf("and {n} other currencies", { n: revenue.length - 1 }) : revenue.length ? tn(revenue[0][2], "{n} payment", "{n} payments") : t("no payments")}
           icon={Coins} tone="warning" href="/admin/economy" />
         <EconomyKpi />
+        <DoublesKpi />
+        <ClockKpi />
       </div>
       <div className="grid-aside section">
         <div className="stack">
@@ -171,6 +176,37 @@ function EconomyKpi() {
     <Kpi label={t("Coin economy")} value={d ? t(HEALTH_WORD[d.health] || d.health) : "—"}
       sub={d ? (d.net_7d > 0 ? "+" : "") + fmtNum(d.net_7d) + " · " + fmtPct(d.net_7d_percent, 2) + " " + t("in 7 days") : null}
       icon={ChartNoAxesCombined} tone={d ? healthTone(d.health) : ""} href="/admin/analytics" />
+  );
+}
+
+/** The doubles games being played now. */
+function DoublesKpi() {
+  const { t, tn, fmtNum } = useLocale();
+  const q = useQuery({
+    queryKey: ["doubles-live"],
+    queryFn: async ({ signal }) => parseDoublesPage(await api("/doubles?limit=1", { signal })).live,
+    refetchInterval: 60000,
+  });
+  const playing = q.data?.filter((g) => !g.finished) || [];
+  return (
+    <Kpi label={t("Doubles now")} value={q.data ? fmtNum(playing.length) : "—"}
+      sub={q.data ? tn(playing.filter((g) => g.rated).length, "{n} rated", "{n} rated") : null} icon={UsersRound} tone="info" href="/admin/doubles" />
+  );
+}
+
+/** This week against the clock: how many play it, the quickest. */
+function ClockKpi() {
+  const { t, tf, tn } = useLocale();
+  const q = useQuery({
+    queryKey: ["/time-attack", null, 1],
+    queryFn: async ({ signal }) => parseClockWeek(await api("/time-attack?limit=1", { signal })),
+    refetchInterval: 300000,
+  });
+  const w = q.data;
+  return (
+    <Kpi label={t("Against the clock")} value={w ? tn(w.players, "{n} player", "{n} players") : "—"}
+      sub={w ? (w.board[0] ? tf("quickest {time} · {name}", { time: w.board[0].time, name: w.board[0].username }) : t("nobody this week yet")) : null}
+      icon={Timer} tone="warning" href="/admin/time-attack" />
   );
 }
 
