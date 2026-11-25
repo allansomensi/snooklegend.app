@@ -92,16 +92,17 @@ describe("a month's page", () => {
 describe("clashes", () => {
   const item = (kind: CalendarItem["kind"], s: number, e: number, status: CalendarItem["status"] = "scheduled"): CalendarItem => ({ kind, title: kind, starts_at: s, ends_at: e, id: s, status });
 
-  it("are two tournaments at once, or anything during a maintenance", () => {
+  it("are two tournaments at once, or a tournament or an auction during a maintenance", () => {
     const cup = item("weekly_cup", 100, 200);
     const tour = item("tournament", 150, 250);
     const stop = item("maintenance", 240, 300);
     const sale = item("promotion", 0, 1000);
-    const found = clashes([cup, tour, stop, sale]);
+    const auction = item("auction", 280, 900);
+    const found = clashes([cup, tour, stop, sale, auction]);
     expect(found.map((c) => [c.a.kind, c.b.kind, c.why])).toEqual([
       ["weekly_cup", "tournament", "same"],
       ["tournament", "maintenance", "maintenance"],
-      ["maintenance", "promotion", "maintenance"],
+      ["maintenance", "auction", "maintenance"],
     ]);
   });
 

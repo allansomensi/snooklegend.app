@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isPinned, isRead, minutesUntil, parsePreview, pinnedForGood, ratingChange, splitNames, strokeStats } from "./inbox";
+import { flatNotification, isPinned, isRead, minutesUntil, parsePreview, pinnedForGood, ratingChange, splitNames, strokeStats } from "./inbox";
 import type { MatchStroke } from "./types";
 
 const rendered = {
@@ -126,5 +126,18 @@ describe("export files", async () => {
     const a = Math.floor(new Date(2026, 10, 1).getTime() / 1000);
     const b = Math.floor(new Date(2026, 11, 1).getTime() / 1000);
     expect(exportName("ledger", a, b)).toBe("snook-legend-ledger-2026-11-01-2026-11-30.csv");
+  });
+});
+
+describe("a notification from the staff lists", () => {
+  it("has its kind's fields at the top", () => {
+    const n = flatNotification({ id: 3, kind: { kind: "staff_gift", coins: 0, item: "cue_dragon", vip_days: 0 }, created_at: 1, text: "Winter cup" });
+    expect(n.kind).toBe("staff_gift");
+    expect(n.item).toBe("cue_dragon");
+    expect(n.text).toBe("Winter cup");
+  });
+
+  it("stays as it is when flat already", () => {
+    expect(flatNotification({ id: 1, kind: "warning", created_at: 1 }).kind).toBe("warning");
   });
 });

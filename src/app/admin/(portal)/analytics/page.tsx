@@ -107,8 +107,8 @@ function CoinsTab() {
               text={t(hText) + " " + tf("Last 7 days: {net} coins net, {pct} of the supply.", { net: (d.net_7d > 0 ? "+" : "") + fmtNum(d.net_7d), pct: fmtPct(d.net_7d_percent, 2) })} />
             <div className="kpis">
               <Kpi label={t("Coins in wallets")} value={fmtNum(d.supply)} sub={tf("{n} wallets", { n: fmtNum(d.wallets) })} icon={Wallet} tone="warning" />
-              <Kpi label={t("Made")} value={"+" + fmtNum(created)} sub={tf("in {n} days", { n: days })} icon={TrendingUp} tone="success" />
-              <Kpi label={t("Spent")} value={"−" + fmtNum(spent)} sub={tf("in {n} days", { n: days })} icon={TrendingDown} tone="danger" />
+              <Kpi label={t("Made")} value={created ? "+" + fmtNum(created) : "0"} sub={tf("in {n} days", { n: days })} icon={TrendingUp} tone="success" />
+              <Kpi label={t("Spent")} value={spent ? "−" + fmtNum(spent) : "0"} sub={tf("in {n} days", { n: days })} icon={TrendingDown} tone="danger" />
               <Kpi label={t("Net in 7 days")} value={(d.net_7d > 0 ? "+" : "") + fmtNum(d.net_7d)} sub={fmtPct(d.net_7d_percent, 2) + " " + t("of the supply")} icon={Coins}
                 tone={healthTone(d.health)} />
             </div>

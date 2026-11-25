@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import { msg } from "@/admin/i18n";
 import { api, seg } from "@/admin/lib/api";
 import { useGameEnd } from "@/admin/lib/games";
+import { flatNotification } from "@/admin/lib/inbox";
 import { useIsAdmin, useQueryParams } from "@/admin/lib/hooks";
 import type { TimelineItem, TimelinePage, TimelineType, UserDetail } from "@/admin/lib/types";
 import { auditLook, useAuditWords } from "../audit";
@@ -110,7 +111,7 @@ export function PlayerTimeline({ d }: { d: UserDetail }) {
   });
   if (q.isError && !q.data) return <ErrorPage error={q.error} onRetry={() => void q.refetch()} />;
   if (!q.data) return <PageLoading />;
-  const all = q.data.pages.flatMap((p) => p.items);
+  const all = q.data.pages.flatMap((p) => p.items).map((i) => (i.type === "notification" ? flatNotification(i) : i));
   const types = FILTERS.find((f) => f[0] === kind)?.[2] || [];
   const list = types.length ? all.filter((i) => types.includes(i.type)) : all;
   const more = async () => {

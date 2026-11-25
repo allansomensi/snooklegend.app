@@ -184,6 +184,7 @@ function SettingRow({ s, name, text }: { s: Setting; name: string; text: string 
   const choiceWord = (v: string) => ({ brazilian: t("Brazilian rules"), official: t("Official rules"), arena: t("Arena"), knockout: t("Knockout") } as Record<string, string>)[v] || v;
   const show = (v: SettingValue | null | undefined) => {
     const m = meaning(v);
+    if (s.type === "bool" || s.type === "choice") return m || String(v ?? "");
     const raw = v === "" ? t("empty") : typeof v === "number" ? fmtNum(v) : String(v);
     return m && m !== raw ? raw + " (" + m + ")" : m || raw;
   };

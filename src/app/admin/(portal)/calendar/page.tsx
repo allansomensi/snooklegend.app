@@ -117,14 +117,14 @@ function Clashes({ list }: { list: Clash[] }) {
   );
 }
 
-function ItemChip({ i, clash, compact }: { i: CalendarItem; clash: boolean; compact?: boolean }) {
+function ItemChip({ i, clash, compact, day }: { i: CalendarItem; clash: boolean; compact?: boolean; day?: Date }) {
   const { t, fmtClock, fmtDate } = useLocale();
   const [label, Icon, cls, href] = KINDS[i.kind] || [i.kind, CalendarDays, "", "/admin/calendar"];
   const tip = [t(label), i.title, fmtDate(i.starts_at) + " → " + fmtDate(i.ends_at), clash ? t("Clashes with something else") : ""].filter(Boolean).join("\n");
   return (
     <Link href={href} className={"cal-item " + cls + (i.status === "cancelled" ? " off" : "") + (clash ? " clash" : "")} title={tip}>
       {clash ? <TriangleAlert className="icon" aria-hidden /> : <Icon className="icon" aria-hidden />}
-      {compact ? null : <span className="ellipsis">{i.kind !== "vip_item" ? fmtClock(i.starts_at) + " " : ""}{i.title}</span>}
+      {compact ? null : <span className="ellipsis">{i.kind === "vip_item" ? "" : !day || dayStart(day) <= i.starts_at ? fmtClock(i.starts_at) + " " : "… "}{i.title}</span>}
     </Link>
   );
 }
@@ -148,7 +148,7 @@ function MonthView({ grid, month, items, clashing, weekStart }: { grid: Date[]; 
               aria-label={d.toLocaleDateString(lang) + " · " + tn(list.length, "{n} thing", "{n} things")}>
               <span className="cal-date">{d.getDate()}</span>
               <div className="cal-items">
-                {list.slice(0, 4).map((i) => <ItemChip key={itemKey(i)} i={i} clash={clashing.has(itemKey(i))} />)}
+                {list.slice(0, 4).map((i) => <ItemChip key={itemKey(i)} i={i} day={d} clash={clashing.has(itemKey(i))} />)}
                 {list.length > 4 ? <span className="faint cal-more">{tn(list.length - 4, "+{n} more", "+{n} more")}</span> : null}
               </div>
             </div>

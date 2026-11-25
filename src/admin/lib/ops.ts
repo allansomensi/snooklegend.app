@@ -112,6 +112,10 @@ const CLASH_GROUP: Record<string, string> = {
   tournament: "tournament", weekly_cup: "tournament", event: "boost", promotion: "promotion", auction: "auction",
 };
 
+/** What a stop of the server spoils: tournaments and auctions (a sale or a
+ * boost just carries on after it). */
+const STOPPED_BY_MAINTENANCE = new Set(["tournament", "weekly_cup", "auction"]);
+
 export interface Clash {
   a: CalendarItem;
   b: CalendarItem;
@@ -120,7 +124,7 @@ export interface Clash {
   why: "maintenance" | "same";
 }
 
-/** What runs at the same time and shouldn't: anything during a maintenance,
+/** What runs at the same time and shouldn't: a tournament or an auction during a maintenance,
  * two tournaments (the weekly cup included), two boosts, two promotions or
  * two auctions. Called-off and finished things never clash. */
 export function clashes(items: CalendarItem[]): Clash[] {
@@ -132,7 +136,8 @@ export function clashes(items: CalendarItem[]): Clash[] {
       const b = on[y];
       if (!(a.starts_at < b.ends_at && b.starts_at < a.ends_at)) continue;
       if (a.kind === "maintenance" || b.kind === "maintenance") {
-        if (a.kind !== b.kind) out.push({ a, b, why: "maintenance" });
+        const other = a.kind === "maintenance" ? b : a;
+        if (STOPPED_BY_MAINTENANCE.has(other.kind)) out.push({ a, b, why: "maintenance" });
       } else if (CLASH_GROUP[a.kind] && CLASH_GROUP[a.kind] === CLASH_GROUP[b.kind]) {
         out.push({ a, b, why: "same" });
       }

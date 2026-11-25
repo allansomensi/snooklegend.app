@@ -4,7 +4,7 @@ import { Award, Bell, Check, CheckCheck, Clock, EyeOff, Gift, Mail, Pin, Scale, 
 import { seg } from "@/admin/lib/api";
 import { nowSecs } from "@/admin/lib/format";
 import { useApi, useMe, useQueryParams } from "@/admin/lib/hooks";
-import { isPinned, isRead, pinnedForGood } from "@/admin/lib/inbox";
+import { flatNotification, isPinned, isRead, pinnedForGood } from "@/admin/lib/inbox";
 import type { Notification, UserDetail } from "@/admin/lib/types";
 import { usePlayerActions } from "../player-dialogs";
 import { CATEGORIES, useActionWords } from "../preview";
@@ -87,7 +87,8 @@ export function PlayerInbox({ d }: { d: UserDetail }) {
   const cat = get("cat", "all");
   return (
     <Loaded queries={[q]}>
-      {({ notifications: all }) => {
+      {({ notifications: raw }) => {
+        const all = raw.map(flatNotification);
         const now = nowSecs();
         const list = all.filter((n) => cat === "all" || n.category === cat);
         const unread = all.filter((n) => !isRead(n) && !n.deleted_at).length;

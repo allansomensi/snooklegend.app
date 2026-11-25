@@ -27,6 +27,19 @@ export function parsePreview(x: unknown): Preview | null {
   };
 }
 
+/** A notification as the staff lists send it (`GET …/notifications`, the
+ * timeline, a player's page): its kind is an object with the kind's own
+ * fields (`{"kind": {"kind": "muted", "until": …}}`); the game's form (a
+ * preview's) has them at the top. Both come out flat. */
+export function flatNotification<T extends { kind: unknown }>(n: T): T & Notification {
+  const k = n.kind;
+  if (k && typeof k === "object" && !Array.isArray(k)) {
+    const fields = k as Record<string, unknown>;
+    return { ...fields, ...n, kind: String(fields.kind ?? "") } as unknown as T & Notification;
+  }
+  return n as T & Notification;
+}
+
 /** Whether a notification was read (an important one: confirmed). */
 export const isRead = (n: Pick<Notification, "read_at">) => !!n.read_at && n.read_at > 0;
 
