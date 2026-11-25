@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Agents' scratch checkouts (git worktrees) are not this tree's code.
+    ".claude/**",
   ]),
 ]);
 
