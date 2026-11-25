@@ -67,5 +67,37 @@ export async function api<T = unknown>(path: string, options: ApiOptions = {}): 
   return data as T;
 }
 
+/** A file from the staff API (a CSV export): the body as it came, with
+ * the bearer token. Errors as `api`'s. */
+export async function apiFile(path: string, signal?: AbortSignal): Promise<Blob> {
+  const { t, tf } = words;
+  const token = session.token();
+  let res: Response;
+  try {
+    res = await fetch(apiBase() + "/admin/api" + path, {
+      headers: token ? { Authorization: "Bearer " + token } : {},
+      cache: "no-store",
+      credentials: "omit",
+      signal,
+    });
+  } catch (e) {
+    if (e instanceof DOMException && e.name === "AbortError") throw e;
+    throw new ApiError(t("Can't reach the server. Check the connection and try again."), 0);
+  }
+  if (res.ok) return res.blob();
+  let said: string | null = null;
+  try {
+    const data = await res.json();
+    if (data && typeof data.error === "string" && data.error) said = data.error;
+  } catch {
+    /* not JSON */
+  }
+  if (res.status === 401) {
+    session.end(t("Your session expired. Sign in again."));
+    throw new ApiError(said ? t(said) : t("Your session expired."), 401);
+  }
+  throw new ApiError(said ? t(said) : tf("Something went wrong ({status}).", { status: res.status }), res.status);
+}
+
 /** A path segment, escaped. */
 export const seg = (s: string | number) => encodeURIComponent(String(s));
