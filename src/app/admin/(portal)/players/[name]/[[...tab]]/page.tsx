@@ -1,12 +1,14 @@
 "use client";
 
-import { Bell, ChevronRight, Coins, History, ListTree, Package, Shield, Star, Target, Trophy, User } from "lucide-react";
+import { Bell, ChevronRight, Coins, History, ListTree, Package, Shield, Star, Target, Timer, Trophy, User, Users } from "lucide-react";
 import Link from "next/link";
 import { use } from "react";
 import { PlayerAchievements } from "@/admin/components/player/achievements";
 import { PlayerChanges } from "@/admin/components/player/changes";
+import { PlayerClock } from "@/admin/components/player/clock";
 import { PlayerCollection } from "@/admin/components/player/collection";
 import { PlayerComputer } from "@/admin/components/player/computer";
+import { PlayerDoubles } from "@/admin/components/player/doubles";
 import { PlayerEconomy } from "@/admin/components/player/economy";
 import { PlayerGames } from "@/admin/components/player/games";
 import { PlayerHeader } from "@/admin/components/player/header";
@@ -20,6 +22,7 @@ import { Loaded } from "@/admin/components/ui/loaded";
 import { msg } from "@/admin/i18n";
 import { seg } from "@/admin/lib/api";
 import { useApi } from "@/admin/lib/hooks";
+import { parseDoublesRatings } from "@/admin/lib/modes";
 import type { UserDetail } from "@/admin/lib/types";
 import "@/admin/styles/players.css";
 
@@ -29,6 +32,8 @@ const TABS = [
   { id: "inbox", label: msg("Inbox"), icon: Bell },
   { id: "timeline", label: msg("Timeline"), icon: ListTree },
   { id: "games", label: msg("Games"), icon: Trophy },
+  { id: "doubles", label: msg("Doubles"), icon: Users },
+  { id: "clock", label: msg("Against the clock"), icon: Timer },
   { id: "computer", label: msg("Against the computer"), icon: Target },
   { id: "economy", label: msg("Economy"), icon: Coins },
   { id: "collection", label: msg("Collection"), icon: Package },
@@ -62,14 +67,16 @@ function Player({ d, tab }: { d: UserDetail; tab: TabId }) {
   const openReports = d.reports.filter((r) => r.status === 0).length;
   // Important notifications they haven't confirmed yet show on the tab.
   const waiting = (d.notifications || []).filter((n) => n.important && !n.read_at && !n.deleted_at).length;
+  const doubles = parseDoublesRatings(d.doubles_ratings);
   const count = (id: TabId) =>
     id === "moderation" ? d.notes.length + d.reports.length
       : id === "games" ? d.history.length
+        : id === "doubles" ? doubles.brazilian.games + doubles.official.games
         : id === "achievements" ? d.achievements.length
           : id === "inbox" ? waiting || null
             : id === "history" ? (d.renames?.length || 0) + (d.rating_adjustments?.length || 0) : null;
   const Body = {
-    overview: PlayerOverview, moderation: PlayerModeration, inbox: PlayerInbox, timeline: PlayerTimeline, games: PlayerGames, computer: PlayerComputer,
+    overview: PlayerOverview, moderation: PlayerModeration, inbox: PlayerInbox, timeline: PlayerTimeline, games: PlayerGames, doubles: PlayerDoubles, clock: PlayerClock, computer: PlayerComputer,
     economy: PlayerEconomy, collection: PlayerCollection, achievements: PlayerAchievements, history: PlayerChanges,
   }[tab];
   return (

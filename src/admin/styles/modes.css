@@ -1,0 +1,54 @@
+/* 0.12's modes: doubles games and against the clock. */
+@layer components {
+  /* A team: its two players, joined. */
+  .team { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
+  .team .amp { color: var(--text-3); font-size: 12px; }
+  .team.won .name { font-weight: 650; }
+  .vs { color: var(--text-3); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; padding: 0 2px; }
+  .teams-cell { display: grid; gap: 4px; }
+  .teams-cell .team.won::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--success); flex: none; }
+
+  /* A doubles game's team, with its two players. */
+  .team-card .team-players { display: grid; gap: 10px; }
+  .team-card .team-player { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; padding: 10px 12px; border-radius: 10px;
+    background: var(--surface-2); border: 1px solid var(--border); }
+  .team-card .team-player .tp-name { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .team-card .team-player .tp-side { display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+  .team-card .team-player .tp-place { font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; }
+  .team-card.voided .delta { text-decoration: line-through; opacity: .7; }
+
+  /* What annulling gives back, in the dialog. */
+  .given-back { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; padding: 10px 12px; border-radius: 10px;
+    background: var(--surface-2); border: 1px solid var(--border); font-size: 13px; }
+  .given-back .gb { display: flex; justify-content: space-between; gap: 8px; }
+
+  /* The rules' card: the doubles record under the singles one. */
+  .rules-card .rc-doubles { display: flex; align-items: baseline; gap: 8px 14px; flex-wrap: wrap; padding-top: 10px; border-top: 1px dashed var(--border);
+    font-size: 13px; color: var(--text-2); }
+  .rules-card .rc-doubles .rc-d-label { display: inline-flex; align-items: center; gap: 6px; font-weight: 650; color: var(--text-2); }
+  .rules-card .rc-doubles .rc-d-label .icon { width: 14px; height: 14px; }
+  .rules-card .rc-doubles .rc-d-rating { font-size: 18px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .rules-card .rc-doubles b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .rules-card .rc-doubles .rc-d-link { margin-left: auto; }
+
+  /* Against the clock: the week chosen, its table. */
+  .week-picker { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .week-picker .input { width: auto; }
+  .week-picker .week-name { font-weight: 650; padding: 0 4px; white-space: nowrap; }
+  .clock-time { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 650; }
+  .place { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 13px; font-weight: 700; font-size: 12.5px;
+    font-variant-numeric: tabular-nums; background: var(--surface-2); color: var(--text-2); }
+  .place.p1 { background: #e7b416; color: #2b2100; }
+  .place.p2 { background: #c3c7cf; color: #1f2329; }
+  .place.p3 { background: #c98a4b; color: #2a1606; }
+  table.data tr.attempt-removed td { color: var(--text-3); }
+  table.data tr.attempt-removed .clock-time { text-decoration: line-through; }
+  .removed-why { font-size: 12px; color: var(--text-3); overflow-wrap: anywhere; }
+
+  @media (max-width: 600px) {
+    .given-back { grid-template-columns: 1fr; }
+    .week-picker { width: 100%; }
+    .week-picker .input { flex: 1 1 140px; }
+    .rules-card .rc-doubles .rc-d-link { margin-left: 0; }
+  }
+}

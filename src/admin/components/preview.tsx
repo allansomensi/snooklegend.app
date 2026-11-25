@@ -43,24 +43,29 @@ const gameLang = (lang: string): PreviewLang => (lang.startsWith("pt") ? "pt" : 
  * What the player will see in their inbox, worded as the game words it in
  * each of its languages (the staff's own text comes through as written):
  * its title and text, whether it asks to confirm reading it, how long it
- * stays pinned, and its button. With `names`, both players' (annul, end).
+ * stays pinned, and its button. With `players` in the preview, each
+ * player's (annul a game, end one: two; annul a doubles game: four, in
+ * `names`' order, a team to a row).
  */
-export function NotificationPreview({ preview, names }: { preview: Preview; names?: [string, string] }) {
+export function NotificationPreview({ preview, names }: { preview: Preview; names?: string[] }) {
   const { t, tf, lang } = useLocale();
   const [shown, setShown] = useState<PreviewLang>(gameLang(lang));
-  const both = preview.players && preview.players.length === 2 ? preview.players : null;
+  const each = preview.players && preview.players.length >= 2 ? preview.players : null;
+  // Two players: each is told about the other (seat 0's names seat 1 as
+  // the opponent). More: the names given (the opponent is a team).
+  const to = (k: number) =>
+    (each?.length === 2 ? each[1 - k].notification.opponent : null) || names?.[k] || tf("Player {n}", { n: k + 1 });
   return (
     <section className="notif-preview" aria-label={t("What the player will see")} aria-live="polite">
       <div className="row between">
-        <span className="np-label">{both ? t("What each player will see") : t("What the player will see")}</span>
+        <span className="np-label">{each ? t("What each player will see") : t("What the player will see")}</span>
         <Segmented<PreviewLang> name={t("Language")} value={shown} onChange={setShown} options={PREVIEW_LANGS.map((l) => [l, LANG_NAMES[l]])} />
       </div>
-      {both ? (
+      {each ? (
         <div className="np-pair">
-          {both.map((p, k) => (
+          {each.map((p, k) => (
             <div key={k} className="stack">
-              {/* Each is told about the other: seat 0's names seat 1 as the opponent. */}
-              <span className="faint">{tf("To {name}", { name: both[1 - k].notification.opponent || names?.[k] || tf("Player {n}", { n: k + 1 }) })}</span>
+              <span className="faint">{tf("To {name}", { name: to(k) })}</span>
               <InboxCard p={p} lang={shown} />
             </div>
           ))}

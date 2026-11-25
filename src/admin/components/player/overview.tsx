@@ -1,20 +1,24 @@
 "use client";
 
 import { Copy, Pencil, Shield, Target, UserX, Users } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FOREVER, nowSecs } from "@/admin/lib/format";
+import { parseDoublesRatings } from "@/admin/lib/modes";
 import { RULES, recordOf } from "@/admin/lib/rules";
-import type { RulesId, User, UserDetail } from "@/admin/lib/types";
+import type { DoublesRecord, RulesId, User, UserDetail } from "@/admin/lib/types";
 import { usePlayerActions } from "../player-dialogs";
 import { useLocale } from "../providers/locale";
 import {
   AdminOnly, Badge, Btn, Card, CardHead, Country, HealthRow, Kpi, RulesBadge, RulesMark, playerHref, useRoleLabel, useRulesNames,
 } from "../ui/bits";
 import { useCopy } from "./copy";
+import "@/admin/styles/modes.css";
 
 /** A player's standing under one of the rules: the rating and its tier,
- * the peak, and the record. `now` marks the rules they play right now. */
-function RulesStanding({ u, r, now }: { u: User; r: RulesId; now: boolean }) {
+ * the peak, and the record; their doubles rating under the same rules
+ * below it. `now` marks the rules they play right now. */
+function RulesStanding({ u, r, now, doubles }: { u: User; r: RulesId; now: boolean; doubles: DoublesRecord }) {
   const { t, tn, fmtNum, fmtPct } = useLocale();
   const { rulesName } = useRulesNames();
   const x = recordOf(u, r);
@@ -38,6 +42,21 @@ function RulesStanding({ u, r, now }: { u: User; r: RulesId; now: boolean }) {
       ) : (
         <div className="rc-stats faint">{t("No rated game under these rules yet.")}</div>
       )}
+      <div className="rc-doubles">
+        <span className="rc-d-label"><Users className="icon" aria-hidden />{t("Doubles")}</span>
+        <span className="rc-d-rating">{fmtNum(doubles.rating)}</span>
+        {doubles.games ? (
+          <>
+            <span>{tn(doubles.peak_rating, "peak {n}", "peak {n}")}</span>
+            <span><b>{fmtNum(doubles.games)}</b> {tn(doubles.games, "rated game", "rated games")}</span>
+            <span><b>{fmtNum(doubles.wins)}</b> {tn(doubles.wins, "win", "wins")}</span>
+            <span><b>{fmtPct((doubles.wins * 100) / doubles.games, 1)}</b> {t("won")}</span>
+          </>
+        ) : (
+          <span className="faint">{t("no rated doubles game")}</span>
+        )}
+        <Link className="rc-d-link" href={playerHref(u.username, "doubles")}>{t("Doubles games")}</Link>
+      </div>
     </section>
   );
 }
@@ -60,10 +79,11 @@ export function PlayerOverview({ d }: { d: UserDetail }) {
   const openReports = d.reports.filter((r) => r.status === 0).length;
   const warnings = d.notes.filter((n) => n.kind === "warning").length;
   const none = <span className="faint">{t("none")}</span>;
+  const doubles = parseDoublesRatings(d.doubles_ratings);
   return (
     <div className="stack">
       <div className="grid-2">
-        {RULES.map((r) => <RulesStanding key={r} u={u} r={r} now={d.presence?.rules === r} />)}
+        {RULES.map((r) => <RulesStanding key={r} u={u} r={r} now={d.presence?.rules === r} doubles={doubles[r]} />)}
       </div>
       <div className="kpis">
         <Kpi label={t("Casual games")} value={fmtNum(u.casual_games)} icon={Users} tone="success" />

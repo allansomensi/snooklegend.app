@@ -51,8 +51,9 @@ export interface FormDialogProps {
    * `"preview": true`; null: nobody is told). When given, the first press
    * shows it and the next one sends; changing a value asks for it again. */
   preview?: (values: Values) => Promise<Preview | null>;
-  /** The two players, for a preview that tells both. */
-  previewNames?: [string, string];
+  /** The players told, in the order of the preview's `players` (the two
+   * of a game, the four of a doubles game). */
+  previewNames?: string[];
   /** Gets the values; throws to show an error (the window stays open). */
   onSubmit: (values: Values) => Promise<void>;
   onClose: () => void;
