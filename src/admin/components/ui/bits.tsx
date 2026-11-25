@@ -4,6 +4,7 @@ import * as Menu from "@radix-ui/react-dropdown-menu";
 import { CircleCheck, Globe, Info, RefreshCw, Shield, TriangleAlert, Ban, MicOff, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, type ButtonHTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
+import { avatarSrc } from "@/admin/lib/avatars";
 import { FLAG_CODES } from "@/admin/lib/countries";
 import { hue, nowSecs } from "@/admin/lib/format";
 import { RULES, recordOf } from "@/admin/lib/rules";
@@ -318,7 +319,18 @@ export function Badge({ children, kind = "", icon: Icon, title }: { children?: R
   );
 }
 
-export function Avatar({ name, size = "" }: { name: string; size?: "" | "sm" | "lg" }) {
+/** A player's picture: the game's (`code`, from the API) or, without
+ * one, their initial on a colour of their name. */
+export function Avatar({ name, size = "", code }: { name: string; size?: "" | "sm" | "lg"; code?: string | null }) {
+  const src = avatarSrc(code);
+  if (src) {
+    return (
+      <span className={("avatar pic " + size).trim()} aria-hidden>
+        {/* eslint-disable-next-line @next/next/no-img-element -- a small picture of the site's own, no optimisation needed */}
+        <img src={src} alt="" loading="lazy" decoding="async" />
+      </span>
+    );
+  }
   return (
     <span className={("avatar " + size).trim()} aria-hidden style={{ background: `hsl(${hue(name)} 38% 38%)` }}>
       {String(name || "?").slice(0, 1)}
@@ -348,11 +360,11 @@ export function Country({ code }: { code?: string | null }) {
 
 export const playerHref = (name: string, tab?: string) => "/admin/players/" + encodeURIComponent(name) + (tab && tab !== "overview" ? "/" + tab : "");
 
-export function PersonLink({ name, avatar = true }: { name?: string | null; avatar?: boolean }) {
+export function PersonLink({ name, avatar = true, code }: { name?: string | null; avatar?: boolean; code?: string | null }) {
   if (!name) return <span className="faint">—</span>;
   return (
     <span className="person">
-      {avatar ? <Avatar name={name} size="sm" /> : null}
+      {avatar ? <Avatar name={name} size="sm" code={code} /> : null}
       <Link className="name" href={playerHref(name)} onClick={(e) => e.stopPropagation()}>
         {name}
       </Link>

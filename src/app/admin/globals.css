@@ -412,6 +412,9 @@ td.unplayed b { color: var(--text-3); font-weight: 600; }
 }
 .avatar.lg { width: 64px; height: 64px; font-size: 26px; }
 .avatar.sm { width: 24px; height: 24px; font-size: 11px; }
+/* A picture of the game's (public/avatars). */
+.avatar.pic { background: var(--surface-3); overflow: hidden; }
+.avatar.pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
 /* A country's flag: its place in the game's atlas (public/flags.png, 16
    flags a row) is set by the component; each flag is 20×15. */
 .fl {

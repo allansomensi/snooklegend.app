@@ -57,7 +57,8 @@ function texts(code: string): string[] {
 }
 
 describe("the portal's words", () => {
-  const all = sources(join(__dirname, "..")).flatMap((f) => texts(readFileSync(f, "utf8")));
+  // The portal's code (src/admin) and its pages (src/app/admin).
+  const all = [join(__dirname, ".."), join(__dirname, "../../app/admin")].flatMap(sources).flatMap((f) => texts(readFileSync(f, "utf8")));
 
   it("are found in the code", () => {
     expect(all.length).toBeGreaterThan(400);

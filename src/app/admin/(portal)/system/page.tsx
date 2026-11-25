@@ -161,7 +161,7 @@ function SystemView({ s, staff, at, onRefresh }: { s: System; staff: UsersPage; 
             <DataTable headers={[t("Name"), t("Role"), t("Last seen")]}>
               {staff.users.map((u) => (
                 <tr key={u.id} className="click" {...clickable(() => router.push(playerHref(u.username)))}>
-                  <td><PersonLink name={u.username} /></td>
+                  <td><PersonLink name={u.username} code={u.avatar} /></td>
                   <td><RoleBadge role={u.role} /></td>
                   <td>{u.online ? <Badge kind="success dot">{t("Online")}</Badge> : <TimeAgo at={u.last_seen} />}</td>
                 </tr>

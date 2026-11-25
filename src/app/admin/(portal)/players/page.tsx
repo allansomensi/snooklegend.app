@@ -65,7 +65,7 @@ function PlayerList({ d, q, pageNo, stale, onPage }: { d: UsersPage; q: string; 
             <tr key={u.id} className="click" {...clickable(() => router.push(playerHref(u.username)))}>
               <td>
                 <span className="person">
-                  <Avatar name={u.username} />
+                  <Avatar name={u.username} code={u.avatar} />
                   <span className="person-name"><b className="name">{u.username}</b><UserBadges u={u} online={false} /></span>
                 </span>
               </td>

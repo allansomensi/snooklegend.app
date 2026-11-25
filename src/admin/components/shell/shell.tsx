@@ -142,7 +142,7 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
         <DropMenu
           trigger={
             <button className="btn ghost me-chip" type="button" aria-label={t("Account")}>
-              <Avatar name={me.username} size="sm" />
+              <Avatar name={me.username} size="sm" code={me.avatar} />
               <span className="who">
                 <b>{me.username}</b>
                 <span className={me.role === "admin" ? "admin" : ""}>{roleLabel(me.role)}</span>
@@ -198,7 +198,7 @@ function SearchBox() {
       key: "u" + u.id,
       node: (
         <span className="person grow">
-          <Avatar name={u.username} size="sm" />
+          <Avatar name={u.username} size="sm" code={u.avatar} />
           <span className="person-name"><b>{u.username}</b><UserBadges u={u} /></span>
           <span className="meta"><RatingPair p={u} /></span>
         </span>

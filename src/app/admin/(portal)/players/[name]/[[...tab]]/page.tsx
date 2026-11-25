@@ -1,15 +1,19 @@
 "use client";
 
-import { ChevronRight, Coins, Shield, Star, Target, Trophy, User } from "lucide-react";
+import { Bell, ChevronRight, Coins, History, ListTree, Package, Shield, Star, Target, Trophy, User } from "lucide-react";
 import Link from "next/link";
 import { use } from "react";
 import { PlayerAchievements } from "@/admin/components/player/achievements";
+import { PlayerChanges } from "@/admin/components/player/changes";
+import { PlayerCollection } from "@/admin/components/player/collection";
 import { PlayerComputer } from "@/admin/components/player/computer";
 import { PlayerEconomy } from "@/admin/components/player/economy";
 import { PlayerGames } from "@/admin/components/player/games";
 import { PlayerHeader } from "@/admin/components/player/header";
+import { PlayerInbox } from "@/admin/components/player/inbox";
 import { PlayerModeration } from "@/admin/components/player/moderation";
 import { PlayerOverview } from "@/admin/components/player/overview";
+import { PlayerTimeline } from "@/admin/components/player/timeline";
 import { useLocale } from "@/admin/components/providers/locale";
 import { Tabs, playerHref } from "@/admin/components/ui/bits";
 import { Loaded } from "@/admin/components/ui/loaded";
@@ -22,10 +26,14 @@ import "@/admin/styles/players.css";
 const TABS = [
   { id: "overview", label: msg("Overview"), icon: User },
   { id: "moderation", label: msg("Moderation"), icon: Shield },
+  { id: "inbox", label: msg("Inbox"), icon: Bell },
+  { id: "timeline", label: msg("Timeline"), icon: ListTree },
   { id: "games", label: msg("Games"), icon: Trophy },
   { id: "computer", label: msg("Against the computer"), icon: Target },
   { id: "economy", label: msg("Economy"), icon: Coins },
+  { id: "collection", label: msg("Collection"), icon: Package },
   { id: "achievements", label: msg("Achievements"), icon: Star },
+  { id: "history", label: msg("Names & ratings"), icon: History },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -52,9 +60,18 @@ function Player({ d, tab }: { d: UserDetail; tab: TabId }) {
   const { t } = useLocale();
   const u = d.user;
   const openReports = d.reports.filter((r) => r.status === 0).length;
+  // Important notifications they haven't confirmed yet show on the tab.
+  const waiting = (d.notifications || []).filter((n) => n.important && !n.read_at && !n.deleted_at).length;
   const count = (id: TabId) =>
-    id === "moderation" ? d.notes.length + d.reports.length : id === "games" ? d.history.length : id === "achievements" ? d.achievements.length : null;
-  const Body = { overview: PlayerOverview, moderation: PlayerModeration, games: PlayerGames, computer: PlayerComputer, economy: PlayerEconomy, achievements: PlayerAchievements }[tab];
+    id === "moderation" ? d.notes.length + d.reports.length
+      : id === "games" ? d.history.length
+        : id === "achievements" ? d.achievements.length
+          : id === "inbox" ? waiting || null
+            : id === "history" ? (d.renames?.length || 0) + (d.rating_adjustments?.length || 0) : null;
+  const Body = {
+    overview: PlayerOverview, moderation: PlayerModeration, inbox: PlayerInbox, timeline: PlayerTimeline, games: PlayerGames, computer: PlayerComputer,
+    economy: PlayerEconomy, collection: PlayerCollection, achievements: PlayerAchievements, history: PlayerChanges,
+  }[tab];
   return (
     <>
       <PlayerHeader d={d} />
@@ -66,7 +83,7 @@ function Player({ d, tab }: { d: UserDetail; tab: TabId }) {
             label: t(x.label),
             icon: x.icon,
             count: count(x.id) || null,
-            alert: x.id === "moderation" && openReports > 0,
+            alert: (x.id === "moderation" && openReports > 0) || (x.id === "inbox" && waiting > 0),
             href: playerHref(u.username, x.id),
           }))}
         />

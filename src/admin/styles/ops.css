@@ -1,0 +1,83 @@
+/* The 0.12 tools: items and their rarity, the notification preview, the
+   item picker, the analytics' charts, the calendar and a game shot by shot.
+   Additions to the portal's components (src/app/admin/globals.css). */
+@layer components {
+  /* The rarities' colours, as the game draws them (crates/proto/src/shop.rs
+     `Rarity::color`), a little darker on the light theme. */
+  :root, :root[data-theme="dark"] {
+    --r-common: #a8b0ba; --r-rare: #4094ff; --r-epic: #b05cff; --r-legendary: #ffb020;
+  }
+  :root[data-theme="light"] {
+    --r-common: #6b7480; --r-rare: #1f6fd6; --r-epic: #8a35d6; --r-legendary: #a86a00;
+  }
+  .r-common { --r: var(--r-common); }
+  .r-rare { --r: var(--r-rare); }
+  .r-epic { --r: var(--r-epic); }
+  .r-legendary { --r: var(--r-legendary); }
+  .r-text.r-common, .r-text.r-rare, .r-text.r-epic, .r-text.r-legendary { color: var(--r); }
+  .rarity { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 650; color: var(--r, var(--text-3)); white-space: nowrap; }
+  .rarity i, .rdot { width: 9px; height: 9px; border-radius: 50%; background: var(--r, var(--border-strong)); flex: none; display: inline-block; box-shadow: 0 0 0 2px color-mix(in srgb, var(--r, transparent) 25%, transparent); }
+  .item-label { display: inline-grid; gap: 1px; min-width: 0; }
+  .item-label .mono { font-size: 11.5px; }
+  .item-tile { display: grid; grid-template-columns: 6px minmax(0, 1fr); gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
+  .item-tile .bar { border-radius: 3px; background: var(--r, var(--border-strong)); }
+  .item-tile .it-main { display: grid; gap: 3px; min-width: 0; }
+  .item-tile .it-origin { font-size: 12.5px; color: var(--text-2); overflow-wrap: anywhere; }
+  .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+
+  /* An item picker: search, filters, and a list to choose from. */
+  .picker { display: grid; gap: 8px; }
+  .picker-tools { display: flex; gap: 8px; flex-wrap: wrap; }
+  .picker-tools .select { width: auto; flex: 0 1 170px; }
+  .picker-search { position: relative; flex: 1 1 200px; }
+  .picker-search .icon { position: absolute; left: 10px; top: 10px; color: var(--text-3); }
+  .picker-search .input { padding-left: 32px; }
+  .picker-list { overflow-y: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-2); }
+  .picker-row {
+    display: flex; align-items: center; gap: 10px; width: 100%; padding: 7px 12px; border: 0; border-bottom: 1px solid var(--border);
+    background: transparent; text-align: left; cursor: pointer; font-size: 13px;
+  }
+  .picker-row:last-child { border-bottom: 0; }
+  .picker-row:hover { background: var(--surface-2); }
+  .picker-row.on { background: var(--accent-soft); }
+  .picker-row .tick { width: 16px; height: 16px; display: grid; place-items: center; color: var(--accent); flex: none; }
+  .picker-row .picker-name { display: grid; min-width: 0; }
+  .picker-row .picker-name b, .picker-row .picker-name .mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .picker-row .picker-name .mono { font-size: 11px; }
+  .picker-price { min-width: 64px; text-align: right; color: var(--text-2); }
+  .picker-empty { padding: 14px; text-align: center; }
+  .item-chip.picked { cursor: pointer; gap: 8px; }
+  .field.invalid .picker-list { border-color: var(--danger); }
+  @media (max-width: 600px) { .picker-row .hide-xs { display: none; } }
+
+  /* What the player will see in their inbox. */
+  .notif-preview { display: grid; gap: 10px; border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border)); background: var(--accent-soft); border-radius: 12px; padding: 12px; }
+  .notif-preview .np-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; color: var(--accent); }
+  .notif-preview .segmented { background: var(--surface); }
+  .np-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 600px) { .np-pair { grid-template-columns: 1fr; } }
+  .inbox-card { display: grid; gap: 8px; padding: 12px 14px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); }
+  .inbox-card.important { border-left: 3px solid var(--warning); }
+  .inbox-card .ic-head { display: flex; align-items: center; gap: 8px; }
+  .inbox-card .ic-head .icon { color: var(--accent); }
+  .inbox-card .ic-body { color: var(--text-2); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .stale { opacity: .55; }
+
+  /* The inbox as the staff see it. */
+  .notif-row { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--border); align-items: start; }
+  .notif-row:last-child { border-bottom: 0; }
+  .notif-row .nr-main { display: grid; gap: 3px; min-width: 0; }
+  .notif-row .nr-text { color: var(--text-2); font-size: 13px; overflow-wrap: anywhere; white-space: pre-wrap; }
+  .notif-row .nr-side { display: grid; gap: 4px; justify-items: end; text-align: right; font-size: 12px; }
+  .notif-row.deleted { opacity: .7; }
+  @media (max-width: 600px) {
+    .notif-row { grid-template-columns: 32px minmax(0, 1fr); }
+    .notif-row .nr-side { grid-column: 2; justify-items: start; text-align: left; }
+  }
+}
+
+@layer components {
+  /* Filters at the top of a card, above its list. */
+  .card-body.toolbar-in { padding: 12px 18px; border-bottom: 1px solid var(--border); }
+  .card-body.toolbar-in .select { width: auto; flex: 0 1 200px; }
+}

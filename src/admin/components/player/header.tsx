@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  Ban, CalendarDays, Clock, Coins, Copy, Ellipsis, Gift, Key, LogOut, MicOff, Pencil, Shield, Star, StickyNote, Trash2, TriangleAlert, Undo2, UserX,
+  Ban, CalendarDays, Clock, Coins, Copy, Ellipsis, Gift, Key, LogOut, Mail, MicOff, Pencil, Scale, Shield, Star, StickyNote, Trash2, TriangleAlert, Undo2, UserX,
 } from "lucide-react";
 import { useIsAdmin, useMe } from "@/admin/lib/hooks";
 import { FOREVER, nowSecs } from "@/admin/lib/format";
@@ -54,6 +54,7 @@ export function PlayerHeader({ d }: { d: UserDetail }) {
           { label: t("Give coins…"), icon: Coins, onSelect: () => actions.coins(u) },
           { label: t("Give an item…"), icon: Gift, onSelect: () => void actions.item(u) },
           { label: t("Give VIP days…"), icon: Star, onSelect: () => actions.vip(u) },
+          isSelf ? null : { label: t("Adjust the rating…"), icon: Scale, onSelect: () => actions.rating(u, d.history) },
         ] as const)
       : []),
   ];
@@ -62,7 +63,7 @@ export function PlayerHeader({ d }: { d: UserDetail }) {
     <>
       <Card>
         <div className="card-body profile-head">
-          <Avatar name={u.username} size="lg" />
+          <Avatar name={u.username} size="lg" code={u.avatar} />
           <div className="who">
             <h1>
               {u.username}
@@ -89,6 +90,7 @@ export function PlayerHeader({ d }: { d: UserDetail }) {
           </div>
           {u.deleted_at ? null : (
             <div className="action-bar">
+              {isSelf ? null : <Btn label={t("Message")} icon={Mail} onClick={() => actions.message(u)} />}
               {isSelf ? null : <Btn label={t("Warn")} icon={TriangleAlert} onClick={() => actions.note(u, "warning")} />}
               {isSelf ? null : muted ? (
                 <Btn label={t("Unmute")} icon={Undo2} onClick={() => void actions.quick(u, "unmute", {}, t("Unmuted."))} />

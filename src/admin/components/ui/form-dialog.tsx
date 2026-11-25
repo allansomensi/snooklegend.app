@@ -1,8 +1,10 @@
 "use client";
 
-import { TriangleAlert, type LucideIcon } from "lucide-react";
+import { Eye, TriangleAlert, type LucideIcon } from "lucide-react";
 import { Fragment, useId, useRef, useState, type ReactNode } from "react";
 import { charCount } from "@/admin/lib/format";
+import type { Preview } from "@/admin/lib/types";
+import { NotificationPreview } from "../preview";
 import { useLocale } from "../providers/locale";
 import { Modal, type Tone } from "./modal";
 import { Spinner } from "./bits";
@@ -29,7 +31,10 @@ export type Field =
   | (Base & { type: "checkbox"; value?: boolean })
   /** Chips that fill the field `target` with their text. */
   | { type: "chips"; name: string; target: string; options: string[] }
-  | { type: "node"; name: string; node: ReactNode | ((values: Values) => ReactNode) };
+  | { type: "node"; name: string; node: ReactNode | ((values: Values) => ReactNode) }
+  /** A control of the page's own (an item picker, a date…): it gets the
+   * value and a way to change it (and the other values). */
+  | (Base & { type: "custom"; value?: FieldValue; render: (value: FieldValue, set: (v: FieldValue) => void, all: Values) => ReactNode });
 
 export interface FormDialogProps {
   title: string;
@@ -42,6 +47,12 @@ export interface FormDialogProps {
   extra?: (values: Values) => ReactNode;
   submit?: string;
   submitKind?: "primary" | "danger";
+  /** The notification the player would get with these values (the API's
+   * `"preview": true`; null: nobody is told). When given, the first press
+   * shows it and the next one sends; changing a value asks for it again. */
+  preview?: (values: Values) => Promise<Preview | null>;
+  /** The two players, for a preview that tells both. */
+  previewNames?: [string, string];
   /** Gets the values; throws to show an error (the window stays open). */
   onSubmit: (values: Values) => Promise<void>;
   onClose: () => void;
@@ -49,13 +60,14 @@ export interface FormDialogProps {
 
 const initialValue = (f: Field): FieldValue => {
   if (f.type === "chips" || f.type === "node") return "";
+  if (f.type === "custom") return f.value ?? "";
   if (f.type === "checkbox") return !!f.value;
   if (f.type === "choices" || f.type === "select") return f.value ?? f.options[0]?.[0] ?? "";
   return f.value ?? "";
 };
 
 /** A form in a window. Enter sends it (Ctrl+Enter in a text area). */
-export function FormDialog({ title, text, icon, tone, wide, fields, extra, submit, submitKind = "primary", onSubmit, onClose }: FormDialogProps) {
+export function FormDialog({ title, text, icon, tone, wide, fields, extra, submit, submitKind = "primary", preview, previewNames, onSubmit, onClose }: FormDialogProps) {
   const { t, tf, fmtNum } = useLocale();
   const uid = useId();
   const [values, setValues] = useState<Values>(() => Object.fromEntries(fields.map((f) => [f.name, initialValue(f)])));
@@ -64,12 +76,27 @@ export function FormDialog({ title, text, icon, tone, wide, fields, extra, submi
   const [sending, setSending] = useState(false);
   const inputs = useRef<Record<string, HTMLElement | null>>({});
   const set = (name: string, v: FieldValue) => setValues((s) => ({ ...s, [name]: v }));
+  // The preview shown, and the values it was made from.
+  const [shown, setShown] = useState<{ key: string; data: Preview | null } | null>(null);
+  const key = JSON.stringify(values);
+  const previewed = !!shown && shown.key === key;
 
   async function run() {
     if (sending) return;
     setError(null);
     for (const f of fields) {
       if (f.type === "chips" || f.type === "node" || f.type === "checkbox") continue;
+      if (f.type === "custom") {
+        const problem = f.required && (values[f.name] === "" || values[f.name] === undefined)
+          ? tf("Fill in “{field}”.", { field: f.label || f.name })
+          : f.validate ? f.validate(String(values[f.name] ?? ""), values) : null;
+        if (problem) {
+          setInvalid(f.name);
+          setError(problem);
+          return;
+        }
+        continue;
+      }
       const v = String(values[f.name] ?? "");
       let problem: string | null = null;
       if (f.required && !v.trim()) problem = tf("Fill in “{field}”.", { field: f.label || f.name });
@@ -84,6 +111,15 @@ export function FormDialog({ title, text, icon, tone, wide, fields, extra, submi
     }
     setInvalid(null);
     setSending(true);
+    if (preview && !previewed) {
+      try {
+        setShown({ key, data: await preview(values) });
+      } catch (e) {
+        setError(e instanceof Error ? e.message : String(e));
+      }
+      setSending(false);
+      return;
+    }
     try {
       await onSubmit(values);
       onClose();
@@ -117,6 +153,22 @@ export function FormDialog({ title, text, icon, tone, wide, fields, extra, submi
     }
     const id = fieldId(f.name);
     const v = values[f.name];
+    if (f.type === "custom") {
+      return (
+        <div key={f.name} className={"field" + (invalid === f.name ? " invalid" : "")}>
+          {f.label ? (
+            <div className="label">
+              <span>
+                {f.label}
+                {f.optional ? <span className="faint"> · {t("optional")}</span> : null}
+              </span>
+            </div>
+          ) : null}
+          {f.render(v, (x) => set(f.name, x), values)}
+          {f.hint ? <div className="hint">{f.hint}</div> : null}
+        </div>
+      );
+    }
     const cls = (base: string) => base + (invalid === f.name ? " invalid" : "");
     const ref = (el: HTMLElement | null) => {
       inputs.current[f.name] = el;
@@ -199,14 +251,24 @@ export function FormDialog({ title, text, icon, tone, wide, fields, extra, submi
         <>
           <button type="button" className="btn" onClick={onClose}>{t("Cancel")}</button>
           <button type="button" data-primary className={"btn " + submitKind} disabled={sending} onClick={() => void run()}>
-            {sending ? <Spinner /> : null}
-            {submit || t("Save")}
+            {sending ? <Spinner /> : preview && !previewed ? <Eye className="icon" aria-hidden /> : null}
+            {preview && !previewed ? t("Preview") : submit || t("Save")}
           </button>
         </>
       }
     >
       {body}
       {extra ? extra(values) : null}
+      {preview && shown ? (
+        shown.data ? (
+          <div className={previewed ? "" : "stale"}>
+            <NotificationPreview preview={shown.data} names={previewNames} />
+            {previewed ? null : <div className="hint">{t("You changed something: preview it again before sending.")}</div>}
+          </div>
+        ) : previewed ? (
+          <div className="hint">{t("The player isn't told about this.")}</div>
+        ) : null
+      ) : null}
       {error ? (
         <div className="alert danger" role="alert">
           <TriangleAlert className="icon" aria-hidden />
