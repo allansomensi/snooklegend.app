@@ -45,8 +45,9 @@ export function Header({ t, locale, paths }: Props) {
     { href: rankingPath(locale), label: t.nav.ranking },
     { href: pagePath(locale, "tournaments"), label: t.nav.tournaments },
     { href: pagePath(locale, "rules"), label: t.nav.rules },
-    { href: `${home}#features`, label: t.nav.features },
-    { href: `${home}#gallery`, label: t.nav.gallery },
+    // These two only where there's room (and always in the phone menu).
+    { href: `${home}#features`, label: t.nav.features, wide: true },
+    { href: `${home}#gallery`, label: t.nav.gallery, wide: true },
     { href: `${home}#faq`, label: t.nav.faq },
   ];
 
@@ -77,17 +78,17 @@ export function Header({ t, locale, paths }: Props) {
             height={36}
             className="size-9 rounded-[10px] shadow-[0_4px_14px_-4px_rgb(0_0_0/0.8)] transition-transform duration-500 group-hover:rotate-[-8deg]"
           />
-          <span className="font-display text-[17px] font-bold tracking-tight text-cream">
+          <span className="whitespace-nowrap font-display text-[17px] font-bold tracking-tight text-cream">
             Snook <span className="text-gold">Legend</span>
           </span>
         </a>
 
-        <nav className="ml-6 hidden items-center gap-1 lg:flex" aria-label="Main">
+        <nav className="ml-4 hidden items-center gap-0.5 lg:flex xl:ml-6 xl:gap-1" aria-label="Main">
           {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="rounded-full px-3.5 py-2 text-[14px] font-medium text-cream/70 transition hover:bg-white/[0.06] hover:text-cream"
+              className={`${"wide" in l && l.wide ? "hidden xl:block" : ""} whitespace-nowrap rounded-full px-3 py-2 text-[14px] font-medium text-cream/70 transition hover:bg-white/[0.06] hover:text-cream xl:px-3.5`}
             >
               {l.label}
             </a>
