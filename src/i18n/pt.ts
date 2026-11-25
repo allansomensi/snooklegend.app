@@ -136,7 +136,7 @@ const pt: Dict = {
       name: "Regra oficial (WPA)",
       tag: "Torneios internacionais",
       points: [
-        "Nada é cantado: qualquer bola do seu grupo em qualquer caçapa mantém a vez",
+        "Só a 8 é cantada: qualquer bola do seu grupo em qualquer caçapa mantém a vez",
         "Bola na mão em qualquer lugar depois de qualquer falta",
         "Saída válida encaçapa uma bola ou leva quatro à tabela",
         "As escolhas depois da saída: seguir, arrumar de novo ou passar",
@@ -550,12 +550,12 @@ const pt: Dict = {
       { what: "Os grupos", br: "Decididos pela primeira bola encaçapada, também na saída.", wpa: "Nunca na saída: pela primeira bola encaçapada depois dela." },
       { what: "Depois de uma falta", br: "As menores bolas do adversário saem da mesa (bolas de penalidade).", wpa: "Bola na mão em qualquer lugar da mesa; nenhuma bola sai." },
       { what: "Branca na caçapa", br: "Uma bola para o adversário; a branca volta para o ponto inicial, sem bola na mão.", wpa: "Uma falta como outra qualquer: bola na mão." },
-      { what: "Cantar", br: "Só a caçapa da 8, antes da primeira tacada nela.", wpa: "Nada é cantado: qualquer caçapa vale." },
+      { what: "Cantar", br: "Só a caçapa da 8, antes da primeira tacada nela.", wpa: "Só a caçapa da 8, a cada tacada nela; as bolas do seu grupo valem em qualquer caçapa." },
     ],
     brTitle: "A regra brasileira",
     brIntro: "A sinuca de bola 8 dos bares e salões do Brasil. Falta não dá bola na mão: custa bolas de penalidade, tiradas do grupo do adversário como se ele as tivesse encaçapado.",
     wpaTitle: "A regra oficial (WPA)",
-    wpaIntro: "A bola 8 dos torneios internacionais, como a World Pool-Billiard Association joga, sem cantar: qualquer bola do seu grupo em qualquer caçapa mantém a vez.",
+    wpaIntro: "A bola 8 dos torneios internacionais, como a World Pool-Billiard Association joga, só com a 8 cantada: qualquer bola do seu grupo em qualquer caçapa mantém a vez.",
     replay: "Ver a animação de novo",
     pause: "Pausar a animação",
     play: "Rodar a animação",
@@ -568,7 +568,7 @@ const pt: Dict = {
       callPocket: "Na 8: cante uma caçapa antes de tacar. Só ela vale.",
       breakWpa: "Uma saída válida encaçapa uma bola ou leva pelo menos quatro bolas até as tabelas.",
       ballInHand: "Depois de qualquer falta, bola na mão: o adversário coloca a branca onde quiser na mesa.",
-      eightAny: "Com o seu grupo fora da mesa, a 8 em qualquer caçapa, sem falta, vence.",
+      eightCalled: "Com o seu grupo fora da mesa, a 8 na caçapa que você cantou, sem falta, vence; em outra caçapa, perde.",
     },
     labels: {
       headString: "Linha de cabeceira",
@@ -587,7 +587,7 @@ const pt: Dict = {
     faq: [
       {
         q: "Qual a diferença entre a regra brasileira e a regra oficial?",
-        a: "As faltas e a bola 8. Na regra brasileira uma falta custa bolas de penalidade (as menores bolas do adversário saem da mesa), a 8 sozinha na saída vence e você canta a caçapa da 8. Na regra oficial (WPA) uma falta dá bola na mão em qualquer lugar, a 8 na saída volta para a mesa e nada é cantado.",
+        a: "As faltas e a bola 8. Na regra brasileira uma falta custa bolas de penalidade (as menores bolas do adversário saem da mesa), a 8 sozinha na saída vence e você canta a caçapa da 8. Na regra oficial (WPA) uma falta dá bola na mão em qualquer lugar, a 8 na saída volta para a mesa e a caçapa da 8 é cantada a cada tacada nela.",
       },
       {
         q: "Como se decidem as lisas e as listradas?",
@@ -607,11 +607,11 @@ const pt: Dict = {
       },
       {
         q: "Precisa cantar a caçapa da 8?",
-        a: "Na regra brasileira, sim: quando o seu grupo acaba, você escolhe a caçapa da 8 antes da primeira tacada nela, e a cantada vale até o fim da partida. Na regra oficial, como o Snook Legend joga, nada é cantado: a 8 em qualquer caçapa, sem falta, vence.",
+        a: "Na regra brasileira, sim: quando o seu grupo acaba, você escolhe a caçapa da 8 antes da primeira tacada nela, e a cantada vale até o fim da partida. Na regra oficial, sim, a cada tacada na 8: o jogo canta a caçapa para onde a sua mira manda a 8 (sem mostrá-la), ou a que você clicar. A 8 nessa caçapa, sem falta, vence; em outra, perde. As bolas do seu grupo nunca são cantadas.",
       },
       {
         q: "Quando se perde na bola 8?",
-        a: "Nas duas regras: encaçapar a 8 antes de acabar o seu grupo, numa falta, ou jogá-la para fora da mesa (depois da saída). Na regra brasileira, também numa caçapa diferente da cantada, ou junto com a branca ou com uma bola do adversário.",
+        a: "Nas duas regras: encaçapar a 8 antes de acabar o seu grupo, numa caçapa diferente da cantada, numa falta, ou jogá-la para fora da mesa (depois da saída). Na regra brasileira, também junto com a branca ou com uma bola do adversário.",
       },
       {
         q: "E se a branca cair na caçapa?",

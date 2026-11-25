@@ -232,8 +232,8 @@ export const SCENES = {
     ],
   },
 
-  /** Official: the 8 in any pocket, without a foul, wins. */
-  eightAny: {
+  /** Official: the 8 in the called pocket, without a foul, wins. */
+  eightCalled: {
     duration: 6.5,
     cue: { at: [81.9, 21.2], angle: 77.3, from: 0.28, strike: 0.38 },
     balls: [
@@ -242,8 +242,11 @@ export const SCENES = {
       still(9, 150, 24),
       still(12, 40, 30),
     ],
-    pockets: [0, 1, 2, 3, 4, 5].map((i) => ({ i, from: 0.04 + i * 0.03, to: 0.26, tone: "green" as const })).concat([{ i: 4, from: 0.66, to: 1, tone: "green" }]),
-    labels: [{ key: "win", x: 100, y: 40, from: 0.7, to: 1, tone: "gold" }],
+    pockets: [{ i: 4, from: 0.08, to: 1, tone: "gold" }],
+    labels: [
+      { key: "called", x: 136, y: 90, from: 0.08, to: 1, tone: "gold" },
+      { key: "win", x: 100, y: 40, from: 0.7, to: 1, tone: "gold" },
+    ],
   },
 } satisfies Record<string, Scene>;
 
@@ -262,7 +265,7 @@ export const SCENE_AT: Record<"brazilian" | "official", { at: [number, number]; 
   official: [
     { at: [1, 0], scene: "breakWpa" },
     { at: [3, 0], scene: "ballInHand" },
-    { at: [4, 0], scene: "eightAny" },
+    { at: [4, 0], scene: "eightCalled" },
   ],
 };
 

@@ -134,7 +134,7 @@ const en = {
       name: "Official rules (WPA)",
       tag: "International tournaments",
       points: [
-        "Nothing is called: any ball of your group in any pocket keeps the table",
+        "Only the 8 is called: any ball of your group in any pocket keeps the table",
         "Ball in hand anywhere after any foul",
         "A legal break makes a ball or drives four balls to a cushion",
         "The choices after the break: play on, re-rack or pass it",
@@ -548,12 +548,12 @@ const en = {
       { what: "The groups", br: "Decided by the first ball made, on the break too.", wpa: "Never on the break: by the first ball made after it." },
       { what: "After a foul", br: "Your opponent's lowest balls come off the table (penalty balls).", wpa: "Ball in hand anywhere on the table; no ball comes off." },
       { what: "Cue ball in a pocket", br: "One ball to your opponent; the cue ball goes back to the head spot, not in hand.", wpa: "A foul like any other: ball in hand." },
-      { what: "Calling", br: "Only the 8's pocket, before your first shot at it.", wpa: "Nothing is called: any pocket counts." },
+      { what: "Calling", br: "Only the 8's pocket, before your first shot at it.", wpa: "Only the 8's pocket, on every shot at it; your group's balls count in any pocket." },
     ],
     brTitle: "The Brazilian rule",
     brIntro: "The eight-ball of Brazil's bars and pool halls. Fouls don't give ball in hand: they cost penalty balls, taken from your opponent's group as if they had made them.",
     wpaTitle: "The official rules (WPA)",
-    wpaIntro: "The eight-ball of international tournaments, as the World Pool-Billiard Association plays it, without calls: any ball of your group in any pocket keeps the table.",
+    wpaIntro: "The eight-ball of international tournaments, as the World Pool-Billiard Association plays it, with only the 8 called: any ball of your group in any pocket keeps the table.",
     replay: "Play the animation again",
     pause: "Pause the animation",
     play: "Play the animation",
@@ -566,7 +566,7 @@ const en = {
       callPocket: "On the 8: call a pocket before you shoot. Only that pocket wins.",
       breakWpa: "A legal break makes a ball or drives at least four balls to a cushion.",
       ballInHand: "After any foul, ball in hand: your opponent places the cue ball anywhere on the table.",
-      eightAny: "Once your group is off the table, the 8 in any pocket, without a foul, wins.",
+      eightCalled: "Once your group is off the table, the 8 in the pocket you called, without a foul, wins; in another pocket, it loses.",
     },
     labels: {
       headString: "Head string",
@@ -585,7 +585,7 @@ const en = {
     faq: [
       {
         q: "What's the difference between the Brazilian rule and the official rules?",
-        a: "The fouls and the 8-ball. Under the Brazilian rule a foul costs penalty balls (your opponent's lowest balls come off the table), the 8 alone on the break wins and you call the 8's pocket. Under the official (WPA) rules a foul gives ball in hand anywhere, the 8 on the break is spotted again and nothing is called.",
+        a: "The fouls and the 8-ball. Under the Brazilian rule a foul costs penalty balls (your opponent's lowest balls come off the table), the 8 alone on the break wins and you call the 8's pocket. Under the official (WPA) rules a foul gives ball in hand anywhere, the 8 on the break is spotted again and the 8's pocket is called on every shot at it.",
       },
       {
         q: "How are solids and stripes decided?",
@@ -605,11 +605,11 @@ const en = {
       },
       {
         q: "Do you have to call the pocket for the 8?",
-        a: "Under the Brazilian rule, yes: once your group is cleared you choose the 8's pocket before your first shot at it, and the call stands to the end of the game. Under the official rules as Snook Legend plays them, nothing is called: the 8 in any pocket, without a foul, wins.",
+        a: "Under the Brazilian rule, yes: once your group is cleared you choose the 8's pocket before your first shot at it, and the call stands to the end of the game. Under the official rules, yes, on every shot at the 8: the game calls the pocket your aim sends it to (without showing it), or the one you click. The 8 in that pocket, without a foul, wins; in another, it loses. Your group's balls are never called.",
       },
       {
         q: "When do you lose on the 8-ball?",
-        a: "Under both rules: making the 8 before your group is cleared, on a foul, or knocking it off the table (after the break). Under the Brazilian rule, also in a pocket other than the one called, or together with the cue ball or one of your opponent's balls.",
+        a: "Under both rules: making the 8 before your group is cleared, in a pocket other than the one called, on a foul, or knocking it off the table (after the break). Under the Brazilian rule, also together with the cue ball or one of your opponent's balls.",
       },
       {
         q: "What happens when the cue ball goes in a pocket?",

@@ -10,7 +10,7 @@
 The eight-ball of international tournaments, as the World Pool-Billiard Association plays it. Snook Legend has the Brazilian rules too: choose the rules of your games in the main menu. If you play the Brazilian rules, read the break, the calls and the fouls below, because they differ a lot.
 
 ### The aim
-Each player has a group of seven balls: solids (1 to 7) or stripes (9 to 15). Pocket all of yours and then the 8-ball before your opponent does.
+Each player has a group of seven balls: solids (1 to 7) or stripes (9 to 15). Pocket all of yours and then the 8-ball, in the pocket you call, before your opponent does.
 
 ### Your turn
 You keep shooting while you make a ball of your group, in any pocket, on a shot without a foul. Otherwise the turn passes, and the balls that went in stay down.
@@ -37,8 +37,8 @@ It is a foul, and the ball stays off (only the 8 comes back). Your opponent play
 ### Open table
 While the groups are not decided, the table is open: you may hit any ball first except the 8. The group of the first ball you make becomes yours. If one group is already off the table, you may play the 8.
 
-### No calls
-Tournaments call every shot; here nothing is called. A ball of your group (or the 8, when you are on it) made in any pocket on a shot without a foul keeps the table, also off a cushion or another ball.
+### Calling the 8
+Tournaments call every shot; here only the 8 is called. A ball of your group made in any pocket on a shot without a foul keeps the table, also off a cushion or another ball. When you shoot at the 8, you call its pocket: following your aim, the game calls the pocket the 8 is heading for, without showing it. To call another one (for a bank shot, say), click it: it lights up. Click it again to go back to your aim.
 
 ### Safety
 To leave the table to your opponent, play a shot that makes none of your balls: the turn passes, and whatever went in stays down. A ball of your group that goes in anyway keeps the table.
@@ -60,7 +60,7 @@ When the game has a shot clock and it runs out, it is a foul: your opponent has 
 ## The 8-ball
 
 ### Winning
-Once your group is off the table, pocket the 8, in any pocket, on a shot without a foul.
+Once your group is off the table, pocket the 8 in the pocket you called, on a shot without a foul.
 
 ### Losing on the 8
-You lose by pocketing the 8 on a foul or before your group is off the table, and by knocking the 8 off the table. None of this applies to the break.
+You lose by pocketing the 8 on a foul, before your group is off the table or in a pocket you didn't call, and by knocking the 8 off the table. None of this applies to the break.

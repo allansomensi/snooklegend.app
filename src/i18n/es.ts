@@ -136,7 +136,7 @@ const es: Dict = {
       name: "Regla oficial (WPA)",
       tag: "Torneos internacionales",
       points: [
-        "No se canta nada: cualquier bola de tu grupo en cualquier tronera mantiene el turno",
+        "Solo se canta la 8: cualquier bola de tu grupo en cualquier tronera mantiene el turno",
         "Bola en mano en cualquier lugar tras cualquier falta",
         "Un saque válido emboca una bola o lleva cuatro a la banda",
         "Las opciones tras el saque: seguir, armar de nuevo o ceder",
@@ -550,12 +550,12 @@ const es: Dict = {
       { what: "Los grupos", br: "Los decide la primera bola metida, también en el saque.", wpa: "Nunca en el saque: la primera bola metida después." },
       { what: "Tras una falta", br: "Las bolas más bajas del rival salen de la mesa (bolas de penalización).", wpa: "Bola en mano en cualquier lugar de la mesa; no sale ninguna bola." },
       { what: "Blanca en la tronera", br: "Una bola para el rival; la blanca vuelve al punto de salida, sin bola en mano.", wpa: "Una falta como cualquier otra: bola en mano." },
-      { what: "Cantar", br: "Solo la tronera de la 8, antes del primer tiro a ella.", wpa: "No se canta nada: vale cualquier tronera." },
+      { what: "Cantar", br: "Solo la tronera de la 8, antes del primer tiro a ella.", wpa: "Solo la tronera de la 8, en cada tiro a ella; las bolas de tu grupo valen en cualquier tronera." },
     ],
     brTitle: "La regla brasileña",
     brIntro: "La bola 8 de los bares y salones de Brasil. Una falta no da bola en mano: cuesta bolas de penalización, quitadas del grupo del rival como si él las hubiera metido.",
     wpaTitle: "La regla oficial (WPA)",
-    wpaIntro: "La bola 8 de los torneos internacionales, como la juega la World Pool-Billiard Association, sin cantar: cualquier bola de tu grupo en cualquier tronera mantiene el turno.",
+    wpaIntro: "La bola 8 de los torneos internacionales, como la juega la World Pool-Billiard Association, cantando solo la 8: cualquier bola de tu grupo en cualquier tronera mantiene el turno.",
     replay: "Ver la animación otra vez",
     pause: "Pausar la animación",
     play: "Reproducir la animación",
@@ -568,7 +568,7 @@ const es: Dict = {
       callPocket: "En la 8: canta una tronera antes de tirar. Solo esa vale.",
       breakWpa: "Un saque válido mete una bola o lleva al menos cuatro bolas a las bandas.",
       ballInHand: "Tras cualquier falta, bola en mano: el rival coloca la blanca donde quiera en la mesa.",
-      eightAny: "Con tu grupo fuera de la mesa, la 8 en cualquier tronera, sin falta, gana.",
+      eightCalled: "Con tu grupo fuera de la mesa, la 8 en la tronera que cantaste, sin falta, gana; en otra tronera, pierde.",
     },
     labels: {
       headString: "Línea de cabecera",
@@ -587,7 +587,7 @@ const es: Dict = {
     faq: [
       {
         q: "¿Qué diferencia hay entre la regla brasileña y la regla oficial?",
-        a: "Las faltas y la bola 8. Con la regla brasileña una falta cuesta bolas de penalización (las bolas más bajas del rival salen de la mesa), la 8 sola en el saque gana y cantas la tronera de la 8. Con la regla oficial (WPA) una falta da bola en mano en cualquier lugar, la 8 en el saque vuelve a la mesa y no se canta nada.",
+        a: "Las faltas y la bola 8. Con la regla brasileña una falta cuesta bolas de penalización (las bolas más bajas del rival salen de la mesa), la 8 sola en el saque gana y cantas la tronera de la 8. Con la regla oficial (WPA) una falta da bola en mano en cualquier lugar, la 8 en el saque vuelve a la mesa y la tronera de la 8 se canta en cada tiro a ella.",
       },
       {
         q: "¿Cómo se deciden las lisas y las rayadas?",
@@ -607,11 +607,11 @@ const es: Dict = {
       },
       {
         q: "¿Hay que cantar la tronera de la 8?",
-        a: "Con la regla brasileña, sí: cuando acabas tu grupo eliges la tronera de la 8 antes del primer tiro a ella, y lo cantado vale hasta el final de la partida. Con la regla oficial, como la juega Snook Legend, no se canta nada: la 8 en cualquier tronera, sin falta, gana.",
+        a: "Con la regla brasileña, sí: cuando acabas tu grupo eliges la tronera de la 8 antes del primer tiro a ella, y lo cantado vale hasta el final de la partida. Con la regla oficial, sí, en cada tiro a la 8: el juego canta la tronera hacia donde tu mira manda la 8 (sin mostrarla), o la que elijas con un clic. La 8 en esa tronera, sin falta, gana; en otra, pierde. Las bolas de tu grupo nunca se cantan.",
       },
       {
         q: "¿Cuándo se pierde con la bola 8?",
-        a: "Con las dos reglas: meter la 8 antes de acabar tu grupo, en una falta, o sacarla de la mesa (después del saque). Con la regla brasileña, también en una tronera distinta de la cantada, o junto con la blanca o con una bola del rival.",
+        a: "Con las dos reglas: meter la 8 antes de acabar tu grupo, en una tronera distinta de la cantada, en una falta, o sacarla de la mesa (después del saque). Con la regla brasileña, también junto con la blanca o con una bola del rival.",
       },
       {
         q: "¿Y si la blanca entra en una tronera?",
