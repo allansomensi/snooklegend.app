@@ -607,7 +607,7 @@ const es: Dict = {
       },
       {
         q: "¿Hay que cantar la tronera de la 8?",
-        a: "Con la regla brasileña, sí: cuando acabas tu grupo eliges la tronera de la 8 antes del primer tiro a ella, y lo cantado vale hasta el final de la partida. Con la regla oficial, sí, en cada tiro a la 8: el juego canta la tronera hacia donde tu mira manda la 8 (sin mostrarla), o la que elijas con un clic. La 8 en esa tronera, sin falta, gana; en otra, pierde. Las bolas de tu grupo nunca se cantan.",
+        a: "Con la regla brasileña, sí: cuando acabas tu grupo eliges la tronera de la 8 antes del primer tiro a ella, y lo cantado vale hasta el final de la partida. Con la regla oficial, sí, en cada tiro a la 8: haces clic en su tronera antes de tirar, como en la regla brasileña (no hay tiro a la 8 sin cantar), y cada tiro a ella se canta de nuevo. La 8 en esa tronera, sin falta, gana; en otra, pierde. Las bolas de tu grupo nunca se cantan.",
       },
       {
         q: "¿Cuándo se pierde con la bola 8?",

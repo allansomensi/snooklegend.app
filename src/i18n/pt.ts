@@ -607,7 +607,7 @@ const pt: Dict = {
       },
       {
         q: "Precisa cantar a caçapa da 8?",
-        a: "Na regra brasileira, sim: quando o seu grupo acaba, você escolhe a caçapa da 8 antes da primeira tacada nela, e a cantada vale até o fim da partida. Na regra oficial, sim, a cada tacada na 8: o jogo canta a caçapa para onde a sua mira manda a 8 (sem mostrá-la), ou a que você clicar. A 8 nessa caçapa, sem falta, vence; em outra, perde. As bolas do seu grupo nunca são cantadas.",
+        a: "Na regra brasileira, sim: quando o seu grupo acaba, você escolhe a caçapa da 8 antes da primeira tacada nela, e a cantada vale até o fim da partida. Na regra oficial, sim, a cada tacada na 8: você clica na caçapa dela antes de dar a tacada, como na regra brasileira (não há tacada na 8 sem cantar), e cada tacada nela é cantada de novo. A 8 nessa caçapa, sem falta, vence; em outra, perde. As bolas do seu grupo nunca são cantadas.",
       },
       {
         q: "Quando se perde na bola 8?",

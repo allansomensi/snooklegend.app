@@ -38,7 +38,7 @@ Encaçapar a 8 na saída não vence nem perde: ela volta para o ponto do pé da 
 Enquanto os grupos não estão decididos, a mesa está aberta: você pode acertar primeiro qualquer bola, menos a 8. O grupo da primeira bola que você encaçapar passa a ser o seu. Se um dos grupos já saiu todo da mesa, você pode jogar a 8.
 
 ### Cantar a 8
-Nos torneios toda tacada é cantada; aqui só a 8 é cantada. Uma bola do seu grupo que cair em qualquer caçapa, numa tacada sem falta, mantém a vez, também de tabela ou de combinação. Quando você joga na 8, canta a caçapa dela: seguindo a sua mira, o jogo canta a caçapa para onde vai a 8, sem mostrá-la. Para cantar outra (numa tabela, por exemplo), clique nela: ela se acende. Clique de novo para voltar à sua mira.
+Nos torneios toda tacada é cantada; aqui só a 8 é cantada. Uma bola do seu grupo que cair em qualquer caçapa, numa tacada sem falta, mantém a vez, também de tabela ou de combinação. Quando você joga na 8, escolha a caçapa dela antes de dar a tacada: clique na caçapa, e ela se acende (clique em outra para trocar). Você não pode dar a tacada sem cantar a caçapa, e cada tacada na 8 é cantada de novo.
 
 ### Defesa
 Para deixar a mesa para o adversário, jogue uma tacada que não encaçape nenhuma bola sua: a vez passa, e o que caiu fica encaçapado. Uma bola do seu grupo que cair mesmo assim mantém a vez.

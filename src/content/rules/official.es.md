@@ -38,7 +38,7 @@ Es falta, y la bola queda fuera (solo la 8 vuelve). El rival juega la mesa como 
 Mientras los grupos no están decididos, la mesa está abierta: puedes tocar primero cualquier bola menos la 8. El grupo de la primera bola que metas pasa a ser el tuyo. Si uno de los grupos ya salió entero de la mesa, puedes jugar la 8.
 
 ### Cantar la 8
-En los torneos se canta cada tiro; aquí solo se canta la 8. Una bola de tu grupo que entre en cualquier tronera, en un tiro sin falta, mantiene el turno, también de banda o de combinación. Cuando tiras a la 8, cantas su tronera: siguiendo tu mira, el juego canta la tronera hacia donde va la 8, sin mostrarla. Para cantar otra (en una banda, por ejemplo), haz clic en ella: se ilumina. Haz clic otra vez para volver a tu mira.
+En los torneos se canta cada tiro; aquí solo se canta la 8. Una bola de tu grupo que entre en cualquier tronera, en un tiro sin falta, mantiene el turno, también de banda o de combinación. Cuando tiras a la 8, elige su tronera antes de tirar: haz clic en la tronera y se ilumina (haz clic en otra para cambiarla). No puedes tirar sin cantar la tronera, y cada tiro a la 8 se canta de nuevo.
 
 ### Defensa
 Para dejarle la mesa al rival, juega un tiro que no meta ninguna bola tuya: el turno pasa, y lo que entró se queda dentro. Una bola de tu grupo que entre de todos modos mantiene el turno.

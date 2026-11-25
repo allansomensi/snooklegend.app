@@ -605,7 +605,7 @@ const en = {
       },
       {
         q: "Do you have to call the pocket for the 8?",
-        a: "Under the Brazilian rule, yes: once your group is cleared you choose the 8's pocket before your first shot at it, and the call stands to the end of the game. Under the official rules, yes, on every shot at the 8: the game calls the pocket your aim sends it to (without showing it), or the one you click. The 8 in that pocket, without a foul, wins; in another, it loses. Your group's balls are never called.",
+        a: "Under the Brazilian rule, yes: once your group is cleared you choose the 8's pocket before your first shot at it, and the call stands to the end of the game. Under the official rules, yes, on every shot at the 8: you click its pocket before you shoot, as under the Brazilian rule (no shot at the 8 without a call), and each shot at it is called afresh. The 8 in that pocket, without a foul, wins; in another, it loses. Your group's balls are never called.",
       },
       {
         q: "When do you lose on the 8-ball?",

@@ -38,7 +38,7 @@ It is a foul, and the ball stays off (only the 8 comes back). Your opponent play
 While the groups are not decided, the table is open: you may hit any ball first except the 8. The group of the first ball you make becomes yours. If one group is already off the table, you may play the 8.
 
 ### Calling the 8
-Tournaments call every shot; here only the 8 is called. A ball of your group made in any pocket on a shot without a foul keeps the table, also off a cushion or another ball. When you shoot at the 8, you call its pocket: following your aim, the game calls the pocket the 8 is heading for, without showing it. To call another one (for a bank shot, say), click it: it lights up. Click it again to go back to your aim.
+Tournaments call every shot; here only the 8 is called. A ball of your group made in any pocket on a shot without a foul keeps the table, also off a cushion or another ball. When you shoot at the 8, choose a pocket for it before you shoot: click the pocket, and it lights up (click another one to change it). You can't shoot until a pocket is called, and each shot at the 8 is called afresh.
 
 ### Safety
 To leave the table to your opponent, play a shot that makes none of your balls: the turn passes, and whatever went in stays down. A ball of your group that goes in anyway keeps the table.
