@@ -18,6 +18,9 @@ export function proxy(request: NextRequest) {
     "img-src 'self' data: blob:",
     "font-src 'self'",
     `connect-src 'self' ${apiOrigin()}${dev ? " ws:" : ""}`,
+    // The portal as an app on a phone: its manifest and its service worker, both its own.
+    "manifest-src 'self'",
+    "worker-src 'self'",
     "object-src 'none'",
     "base-uri 'none'",
     "form-action 'self'",
