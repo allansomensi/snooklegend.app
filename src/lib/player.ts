@@ -3,7 +3,7 @@
 // deleted account, and for a former name).
 
 import type { Locale } from "@/i18n";
-import { bool, getJson, isObj, list, num, numOrNull, str, strOrNull, type Obj } from "./api";
+import { bool, getJson, isObj, list, num, numOrNull, str, type Obj } from "./api";
 import { ACHIEVEMENTS, AVATARS, CUES, FRAMES, RETIRED_AVATARS } from "./game-data";
 import { RULES, tierOf, TIERS, type Rules, type TierKey } from "./ranking";
 

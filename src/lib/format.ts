@@ -12,8 +12,11 @@ export function formatDate(locale: Locale, unix: number, style: "medium" | "long
 /** A date and time (Unix seconds), UTC, with the zone named. */
 export function formatDateTime(locale: Locale, unix: number): string {
   return new Intl.DateTimeFormat(lang(locale), {
-    dateStyle: "medium",
-    timeStyle: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
     timeZone: "UTC",
     timeZoneName: "short",
   }).format(new Date(unix * 1000));

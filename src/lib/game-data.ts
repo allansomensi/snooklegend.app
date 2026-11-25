@@ -1,5 +1,4 @@
 // Made by scripts/sync-game-data.py from the game's repository: don't edit by hand.
-/* eslint-disable */
 
 type Names = { en: string; pt: string; es: string };
 
