@@ -535,7 +535,7 @@ const es: Dict = {
   },
   guide: {
     nav: "Reglas",
-    title: "Reglas del pool bola 8, ilustradas: regla brasileña y oficial (WPA)",
+    title: "Reglas de la bola 8: regla brasileña y oficial (WPA)",
     shortTitle: "Reglas de la bola 8",
     description: "Las reglas del pool bola 8 explicadas con mesas animadas: el saque, lisas y rayadas, faltas, bolas de penalización, bola en mano y la bola 8, con la regla brasileña y la regla oficial de la WPA.",
     kicker: "Guía de reglas",

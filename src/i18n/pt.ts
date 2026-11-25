@@ -535,7 +535,7 @@ const pt: Dict = {
   },
   guide: {
     nav: "Regras",
-    title: "Regras da sinuca bola 8, ilustradas: regra brasileira e oficial (WPA)",
+    title: "Regras da sinuca: regra brasileira e oficial (bola 8)",
     shortTitle: "Regras da sinuca",
     description: "As regras da sinuca bola 8 explicadas com mesas animadas: a saída, lisas e listradas, faltas, bolas de penalidade, bola na mão e a bola 8, na regra brasileira e na regra oficial da WPA.",
     kicker: "Guia de regras",

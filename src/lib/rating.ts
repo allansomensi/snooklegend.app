@@ -88,3 +88,14 @@ export function opponentsAround(rating: number, span = 600, step = 50): number[]
   for (let r = base - span; r <= base + span; r += step) if (r >= ELO.floor) out.push(r);
   return out;
 }
+
+/** Coins for reaching a league for the first time (`Tier::prize` in the game). */
+export const LEAGUE_PRIZES: Record<string, number> = {
+  rookie: 0,
+  amateur: 50,
+  skilled: 100,
+  expert: 200,
+  master: 400,
+  grandmaster: 700,
+  legend: 1000,
+};

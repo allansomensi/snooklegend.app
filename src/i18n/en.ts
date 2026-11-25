@@ -533,7 +533,7 @@ const en = {
   },
   guide: {
     nav: "Rules guide",
-    title: "Rules of eight-ball pool, illustrated: Brazilian and official (WPA)",
+    title: "Eight-ball pool rules: Brazilian and official (WPA)",
     shortTitle: "Rules of eight-ball pool",
     description: "The rules of eight-ball pool explained with animated tables: the break, solids and stripes, fouls, penalty balls, ball in hand and the 8-ball, under the Brazilian rule and the official WPA rules.",
     kicker: "Rules guide",

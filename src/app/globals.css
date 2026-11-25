@@ -387,3 +387,18 @@ details > summary::-webkit-details-marker { display: none; }
 @keyframes vip-turn {
   to { --vip-angle: 360deg; }
 }
+
+/* The rules guide's comparison: on a phone, each cell says which rules it's about. */
+.compare-cell::before {
+  content: attr(data-label);
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: 0.6875rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-fog);
+}
+@media (min-width: 768px) {
+  .compare-cell::before { display: none; }
+}
