@@ -1,7 +1,7 @@
 "use client";
 
 import { Crown, Globe, RefreshCw, Search, Trophy } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { fmt, LOCALE_INFO, type Dict, type Locale } from "@/i18n";
 import {
   ADMIN_RED,
@@ -19,6 +19,11 @@ import { Flag } from "./Flag";
 type T = Dict["ranking"];
 
 type Board = { entries: RankingEntry[]; at: number };
+
+/** The ranking as the page was made with it (on the server), when the game server answered. */
+export type InitialRanking = { boards: Partial<Record<Rules, RankingEntry[]>>; at: number } | null;
+
+const noSubscribe = () => () => {};
 
 /** How often the ranking is read again while the page is open. */
 const REFRESH_MS = 60_000;
@@ -42,9 +47,15 @@ async function fetchRanking(which: Rules): Promise<RankingEntry[] | null> {
   }
 }
 
-export function RankingBoard({ t, locale }: { t: T; locale: Locale }) {
+export function RankingBoard({ t, locale, initial = null }: { t: T; locale: Locale; initial?: InitialRanking }) {
   const [rules, setRules] = useState<Rules>("brazilian");
-  const [boards, setBoards] = useState<Partial<Record<Rules, Board>>>({});
+  // The page comes with the ranking in it (for everyone, search engines
+  // included); the browser keeps it up to date.
+  const [boards, setBoards] = useState<Partial<Record<Rules, Board>>>(() =>
+    initial ? Object.fromEntries(RULES.flatMap((r) => (initial.boards[r] ? [[r, { entries: initial.boards[r], at: initial.at }]] : []))) : {},
+  );
+  // False on the server and while the page hydrates: the time of day is the visitor's.
+  const hydrated = useSyncExternalStore(noSubscribe, () => true, () => false);
   // The rules whose last load failed (and nothing to show for them).
   const [failed, setFailed] = useState<Partial<Record<Rules, boolean>>>({});
   const [slow, setSlow] = useState(false);
@@ -71,13 +82,14 @@ export function RankingBoard({ t, locale }: { t: T; locale: Locale }) {
 
   const board = boards[rules];
   const loaded = board !== undefined;
+  const loadedAt = board?.at;
   const status = loaded ? "ready" : failed[rules] ? "error" : "loading";
 
-  // The rules shown: loaded when first chosen, then again every minute while
-  // the page is in view.
+  // The rules shown: loaded when first chosen (or at once, if the page's own
+  // copy is over a minute old), then again every minute while the page is in view.
   useEffect(() => {
     let alive = true;
-    if (!loaded) {
+    if (!loaded || (loadedAt !== undefined && Date.now() - loadedAt > REFRESH_MS)) {
       fetchRanking(rules).then((e) => {
         if (alive) apply(rules, e);
       });
@@ -89,7 +101,7 @@ export function RankingBoard({ t, locale }: { t: T; locale: Locale }) {
       alive = false;
       window.clearInterval(timer);
     };
-  }, [rules, loaded, load, apply]);
+  }, [rules, loaded, loadedAt, load, apply]);
 
   // A first load that takes a while: the free server is waking up.
   useEffect(() => {
@@ -119,7 +131,7 @@ export function RankingBoard({ t, locale }: { t: T; locale: Locale }) {
   const podium = q ? [] : entries.slice(0, 3);
   const rest = q ? filtered : entries.slice(3);
   const htmlLang = LOCALE_INFO[locale].htmlLang;
-  const time = board ? new Intl.DateTimeFormat(htmlLang, { timeStyle: "short" }).format(board.at) : "";
+  const time = board && hydrated ? new Intl.DateTimeFormat(htmlLang, { timeStyle: "short" }).format(board.at) : "";
 
   return (
     <div>
@@ -199,12 +211,12 @@ export function RankingBoard({ t, locale }: { t: T; locale: Locale }) {
                   className="w-full rounded-full bg-ink-850/80 py-2.5 pl-11 pr-4 text-[15px] text-cream placeholder:text-fog ring-1 ring-white/[0.08] outline-none transition focus:ring-gold-400/60"
                 />
               </label>
-              <p className="flex items-center gap-2 text-[13px] text-fog">
+              <p className={`flex items-center gap-2 text-[13px] text-fog ${time ? "" : "invisible"}`}>
                 <span className="relative flex size-2">
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-felt-400 opacity-60" />
                   <span className="relative inline-flex size-2 rounded-full bg-felt-400" />
                 </span>
-                {fmt(t.updated, { time })}
+                {time ? fmt(t.updated, { time }) : "\u00a0"}
               </p>
             </div>
             {rest.length > 0 ? (

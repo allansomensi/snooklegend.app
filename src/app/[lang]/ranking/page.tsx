@@ -5,7 +5,9 @@ import { isLocale } from "@/i18n";
 import { buildRankingMetadata } from "@/lib/metadata";
 
 // The ranking in Portuguese and Spanish (`/pt/ranking/`, `/es/ranking/`);
-// English's is `/ranking/`.
+// English's is `/ranking/`. Made with the ranking in it, then again at most
+// every five minutes (RANKING_REVALIDATE); the browser keeps it live.
+export const revalidate = 300;
 export const dynamicParams = false;
 export function generateStaticParams() {
   return [{ lang: "pt" }, { lang: "es" }];

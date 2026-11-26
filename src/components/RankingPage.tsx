@@ -1,23 +1,40 @@
 import { getDict, LOCALE_INFO, LOCALES, type Locale } from "@/i18n";
-import { rankingPath } from "@/lib/ranking";
+import { getJson } from "@/lib/api";
+import { parseRanking, rankingPath, RULES, type RankingEntry, type Rules } from "@/lib/ranking";
 import { getLatestRelease } from "@/lib/release";
 import { DownloadButton } from "./DownloadButton";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { PlatformProvider } from "./PlatformProvider";
-import { RankingBoard } from "./RankingBoard";
+import { RankingBoard, type InitialRanking } from "./RankingBoard";
 import { Breadcrumbs } from "./SiteFrame";
 import { pagePath } from "@/lib/routes";
 
+/** How long the ranking pages are kept before being made again (the browser refreshes the ranking every minute). */
+export const RANKING_REVALIDATE = 300;
+
+/**
+ * The ranking under both sets of rules, from the game server, for the page
+ * itself (so its names and their links are there without scripts); null if
+ * the server didn't answer: the browser loads it then.
+ */
+async function initialRanking(): Promise<InitialRanking> {
+  const results = await Promise.all(RULES.map((r) => getJson(`/api/leaderboard?rules=${r}`, parseRanking, { revalidate: RANKING_REVALIDATE })));
+  const boards: Partial<Record<Rules, RankingEntry[]>> = {};
+  results.forEach((res, i) => {
+    if (res.ok) boards[RULES[i]] = res.data;
+  });
+  return Object.keys(boards).length > 0 ? { boards, at: Date.now() } : null;
+}
+
 /**
  * The world ranking: the top 100 under the Brazilian and the official rules,
- * read live from the game server in the visitor's browser (the page itself is
- * prerendered, like the rest of the site).
+ * made on the server every few minutes and kept live in the visitor's browser.
  */
 export async function RankingPage({ locale }: { locale: Locale }) {
   const t = getDict(locale);
   const r = t.ranking;
-  const release = await getLatestRelease();
+  const [release, initial] = await Promise.all([getLatestRelease(), initialRanking()]);
   const htmlLang = LOCALE_INFO[locale].htmlLang;
   const paths = Object.fromEntries(LOCALES.map((l) => [l, rankingPath(l)])) as Record<Locale, string>;
 
@@ -41,7 +58,7 @@ export async function RankingPage({ locale }: { locale: Locale }) {
           </header>
 
           <div className="mx-auto mt-10 max-w-5xl sm:mt-12">
-            <RankingBoard t={r} locale={locale} />
+            <RankingBoard t={r} locale={locale} initial={initial} />
             <p className="mt-6 text-center text-[13px] text-fog">
               {r.note}{" "}
               <a href={pagePath(locale, "rating")} className="font-semibold text-gold-300 hover:text-gold-200">
