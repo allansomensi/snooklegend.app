@@ -26,8 +26,44 @@ it installed in a minute.
 - Players' profiles, the official tournaments, an illustrated rules guide, a
   rating calculator and the supporters (see below).
 - Features, both sets of rules, the fifteen opponents, a screenshot gallery,
-  system requirements and an FAQ; SEO metadata, Open Graph picture, `hreflang`,
-  sitemap and structured data (`VideoGame`).
+  system requirements and an FAQ, and a download page of its own (`/download/`,
+  `/pt/baixar/`, `/es/descargar/`). Built for search engines: see
+  [Search engines](#search-engines).
+
+## Search engines
+
+Every page of the site, in each language:
+
+- **Its own title and description** (`src/lib/metadata.ts`, the words in
+  `src/i18n/`): " | Snook Legend" after the title; the words people search
+  with (sinuca online, jogo de sinuca, 8 ball pool, billar online…).
+- **Its canonical address and its versions in the other languages**
+  (`hreflang` `en`, `pt-BR` and `pt`, `es`, and `x-default` = English), the
+  same on every version; `<html lang>` per language.
+- **Cards for social networks** (Open Graph, X): the site's picture, or a
+  player's or a tournament's own card (`…/card.png`, drawn when asked for).
+- **Structured data** (JSON-LD, `src/lib/structured-data.ts`): the
+  organization with its official profiles, the site, the game (`VideoGame`:
+  free, its systems, screenshots, version, downloads, the Microsoft Store),
+  breadcrumbs on every inner page, the questions where a page shows them,
+  `ProfilePage` for players, `SportsEvent` for tournaments, `Article` for the
+  rules guide. Only what's true: no ratings or reviews.
+- **`/sitemap.xml`**: every page in every language with its alternates, the
+  home pages' screenshots, the best players and the latest tournaments (from
+  the game server, made again every hour; without the server, the rest).
+  **`/robots.txt`** keeps crawlers out of `/admin/`, whose pages also say
+  `noindex`.
+- The ranking is in the page itself (made again every five minutes), so its
+  links to the players' profiles are followed.
+
+Telling Google and Bing the site is yours: in Vercel, set
+`GOOGLE_SITE_VERIFICATION` (Search Console → Add property → URL prefix → HTML
+tag: the `content` value) and/or `BING_SITE_VERIFICATION` (Bing Webmaster
+Tools, `msvalidate.01`), redeploy, verify, then submit
+`https://snooklegend.app/sitemap.xml` in both.
+
+When a page's text changes, change its date with it: `LEGAL_UPDATED`
+(`src/lib/legal.ts`) and `RULES_UPDATED` (`src/lib/rules-guide.ts`).
 
 ## The staff portal (`/admin`)
 
@@ -85,7 +121,9 @@ last good page at once, and a server that doesn't answer keeps it in place.
 |---|---|---|---|---|
 | A player's profile | `/player/<name>/` | `/jogador/<name>/` | `/es/jugador/<name>/` | `GET /api/players/{name}` |
 | The tournaments | `/tournaments/` | `/pt/torneios/` | `/es/torneos/` | `GET /api/tournaments` |
-| A tournament (and its sharing picture) | `/tournaments/<id>/` | `/pt/torneios/<id>/` | `/es/torneos/<id>/` | `GET /api/tournaments/{id}` |
+| A tournament | `/tournaments/<id>/` | `/pt/torneios/<id>/` | `/es/torneos/<id>/` | `GET /api/tournaments/{id}` |
+| A player's or a tournament's picture for sharing | `…/card.png` | `…/card.png` | `…/card.png` | the same |
+| The world ranking (kept five minutes) | `/ranking/` | `/pt/ranking/` | `/es/ranking/` | `GET /api/leaderboard` |
 | Supporters | `/supporters/` | `/pt/apoiadores/` | `/es/mecenas/` | `GET /api/supporters` |
 | The rules guide, illustrated | `/rules/` | `/pt/regras/` | `/es/reglas/` | `src/content/rules/` |
 | The rating calculator | `/rating/` | `/pt/rating/` | `/es/rating/` | `src/lib/rating.ts` |
@@ -236,9 +274,11 @@ that include custom events):
 | The playable table | `src/components/PoolTable.tsx` |
 | Pictures (from the game's repository) | `python3 scripts/make-assets.py ../snook-legend` |
 
-The Microsoft Store link is a search for now. Once the product page's address is at
-hand (`https://apps.microsoft.com/detail/<id>`), put it in `MS_STORE_URL`, or set
-`NEXT_PUBLIC_MS_STORE_URL` when building.
+The Microsoft Store's page is `MS_STORE_URL` (`NEXT_PUBLIC_MS_STORE_URL` replaces it
+when building); the itch.io page, `ITCH_URL`; the game's official profiles (Bluesky,
+Instagram, Facebook, X, Threads: the footer's links and the structured data), `SOCIAL_PROFILES`
+(and `X_HANDLE`, for the cards shared on X):
+all in `src/lib/site.ts`.
 
 A new language: copy `src/i18n/en.ts`, translate it, add it to `LOCALES` and
 `LOCALE_INFO` in `src/i18n/index.ts` and to `generateStaticParams` in

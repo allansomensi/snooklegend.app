@@ -12,14 +12,16 @@ import {
   Zap,
 } from "lucide-react";
 import type { ReactNode } from "react";
-import type { Dict } from "@/i18n";
+import type { Dict, Locale } from "@/i18n";
+import { rankingPath } from "@/lib/ranking";
+import { pagePath } from "@/lib/routes";
 import { Ball } from "./Ball";
 import { SectionHeading } from "./Section";
 import { Shot } from "./Shot";
 
-type Props = { t: Dict; shotsDir: string };
+type Props = { t: Dict; shotsDir: string; locale: Locale };
 
-export function Features({ t, shotsDir }: Props) {
+export function Features({ t, shotsDir, locale }: Props) {
   const f = t.features.items;
   return (
     <section id="features" aria-labelledby="features-title" className="defer-render relative py-24 [--defer-size:2600px] sm:py-32">
@@ -33,7 +35,7 @@ export function Features({ t, shotsDir }: Props) {
             <div className="grid h-full gap-6 lg:grid-cols-[1fr_1.15fr] lg:items-center">
               <TileText icon={<Zap />} title={f.physics.title} text={f.physics.text} />
               <div className="relative overflow-hidden rounded-2xl ring-1 ring-white/10">
-                <Shot dir={shotsDir} name="03-elevation" alt="" sizes="(max-width: 768px) 100vw, 480px" className="h-auto" />
+                <Shot dir={shotsDir} name="03-elevation" alt={t.gallery.items[3]} sizes="(max-width: 768px) 100vw, 480px" className="h-auto" />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink-900/50 to-transparent" />
               </div>
             </div>
@@ -59,7 +61,12 @@ export function Features({ t, shotsDir }: Props) {
 
           {/* Online lounge */}
           <Tile className="md:col-span-2" delay={0}>
-            <TileText icon={<MessagesSquare />} title={f.online.title} text={f.online.text} />
+            <TileText
+              icon={<MessagesSquare />}
+              title={f.online.title}
+              text={f.online.text}
+              link={{ href: rankingPath(locale), label: t.features.links.ranking }}
+            />
             <ul className="mt-6 space-y-2" aria-hidden="true">
               {[
                 ["rosa", "Rosa", 1532, "#22c55e"],
@@ -82,7 +89,12 @@ export function Features({ t, shotsDir }: Props) {
 
           {/* Tournaments: a bracket */}
           <Tile className="md:col-span-2" delay={70}>
-            <TileText icon={<Trophy />} title={f.tournaments.title} text={f.tournaments.text} />
+            <TileText
+              icon={<Trophy />}
+              title={f.tournaments.title}
+              text={f.tournaments.text}
+              link={{ href: pagePath(locale, "tournaments"), label: t.features.links.tournaments }}
+            />
             <svg viewBox="0 0 220 110" className="mt-6 w-full text-white/20" aria-hidden="true">
               <g fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M10 12h40v20h-40M10 52h40v-20M10 62h40v20h-40M10 102h40v-20M50 32h40v25h-40M50 82h40v-25" />
@@ -136,7 +148,7 @@ export function Features({ t, shotsDir }: Props) {
               <Shot
                 dir={shotsDir}
                 name="04-hall"
-                alt=""
+                alt={t.gallery.items[1]}
                 sizes="(max-width: 768px) 100vw, 760px"
                 className="absolute inset-0 h-full object-cover object-[50%_40%]"
               />
@@ -242,7 +254,18 @@ function Tile({
   );
 }
 
-function TileText({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
+function TileText({
+  icon,
+  title,
+  text,
+  link,
+}: {
+  icon: ReactNode;
+  title: string;
+  text: string;
+  /** A page of the site that tells more. */
+  link?: { href: string; label: string };
+}) {
   return (
     <div>
       <div className="mb-5 grid size-11 place-items-center rounded-xl bg-gradient-to-b from-gold-300/20 to-gold-500/5 text-gold-300 ring-1 ring-gold-400/25 [&>svg]:size-5">
@@ -250,6 +273,11 @@ function TileText({ icon, title, text }: { icon: ReactNode; title: string; text:
       </div>
       <h3 className="font-display text-xl font-bold tracking-tight text-cream sm:text-[1.35rem]">{title}</h3>
       <p className="mt-2.5 text-[15px] leading-relaxed text-mist">{text}</p>
+      {link && (
+        <a href={link.href} className="mt-3 inline-block text-[15px] font-semibold text-gold-300 transition hover:text-gold-200">
+          {link.label} →
+        </a>
+      )}
     </div>
   );
 }

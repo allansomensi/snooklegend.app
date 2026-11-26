@@ -11,6 +11,7 @@ import {
   GITHUB_URL,
   INSTALL_PS1,
   INSTALL_SH,
+  ITCH_URL,
   latestAsset,
   MS_STORE_URL,
   RELEASES_URL,
@@ -223,6 +224,7 @@ export function DownloadSection({ t, locale, releasedOn }: Props) {
               <span className="flex w-full flex-wrap gap-x-5 gap-y-2 sm:w-auto sm:flex-1 sm:justify-end">
                 <ExtLink href={CHANGELOG_URL}>{d.whatsNew}</ExtLink>
                 <ExtLink href={RELEASES_URL}>{d.allReleases}</ExtLink>
+                <ExtLink href={ITCH_URL}>{d.itch}</ExtLink>
                 <ExtLink href={GITHUB_URL}>
                   <GithubIcon className="size-4" /> {d.source}
                 </ExtLink>

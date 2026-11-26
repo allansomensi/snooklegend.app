@@ -1,22 +1,25 @@
-// A tournament's picture for social networks (1200×630): its name, the
-// rules, the format and the champion or the state, on the felt.
+// A tournament's picture for social networks (1200×630, `…/card.png` next to
+// its page): its name, the rules, the format and the champion or the state,
+// on the felt.
 
 import { ImageResponse } from "next/og";
 import { fmt, getDict, type Locale } from "@/i18n";
 import { formatNumber } from "@/lib/format";
+import { SITE_URL } from "@/lib/site";
+import { CARD_CACHE, OG_SIZE } from "./PlayerOgImage";
 import { loadTournament } from "./TournamentRoute";
 
-export const OG_SIZE = { width: 1200, height: 630 };
-
-export async function tournamentOgImage(locale: Locale, raw: string) {
+/** The card of the tournament numbered in the address (a 404 for no such tournament). */
+export async function tournamentCard(locale: Locale, raw: string): Promise<Response> {
+  const x = await loadTournament(raw).catch(() => undefined);
+  // No such tournament: no picture. The server didn't answer: the game's own, a minute.
+  if (x === null) return new Response(null, { status: 404 });
+  if (x === undefined) return Response.redirect(new URL("/og.jpg", SITE_URL), 307);
   const d = getDict(locale);
   const t = d.tournaments;
-  const x = await loadTournament(raw).catch(() => null);
-  const name = x?.name ?? t.title;
-  const line = x
-    ? [x.rules === "brazilian" ? d.common.brazilian : d.common.official, t.formats[x.format], fmt(t.players, { n: x.players })].join("  ·  ")
-    : "Snook Legend";
-  const big = x?.champion ? `${t.champion}: ${x.champion}` : x ? (t.states[x.state] ?? x.state) : "";
+  const name = x.name;
+  const line = [x.rules === "brazilian" ? d.common.brazilian : d.common.official, t.formats[x.format], fmt(t.players, { n: x.players })].join("  ·  ");
+  const big = x.champion ? `${t.champion}: ${x.champion}` : (t.states[x.state] ?? x.state);
   return new ImageResponse(
     (
       <div
@@ -43,7 +46,7 @@ export async function tournamentOgImage(locale: Locale, raw: string) {
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
           <div style={{ fontSize: 44, fontWeight: 800, color: "#f5e1aa" }}>{big}</div>
-          {x && x.prizePool > 0 && (
+          {x.prizePool > 0 && (
             <div style={{ display: "flex", fontSize: 30, color: "#f5e1aa" }}>
               {`${t.prizePool}: ${fmt(d.common.coins, { n: formatNumber(locale, x.prizePool) })}`}
             </div>
@@ -51,6 +54,6 @@ export async function tournamentOgImage(locale: Locale, raw: string) {
         </div>
       </div>
     ),
-    OG_SIZE,
+    { ...OG_SIZE, headers: CARD_CACHE },
   );
 }

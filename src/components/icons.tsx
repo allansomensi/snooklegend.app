@@ -42,6 +42,53 @@ export function GithubIcon(props: P) {
   );
 }
 
+/** Bluesky's butterfly. */
+export function BlueskyIcon(props: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M12 10.8c-1.09-2.11-4.05-6.05-6.8-8C2.57.94 1.56 1.27.9 1.57.14 1.91 0 3.08 0 3.77c0 .69.38 5.65.62 6.48.82 2.74 3.72 3.66 6.39 3.36l.41-.05c-3.91.58-7.39 2-2.83 7.08 5.01 5.19 6.87-1.11 7.82-4.31.95 3.2 2.05 9.27 7.73 4.31 4.27-4.31 1.17-6.5-2.74-7.08l-.41-.05c2.67.3 5.57-.63 6.38-3.36.25-.83.63-5.79.63-6.48 0-.69-.14-1.86-.9-2.21-.66-.3-1.67-.62-4.3 1.24-2.76 1.95-5.72 5.89-6.8 8z" />
+    </svg>
+  );
+}
+
+/** A camera, as Instagram draws it. */
+export function InstagramIcon(props: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" {...props}>
+      <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" />
+      <circle cx="12" cy="12" r="4.25" />
+      <circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/** Facebook's "f". */
+export function FacebookIcon(props: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z" />
+    </svg>
+  );
+}
+
+/** X's logo. */
+export function XIcon(props: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.4l-5.8-7.58-6.63 7.58H.48l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.48 3.24H4.3l13.31 17.41z" />
+    </svg>
+  );
+}
+
+/** Threads' "@". */
+export function ThreadsIcon(props: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" {...props}>
+      <path d="M16.5 11.4c-.2-2.6-1.8-3.9-4.2-3.9-2 0-3.4 1-3.9 2.6M16.5 11.4c-1.9-.6-6.3-.8-6.6 1.9-.2 1.7 1.4 2.6 2.9 2.5 2.4-.1 3.7-1.8 3.7-4.4zm0 0c2.6 1 3.3 3.6 2.3 5.7-1.3 2.7-4.3 3.9-7.1 3.9C6.6 21 3.5 17.5 3.5 12S6.6 3 11.7 3c3.9 0 6.6 1.9 7.8 5.4" />
+    </svg>
+  );
+}
+
 export function MicrosoftIcon(props: P) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>

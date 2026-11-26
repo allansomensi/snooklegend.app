@@ -131,7 +131,7 @@ export function Header({ t, locale, paths }: Props) {
         }`}
       >
         <nav className="container-page flex flex-col gap-1 pb-6 pt-2" aria-label={t.nav.menu}>
-          {[...links, { href: `${home}#play`, label: t.nav.play }, { href: `${home}#download`, label: t.nav.download }].map((l) => (
+          {[...links, { href: `${home}#play`, label: t.nav.play }, { href: pagePath(locale, "download"), label: t.nav.download }].map((l) => (
             <a
               key={l.href}
               href={l.href}

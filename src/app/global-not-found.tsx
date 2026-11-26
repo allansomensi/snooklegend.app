@@ -4,9 +4,9 @@ import { Document } from "@/components/Document";
 import { EightBall } from "@/components/icons";
 
 export const metadata: Metadata = {
-  title: "404 · Snook Legend",
-  description: "This page rolled into a pocket.",
-  robots: { index: false },
+  title: "Page not found (404) | Snook Legend",
+  description: "This page rolled into a pocket. Snook Legend is a free 3D 8 ball pool game for Windows, macOS and Linux.",
+  robots: { index: false, follow: true },
 };
 
 export default function GlobalNotFound() {
@@ -22,9 +22,15 @@ export default function GlobalNotFound() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <a href="/" className="btn btn-felt h-12 px-6">Snook Legend</a>
-            <a href="/pt/" className="btn btn-ghost h-12 px-5">Português</a>
-            <a href="/es/" className="btn btn-ghost h-12 px-5">Español</a>
+            <a href="/pt/" hrefLang="pt-BR" lang="pt-BR" className="btn btn-ghost h-12 px-5">Português</a>
+            <a href="/es/" hrefLang="es" lang="es" className="btn btn-ghost h-12 px-5">Español</a>
           </div>
+          <nav aria-label="Snook Legend" className="mt-8 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-mist">
+            <a href="/download/" className="transition hover:text-cream">Download</a>
+            <a href="/rules/" className="transition hover:text-cream">8 ball pool rules</a>
+            <a href="/ranking/" className="transition hover:text-cream">World ranking</a>
+            <a href="/tournaments/" className="transition hover:text-cream">Tournaments</a>
+          </nav>
         </div>
       </main>
     </Document>

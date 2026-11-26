@@ -2,11 +2,24 @@ import type { Dict } from "./en";
 
 const es: Dict = {
   meta: {
-    title: "Snook Legend: pool 3D de bola 8 para Windows, macOS y Linux",
+    title: "Snook Legend: juego de pool gratis para PC (billar bola 8)",
     shortTitle: "Snook Legend",
     description:
-      "Un juego de pool (bola 8) en 3D, gratis, con física real. Juega en línea con clasificación, enfréntate a quince rivales de la computadora, el desafío diario y 24 ejercicios, con la regla brasileña o la oficial de la WPA. Descárgalo para Windows, macOS y Linux.",
+      "Juego de pool bola 8 en 3D gratis para PC: billar online con ranking, torneos y dobles, 15 rivales de la computadora y física real. Para Windows, macOS y Linux.",
     ogAlt: "Snook Legend: una mesa de pool en una sala en penumbra",
+    keywords: [
+      "Snook Legend",
+      "billar online",
+      "juego de pool gratis",
+      "bola 8",
+      "pool bola 8",
+      "juego de billar",
+      "billar gratis para PC",
+      "pool 3D",
+      "pool para Windows",
+      "pool para Mac",
+      "pool para Linux",
+    ],
   },
   nav: {
     tournaments: "Torneos",
@@ -25,6 +38,7 @@ const es: Dict = {
   },
   hero: {
     badge: "Ahora en 27 idiomas",
+    eyebrow: "Juego de billar online gratis para PC",
     titleA: "Pool como se juega",
     titleB: "de verdad.",
     sub: "Snook Legend es un juego de pool de bola 8 en 3D con física real, una sala en línea llena de vida, quince rivales de la computadora con personalidad propia y dos reglas. Gratis, ligero y rápido.",
@@ -75,6 +89,7 @@ const es: Dict = {
     kicker: "Por qué los jugadores se quedan",
     title: "Todo lo que tenían las viejas salas de pool. Y más.",
     sub: "Hecho en torno a lo que hacía especiales a las salas de pool en línea: un taco que hace todo lo que hace uno real, una sala para conocer gente y una clasificación que da ganas de volver.",
+    links: { ranking: "Ver el ranking mundial", tournaments: "Ver los torneos" },
     items: {
       physics: {
         title: "Física real",
@@ -198,6 +213,7 @@ const es: Dict = {
     released: "Publicada el {date}",
     whatsNew: "Novedades",
     allReleases: "Todas las versiones",
+    itch: "También en itch.io",
     recommended: "Recomendado",
     detected: "Tu computadora",
     copy: "Copiar",
@@ -248,6 +264,21 @@ const es: Dict = {
       x64: "x64 (Intel / AMD)",
       arm: "ARM64",
       deps: "Necesita las bibliotecas de escritorio habituales (ALSA, X11, OpenGL), que toda instalación de escritorio tiene.",
+    },
+  },
+  downloadPage: {
+    title: "Descargar juego de billar gratis para PC",
+    shortTitle: "Descargar",
+    description: "Descarga Snook Legend, el juego de pool bola 8 en 3D gratis: el instalador para Windows, la Microsoft Store, o macOS y Linux con un comando. Unos 20 MB, código abierto.",
+    kicker: "Descarga gratis",
+    heading: "Descarga Snook Legend gratis",
+    sub: "El juego completo, gratis: partidas en línea con ranking, torneos, dobles, quince rivales de la computadora, el desafío diario y 24 ejercicios. Unos 20 MB para Windows, macOS y Linux, y se actualiza solo.",
+    faqTitle: "Instalar, actualizar y desinstalar",
+    nextTitle: "Antes de tu primera partida",
+    next: {
+      rules: "Aprende las reglas, ilustradas",
+      ranking: "Mira quién está en lo más alto del ranking mundial",
+      tournaments: "Encuentra un torneo para jugar",
     },
   },
   modal: {
@@ -347,10 +378,11 @@ const es: Dict = {
   ranking: {
     nav: "Ranking",
     title: "Ranking mundial",
+    metaTitle: "Ranking mundial de billar: los 100 mejores",
     description:
-      "Los mejores jugadores de Snook Legend del mundo, en directo: el top 100 de las partidas en línea con ranking, con las reglas brasileñas y las oficiales de la WPA.",
+      "Los mejores jugadores de billar online de Snook Legend, en directo: el top 100 de las partidas con ranking, con la regla brasileña y la oficial (WPA), con rating y liga.",
     kicker: "En directo desde el servidor del juego",
-    heading: "Ranking mundial",
+    heading: "Ranking mundial de billar",
     sub: "Los 100 mejores jugadores en las partidas en línea con ranking. Cada reglamento tiene su propio rating: elige uno.",
     brazilian: "Reglas brasileñas",
     official: "Reglas oficiales (WPA)",
@@ -403,7 +435,7 @@ const es: Dict = {
   },
   player: {
     kicker: "Perfil del jugador",
-    title: "{name}: perfil del jugador",
+    title: "{name}: perfil y estadísticas de billar",
     description: "{name}{from} en Snook Legend: rating {rating} ({tier}) con {rules}, nivel {level}, {wins} victorias en {games} partidas con ranking. Logros, trofeos y las últimas partidas.",
     descriptionNew: "{name}{from} en Snook Legend, nivel {level}: ratings, logros, trofeos y las últimas partidas.",
     from: " ({country})",
@@ -459,6 +491,7 @@ const es: Dict = {
     cue: "Taco",
     cueAlt: "El taco de {name}: {cue}",
     avatarAlt: "La foto de perfil de {name}",
+    cardAlt: "{name} en Snook Legend: rating, liga y récord",
     noAvatar: "{name} no tiene foto de perfil",
     vipFrame: "Perfil VIP",
     cta: "Juega contra {name} en línea: descarga el juego, es gratis.",
@@ -469,9 +502,10 @@ const es: Dict = {
   tournaments: {
     nav: "Torneos",
     title: "Torneos",
-    description: "Los torneos oficiales de Snook Legend: la copa semanal, eliminatorias y arenas, en vivo y pasados. Cuadros, clasificaciones, campeones y premios.",
+    metaTitle: "Torneos de billar online",
+    description: "Los torneos oficiales de billar online de Snook Legend: la copa semanal, eliminatorias y arenas, en vivo y pasados, con cuadros, clasificaciones, campeones y premios.",
     kicker: "Torneos oficiales",
-    heading: "Torneos",
+    heading: "Torneos de billar",
     sub: "La copa semanal, los torneos del equipo y los eventos: cuadros, clasificaciones, campeones y premios, mientras se juegan.",
     live: "En juego",
     upcoming: "Próximamente",
@@ -493,7 +527,7 @@ const es: Dict = {
     ends: "Termina {date}",
     played: "Jugado el {date}",
     view: "Ver el torneo",
-    detailTitle: "{name}: torneo {format}",
+    detailTitle: "{name}: torneo de billar ({format})",
     detailDescription: "{name}, torneo {format} de Snook Legend con {rules}{players}{champion}. Cuadro, resultados y premios.",
     detailPlayers: ", {n} jugadores",
     detailChampion: ", ganado por {name}",
@@ -530,6 +564,7 @@ const es: Dict = {
     unavailable: "No se pudieron cargar los torneos ahora. Vuelve a intentarlo en un minuto.",
     allTournaments: "Todos los torneos",
     notFoundTitle: "Torneo no encontrado",
+    cardAlt: "{name}, torneo de billar de Snook Legend: regla, formato y campeón",
     notFoundText: "No hay ningún torneo oficial con este número. Puede que fuera privado, o que se cancelara.",
     cta: "Entra en el próximo: descarga el juego y juega en línea.",
   },
@@ -537,7 +572,7 @@ const es: Dict = {
     nav: "Reglas",
     title: "Reglas de la bola 8: regla brasileña y oficial (WPA)",
     shortTitle: "Reglas de la bola 8",
-    description: "Las reglas del pool bola 8 explicadas con mesas animadas: el saque, lisas y rayadas, faltas, bolas de penalización, bola en mano y la bola 8, con la regla brasileña y la regla oficial de la WPA.",
+    description: "Las reglas del pool bola 8 con mesas animadas: el saque, lisas y rayadas, faltas, bolas de penalización, bola en mano y la bola 8, con la regla brasileña y la oficial.",
     kicker: "Guía de reglas",
     heading: "Las reglas de la bola 8, ilustradas",
     sub: "Dos formas de jugar el mismo juego: la regla brasileña de los bares, con bolas de penalización, y la regla oficial de los torneos, con bola en mano. Las dos exactamente como las juega Snook Legend.",
@@ -623,9 +658,9 @@ const es: Dict = {
   },
   calc: {
     nav: "Calculadora de rating",
-    title: "Calculadora de rating: cómo funciona el ranking de Snook Legend",
+    title: "Calculadora de rating: cómo funciona el ranking",
     shortTitle: "Calculadora de rating",
-    description: "Cuántos puntos de rating vale una partida en Snook Legend: pon tu rating y mira cuánto ganas o pierdes contra cada rival. Cómo funcionan el rating Elo, el factor K y las ligas.",
+    description: "Cuántos puntos de rating vale una partida de billar en Snook Legend: pon tu rating y mira cuánto ganas o pierdes contra cada rival. El rating Elo, el factor K y las ligas.",
     kicker: "Calculadora de rating",
     heading: "¿Cuántos puntos vale esta partida?",
     sub: "Pon tu rating y tus partidas con ranking en una regla, y mira cuánto vale una victoria y una derrota contra cada rival, calculado exactamente como lo hace el juego.",
@@ -712,6 +747,8 @@ const es: Dict = {
       privacy: "Política de privacidad",
     },
     made: "Hecho con Rust, para quienes aman el pool.",
+    follow: "Sigue a Snook Legend",
+    on: "Snook Legend en {network}",
   },
 };
 

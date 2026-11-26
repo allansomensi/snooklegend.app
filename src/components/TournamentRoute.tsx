@@ -7,14 +7,14 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { fmt, getDict, type Locale } from "@/i18n";
 import { BUILDING, ServerUnavailable } from "@/lib/api";
-import { pageMetadata } from "@/lib/metadata";
+import { notFoundMetadata, pageMetadata } from "@/lib/metadata";
 import { pagePath, tournamentPath } from "@/lib/routes";
 import { fetchTournament, fetchTournaments } from "@/lib/tournaments";
 import { describe, TournamentPage, TournamentsPage } from "./Tournaments";
 
 export function tournamentsMetadata(locale: Locale): Metadata {
   const t = getDict(locale).tournaments;
-  return pageMetadata({ locale, pathOf: (l) => pagePath(l, "tournaments"), title: t.title, description: t.description });
+  return pageMetadata({ locale, pathOf: (l) => pagePath(l, "tournaments"), title: t.metaTitle, description: t.description });
 }
 
 export async function TournamentsRoutePage({ locale }: { locale: Locale }) {
@@ -43,14 +43,15 @@ const loadTournament = cache(async (raw: string) => {
 export async function tournamentMetadata(locale: Locale, raw: string): Promise<Metadata> {
   const x = await loadTournament(raw).catch(() => null);
   const d = getDict(locale);
-  if (!x) return { title: d.tournaments.notFoundTitle, robots: { index: false, follow: true } };
+  if (!x) return notFoundMetadata(d.tournaments.notFoundTitle, d.tournaments.notFoundText);
   return pageMetadata({
     locale,
     pathOf: (l) => tournamentPath(l, x.id),
     title: fmt(d.tournaments.detailTitle, { name: x.name, format: d.tournaments.formats[x.format].toLowerCase() }),
     description: describe(x, d),
-    // The picture is the page's own (opengraph-image.tsx).
-    image: false,
+    // The tournament's card (card.png, next to the page).
+    image: { url: `${tournamentPath(locale, x.id)}card.png`, width: 1200, height: 630, type: "image/png" },
+    imageAlt: fmt(d.tournaments.cardAlt, { name: x.name }),
   });
 }
 

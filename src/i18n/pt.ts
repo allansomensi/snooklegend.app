@@ -2,11 +2,25 @@ import type { Dict } from "./en";
 
 const pt: Dict = {
   meta: {
-    title: "Snook Legend: sinuca 3D de bola 8 para Windows, macOS e Linux",
+    title: "Snook Legend: jogo de sinuca online grátis para PC (bola 8)",
     shortTitle: "Snook Legend",
     description:
-      "Jogo de sinuca (bola 8) em 3D, grátis, com física de verdade. Jogue online valendo ranking, enfrente quinze adversários de computador, o desafio diário e 24 treinos, na regra brasileira ou na oficial da WPA. Baixe para Windows, macOS e Linux.",
+      "Jogo de sinuca bola 8 em 3D grátis para PC: sinuca online com ranking, torneios e duplas, 15 adversários de computador, regra brasileira e oficial. Windows, Mac e Linux.",
     ogAlt: "Snook Legend: uma mesa de sinuca num salão à meia-luz",
+    keywords: [
+      "Snook Legend",
+      "sinuca online",
+      "jogo de sinuca",
+      "sinuca bola 8",
+      "sinuca grátis para PC",
+      "jogo de bilhar",
+      "sinuca brasileira",
+      "regra brasileira",
+      "sinuca 3D",
+      "sinuca para Windows",
+      "sinuca para Mac",
+      "sinuca para Linux",
+    ],
   },
   nav: {
     tournaments: "Torneios",
@@ -25,6 +39,7 @@ const pt: Dict = {
   },
   hero: {
     badge: "Agora em 27 idiomas",
+    eyebrow: "Jogo de sinuca online grátis para PC",
     titleA: "Sinuca como ela",
     titleB: "é jogada de verdade.",
     sub: "Snook Legend é um jogo de sinuca de bola 8 em 3D, com física de verdade, um salão online cheio de gente, quinze adversários de computador com personalidade própria e duas regras. Grátis, leve e rápido.",
@@ -75,6 +90,7 @@ const pt: Dict = {
     kicker: "Por que os jogadores ficam",
     title: "Tudo o que os salões de sinuca tinham. E mais.",
     sub: "Feito em torno do que tornava especiais os salões de sinuca online: um taco que faz tudo o que um de verdade faz, um salão para conhecer gente e um ranking que dá vontade de voltar.",
+    links: { ranking: "Ver o ranking mundial", tournaments: "Ver os torneios" },
     items: {
       physics: {
         title: "Física de verdade",
@@ -198,6 +214,7 @@ const pt: Dict = {
     released: "Lançada em {date}",
     whatsNew: "Novidades",
     allReleases: "Todas as versões",
+    itch: "Também no itch.io",
     recommended: "Recomendado",
     detected: "Seu computador",
     copy: "Copiar",
@@ -248,6 +265,21 @@ const pt: Dict = {
       x64: "x64 (Intel / AMD)",
       arm: "ARM64",
       deps: "Precisa das bibliotecas de sempre do desktop (ALSA, X11, OpenGL), que toda instalação com interface gráfica tem.",
+    },
+  },
+  downloadPage: {
+    title: "Baixar jogo de sinuca grátis para PC",
+    shortTitle: "Baixar",
+    description: "Baixe o Snook Legend, o jogo de sinuca bola 8 em 3D grátis: instalador para Windows, Microsoft Store, ou macOS e Linux com um comando. Cerca de 20 MB, código aberto.",
+    kicker: "Download grátis",
+    heading: "Baixe o Snook Legend grátis",
+    sub: "O jogo completo, grátis: partidas online valendo ranking, torneios, duplas, quinze adversários de computador, o desafio diário e 24 treinos. Cerca de 20 MB para Windows, macOS e Linux, e ele se atualiza sozinho.",
+    faqTitle: "Instalar, atualizar e desinstalar",
+    nextTitle: "Antes da primeira partida",
+    next: {
+      rules: "Aprenda as regras, ilustradas",
+      ranking: "Veja quem está no topo do ranking mundial",
+      tournaments: "Encontre um torneio para jogar",
     },
   },
   modal: {
@@ -347,10 +379,11 @@ const pt: Dict = {
   ranking: {
     nav: "Ranking",
     title: "Ranking mundial",
+    metaTitle: "Ranking mundial de sinuca: os 100 melhores",
     description:
-      "Os melhores jogadores de Snook Legend do mundo, ao vivo: o top 100 das partidas online valendo ranking, na regra brasileira e na regra oficial da WPA.",
+      "Os melhores jogadores de sinuca online do Snook Legend, ao vivo: o top 100 das partidas valendo ranking, na regra brasileira e na oficial (WPA), com rating e liga.",
     kicker: "Ao vivo, direto do servidor do jogo",
-    heading: "Ranking mundial",
+    heading: "Ranking mundial de sinuca",
     sub: "Os 100 melhores jogadores nas partidas online valendo ranking. Cada regra tem o seu próprio rating: escolha uma.",
     brazilian: "Regra brasileira",
     official: "Regra oficial (WPA)",
@@ -403,7 +436,7 @@ const pt: Dict = {
   },
   player: {
     kicker: "Perfil do jogador",
-    title: "{name}: perfil do jogador",
+    title: "{name}: perfil e estatísticas de sinuca",
     description: "{name}{from} no Snook Legend: rating {rating} ({tier}) n{rules}, nível {level}, {wins} vitórias em {games} partidas valendo ranking. Conquistas, troféus e as últimas partidas.",
     descriptionNew: "{name}{from} no Snook Legend, nível {level}: ratings, conquistas, troféus e as últimas partidas.",
     from: " ({country})",
@@ -459,6 +492,7 @@ const pt: Dict = {
     cue: "Taco",
     cueAlt: "O taco de {name}: {cue}",
     avatarAlt: "A foto de perfil de {name}",
+    cardAlt: "{name} no Snook Legend: rating, liga e campanha",
     noAvatar: "{name} não tem foto de perfil",
     vipFrame: "Perfil VIP",
     cta: "Jogue contra {name} online: baixe o jogo, é grátis.",
@@ -469,9 +503,10 @@ const pt: Dict = {
   tournaments: {
     nav: "Torneios",
     title: "Torneios",
-    description: "Os torneios oficiais do Snook Legend: a copa semanal, mata-matas e arenas, ao vivo e passados. Chaves, classificação, campeões e premiação.",
+    metaTitle: "Torneios de sinuca online",
+    description: "Os torneios oficiais de sinuca online do Snook Legend: a copa semanal, mata-matas e arenas, ao vivo e passados, com chaves, classificação, campeões e prêmios.",
     kicker: "Torneios oficiais",
-    heading: "Torneios",
+    heading: "Torneios de sinuca",
     sub: "A copa semanal, os torneios da equipe e os eventos: chaves, classificação, campeões e prêmios, enquanto são jogados.",
     live: "Em andamento",
     upcoming: "Em breve",
@@ -493,7 +528,7 @@ const pt: Dict = {
     ends: "Termina {date}",
     played: "Jogado em {date}",
     view: "Ver o torneio",
-    detailTitle: "{name}: torneio {format}",
+    detailTitle: "{name}: torneio de sinuca ({format})",
     detailDescription: "{name}, torneio {format} do Snook Legend n{rules}{players}{champion}. Chave, resultados e prêmios.",
     detailPlayers: ", {n} jogadores",
     detailChampion: ", vencido por {name}",
@@ -530,6 +565,7 @@ const pt: Dict = {
     unavailable: "Não foi possível carregar os torneios agora. Tente de novo em um minuto.",
     allTournaments: "Todos os torneios",
     notFoundTitle: "Torneio não encontrado",
+    cardAlt: "{name}, torneio de sinuca do Snook Legend: regra, formato e campeão",
     notFoundText: "Não há torneio oficial com esse número. Ele pode ter sido particular, ou foi cancelado.",
     cta: "Entre no próximo: baixe o jogo e jogue online.",
   },
@@ -537,7 +573,7 @@ const pt: Dict = {
     nav: "Regras",
     title: "Regras da sinuca: regra brasileira e oficial (bola 8)",
     shortTitle: "Regras da sinuca",
-    description: "As regras da sinuca bola 8 explicadas com mesas animadas: a saída, lisas e listradas, faltas, bolas de penalidade, bola na mão e a bola 8, na regra brasileira e na regra oficial da WPA.",
+    description: "As regras da sinuca bola 8 com mesas animadas: a saída, lisas e listradas, faltas, bolas de penalidade, bola na mão e a bola 8, na regra brasileira e na oficial.",
     kicker: "Guia de regras",
     heading: "Regras da sinuca, ilustradas",
     sub: "Dois jeitos de jogar o mesmo jogo: a regra brasileira dos bares, com bolas de penalidade, e a regra oficial dos torneios, com bola na mão. As duas exatamente como o Snook Legend joga.",
@@ -623,9 +659,9 @@ const pt: Dict = {
   },
   calc: {
     nav: "Calculadora de rating",
-    title: "Calculadora de rating: como funciona o ranking do Snook Legend",
+    title: "Calculadora de rating: como funciona o ranking",
     shortTitle: "Calculadora de rating",
-    description: "Quantos pontos de rating vale uma partida no Snook Legend: ponha o seu rating e veja quanto você ganha ou perde contra cada adversário. Como funcionam o rating Elo, o fator K e as ligas.",
+    description: "Quantos pontos de rating vale uma partida de sinuca no Snook Legend: ponha o seu rating e veja quanto ganha ou perde contra cada adversário. Elo, fator K e ligas.",
     kicker: "Calculadora de rating",
     heading: "Quantos pontos vale esta partida?",
     sub: "Ponha o seu rating e as suas partidas valendo ranking numa regra, e veja quanto vale uma vitória e uma derrota contra cada adversário, calculado exatamente como o jogo calcula.",
@@ -712,6 +748,8 @@ const pt: Dict = {
       privacy: "Política de privacidade",
     },
     made: "Feito em Rust, para quem ama sinuca.",
+    follow: "Siga o Snook Legend",
+    on: "Snook Legend no {network}",
   },
 };
 

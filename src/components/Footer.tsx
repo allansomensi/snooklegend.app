@@ -1,4 +1,4 @@
-import { LOCALE_INFO, LOCALES, type Dict, type Locale } from "@/i18n";
+import { fmt, LOCALE_INFO, LOCALES, type Dict, type Locale } from "@/i18n";
 import {
   CHANGELOG_URL,
   GITHUB_URL,
@@ -6,11 +6,14 @@ import {
   legalPath,
   LICENSE_URL,
   RELEASES_URL,
+  socialProfiles,
   TRANSLATIONS_URL,
 } from "@/lib/site";
 import { rankingPath } from "@/lib/ranking";
 import { pagePath } from "@/lib/routes";
-import { GithubIcon } from "./icons";
+import { BlueskyIcon, FacebookIcon, GithubIcon, InstagramIcon, ThreadsIcon, XIcon } from "./icons";
+
+const SOCIAL_ICONS = { bluesky: BlueskyIcon, instagram: InstagramIcon, facebook: FacebookIcon, x: XIcon, threads: ThreadsIcon };
 import { LiveVersion } from "./LiveVersion";
 
 export function Footer({
@@ -31,7 +34,7 @@ export function Footer({
     {
       title: t.footer.game,
       links: [
-        { href: `${home}#download`, label: l.download },
+        { href: pagePath(locale, "download"), label: l.download },
         { href: rankingPath(locale), label: l.ranking },
         { href: pagePath(locale, "tournaments"), label: l.tournaments },
         { href: pagePath(locale, "rules"), label: l.guide },
@@ -88,10 +91,31 @@ export function Footer({
               </a>
             ))}
           </div>
+          {/* The official profiles: `rel="me"` tells them (and search engines) that this site is the game's own. */}
+          <ul className="mt-5 flex items-center gap-1.5" aria-label={t.footer.follow}>
+            {socialProfiles().map((p) => {
+              const Icon = SOCIAL_ICONS[p.key];
+              const label = fmt(t.footer.on, { network: p.name });
+              return (
+                <li key={p.key}>
+                  <a
+                    href={p.url}
+                    target="_blank"
+                    rel="me noopener"
+                    aria-label={label}
+                    title={label}
+                    className="grid size-10 place-items-center rounded-full bg-white/[0.04] text-cream/70 ring-1 ring-white/[0.08] transition hover:bg-white/[0.08] hover:text-cream"
+                  >
+                    <Icon className="size-[18px]" />
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
         </div>
         {cols.map((c) => (
           <nav key={c.title} aria-label={c.title}>
-            <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-gold-300/90">{c.title}</h3>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-gold-300/90">{c.title}</h2>
             <ul className="mt-3 space-y-0.5">
               {c.links.map((link) => (
                 <li key={link.href}>

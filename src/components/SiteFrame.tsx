@@ -5,6 +5,7 @@ import { SITE_URL } from "@/lib/site";
 import { DownloadButton } from "./DownloadButton";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
+import { JsonLd } from "./JsonLd";
 import { PlatformProvider } from "./PlatformProvider";
 
 /**
@@ -70,10 +71,7 @@ export function PageHeader({
   );
 }
 
-/** Structured data for search engines (JSON-LD), safe inside a script tag. */
-export function JsonLd({ data }: { data: object | object[] }) {
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
-}
+export { JsonLd };
 
 export type Crumb = { name: string; path: string };
 

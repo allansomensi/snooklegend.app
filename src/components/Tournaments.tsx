@@ -3,7 +3,8 @@ import { fmt, getDict, type Dict, type Locale } from "@/i18n";
 import { formatDateTime, formatNumber, isoDate } from "@/lib/format";
 import { cueName, frameOf } from "@/lib/player";
 import { pagePath, pathsOf, playerPath, tournamentPath } from "@/lib/routes";
-import { SITE_URL } from "@/lib/site";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { ORG_ID } from "@/lib/structured-data";
 import {
   ARENA_POINTS,
   fullBracket,
@@ -38,7 +39,7 @@ export async function TournamentsPage({ locale, list }: { locale: Locale; list: 
     ? {
         "@context": "https://schema.org",
         "@type": "ItemList",
-        name: t.title,
+        name: t.metaTitle,
         itemListElement: list.slice(0, 30).map((x, i) => ({ "@type": "ListItem", position: i + 1, url: SITE_URL + tournamentPath(locale, x.id), name: x.name })),
       }
     : null;
@@ -180,10 +181,11 @@ export async function TournamentPage({ locale, x }: { locale: Locale; x: Tournam
     sport: "Eight-ball pool",
     ...(x.startsAt ? { startDate: isoDate(x.startsAt) } : {}),
     ...(x.endsAt ? { endDate: isoDate(x.endsAt) } : {}),
-    eventStatus: "https://schema.org/EventScheduled",
+    eventStatus: x.state === "cancelled" ? "https://schema.org/EventCancelled" : "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
     location: { "@type": "VirtualLocation", url: SITE_URL + path },
-    organizer: { "@type": "Organization", name: "Snook Legend", url: SITE_URL },
+    organizer: { "@type": "Organization", "@id": ORG_ID, name: SITE_NAME, url: `${SITE_URL}/` },
+    ...(x.entryFee > 0 ? {} : { isAccessibleForFree: true }),
     ...(x.entrants.length
       ? { competitor: x.entrants.slice(0, 64).map((e) => ({ "@type": "Person", name: e.username, url: SITE_URL + playerPath(locale, e.username) })) }
       : {}),

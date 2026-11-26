@@ -1,10 +1,23 @@
 const en = {
   meta: {
-    title: "Snook Legend: 3D eight-ball pool for Windows, macOS and Linux",
+    title: "Snook Legend: Free 8 Ball Pool Game for PC, Mac and Linux",
     shortTitle: "Snook Legend",
     description:
-      "A free 3D eight-ball pool game with real physics. Play rated games online, take on fifteen computer opponents, the daily challenge and 24 drills, under the Brazilian or the official WPA rules. Download for Windows, macOS and Linux.",
+      "Free 3D 8 ball pool game for PC: online billiards with a world ranking, tournaments and 2v2 doubles, 15 computer opponents and real physics. Windows, macOS, Linux.",
     ogAlt: "Snook Legend: a pool table in a dim pool hall",
+    keywords: [
+      "Snook Legend",
+      "8 ball pool",
+      "free pool game for PC",
+      "online billiards",
+      "eight-ball pool",
+      "pool game",
+      "billiards game",
+      "3D pool game",
+      "pool game for Windows",
+      "pool game for Mac",
+      "pool game for Linux",
+    ],
   },
   nav: {
     tournaments: "Tournaments",
@@ -23,6 +36,7 @@ const en = {
   },
   hero: {
     badge: "Now in 27 languages",
+    eyebrow: "Free 8 ball pool game for PC",
     titleA: "Pool the way",
     titleB: "it's really played.",
     sub: "Snook Legend is a 3D eight-ball pool game with real physics, a lively online lounge, fifteen computer opponents with personalities of their own and two sets of rules. Free, small and fast.",
@@ -73,6 +87,7 @@ const en = {
     kicker: "Why players stay",
     title: "Everything the old pool rooms had. And more.",
     sub: "Built around what made online pool rooms special: a cue that does everything a real one does, a lounge to meet people, and a ranking that keeps you coming back.",
+    links: { ranking: "See the world ranking", tournaments: "See the tournaments" },
     items: {
       physics: {
         title: "Real ball physics",
@@ -196,6 +211,7 @@ const en = {
     released: "Released {date}",
     whatsNew: "What's new",
     allReleases: "All releases",
+    itch: "Also on itch.io",
     recommended: "Recommended",
     detected: "Your computer",
     copy: "Copy",
@@ -246,6 +262,21 @@ const en = {
       x64: "x64 (Intel / AMD)",
       arm: "ARM64",
       deps: "Needs the usual desktop libraries (ALSA, X11, OpenGL), which every desktop installation has.",
+    },
+  },
+  downloadPage: {
+    title: "Download free 8 ball pool for PC, Mac and Linux",
+    shortTitle: "Download",
+    description: "Download Snook Legend, the free 3D 8 ball pool game: the Windows installer, the Microsoft Store, or macOS and Linux in one command. About 20 MB, open source.",
+    kicker: "Free download",
+    heading: "Download Snook Legend for free",
+    sub: "The full game, free: online games with a world ranking, tournaments, 2v2 doubles, fifteen computer opponents, the daily challenge and 24 drills. About 20 MB for Windows, macOS and Linux, and it updates itself.",
+    faqTitle: "Installing, updating and uninstalling",
+    nextTitle: "Before your first game",
+    next: {
+      rules: "Learn the rules, illustrated",
+      ranking: "See who's on top of the world ranking",
+      tournaments: "Find a tournament to enter",
     },
   },
   modal: {
@@ -345,10 +376,11 @@ const en = {
   ranking: {
     nav: "Ranking",
     title: "World ranking",
+    metaTitle: "8 ball pool world ranking: the top 100 players",
     description:
-      "The best Snook Legend players in the world, live: the top 100 in rated online games, under the Brazilian rules and the official WPA rules.",
+      "The best 8 ball pool players of Snook Legend, live: the top 100 in rated online games, under the Brazilian rule and the official WPA rules.",
     kicker: "Live from the game server",
-    heading: "World ranking",
+    heading: "Pool world ranking",
     sub: "The top 100 players in rated online games. Each set of rules has its own rating: pick one.",
     brazilian: "Brazilian rules",
     official: "Official rules (WPA)",
@@ -401,7 +433,7 @@ const en = {
   },
   player: {
     kicker: "Player profile",
-    title: "{name}: player profile",
+    title: "{name}: pool player profile and stats",
     description: "{name}{from} on Snook Legend: {rating} rating ({tier}) under {rules}, level {level}, {wins} wins in {games} rated games. Achievements, trophies and the latest games.",
     descriptionNew: "{name}{from} on Snook Legend, level {level}: ratings, achievements, trophies and the latest games.",
     from: " from {country}",
@@ -457,6 +489,7 @@ const en = {
     cue: "Cue",
     cueAlt: "{name}'s cue: {cue}",
     avatarAlt: "{name}'s profile picture",
+    cardAlt: "{name} on Snook Legend: rating, league and record",
     noAvatar: "{name} has no profile picture",
     vipFrame: "VIP profile",
     cta: "Play {name} online: download the game, it's free.",
@@ -467,9 +500,10 @@ const en = {
   tournaments: {
     nav: "Tournaments",
     title: "Tournaments",
-    description: "Snook Legend's official tournaments: the weekly cup, knockouts and arenas, live and past. Brackets, standings, champions and prize pools.",
+    metaTitle: "Online 8 ball pool tournaments",
+    description: "Snook Legend's official online pool tournaments: the weekly cup, knockouts and arenas, live and past, with brackets, standings, champions and prize pools.",
     kicker: "Official tournaments",
-    heading: "Tournaments",
+    heading: "Pool tournaments",
     sub: "The weekly cup, the staff's tournaments and the events: brackets, standings, champions and prizes, as they're played.",
     live: "Being played",
     upcoming: "Coming up",
@@ -491,7 +525,7 @@ const en = {
     ends: "Ends {date}",
     played: "Played {date}",
     view: "See the tournament",
-    detailTitle: "{name}: {format} tournament",
+    detailTitle: "{name}: pool tournament ({format})",
     detailDescription: "{name}, a {format} tournament of Snook Legend under {rules}{players}{champion}. Bracket, results and prizes.",
     detailPlayers: ", {n} players",
     detailChampion: ", won by {name}",
@@ -528,14 +562,15 @@ const en = {
     unavailable: "The tournaments couldn't be loaded right now. Try again in a minute.",
     allTournaments: "All tournaments",
     notFoundTitle: "Tournament not found",
+    cardAlt: "{name}, a Snook Legend pool tournament: rules, format and champion",
     notFoundText: "There's no official tournament with this number. It may have been a private one, or it was cancelled.",
     cta: "Enter the next one: download the game and play online.",
   },
   guide: {
     nav: "Rules guide",
-    title: "Eight-ball pool rules: Brazilian and official (WPA)",
+    title: "8 ball pool rules: Brazilian and official (WPA)",
     shortTitle: "Rules of eight-ball pool",
-    description: "The rules of eight-ball pool explained with animated tables: the break, solids and stripes, fouls, penalty balls, ball in hand and the 8-ball, under the Brazilian rule and the official WPA rules.",
+    description: "The rules of 8 ball pool explained with animated tables: the break, solids and stripes, fouls, penalty balls, ball in hand and the 8, Brazilian and official (WPA).",
     kicker: "Rules guide",
     heading: "The rules of eight-ball, illustrated",
     sub: "Two ways to play the same game: the Brazilian rule of the bars, with penalty balls, and the official rules of the tournaments, with ball in hand. Both exactly as Snook Legend plays them.",
@@ -621,9 +656,9 @@ const en = {
   },
   calc: {
     nav: "Rating calculator",
-    title: "Rating calculator: how the Snook Legend ranking works",
+    title: "Rating calculator: how the pool ranking works",
     shortTitle: "Rating calculator",
-    description: "How many rating points a game is worth in Snook Legend: put in your rating and see what you win or lose against each opponent. How the Elo rating, the K-factor and the leagues work.",
+    description: "How many rating points a game of Snook Legend is worth: enter your rating and see what you win or lose against each opponent. The Elo rating, K-factor and leagues.",
     kicker: "Rating calculator",
     heading: "How many points is this game worth?",
     sub: "Put in your rating and your rated games under one set of rules, and see what a win and a loss are worth against every opponent, worked out exactly as the game does.",
@@ -710,6 +745,8 @@ const en = {
       privacy: "Privacy policy",
     },
     made: "Made with Rust, for people who love pool.",
+    follow: "Follow Snook Legend",
+    on: "Snook Legend on {network}",
   },
 };
 

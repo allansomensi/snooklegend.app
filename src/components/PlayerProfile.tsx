@@ -16,6 +16,7 @@ import { ELO } from "@/lib/rating";
 import { ADMIN_RED, rankingPath, tierOf, TIERS } from "@/lib/ranking";
 import { pagePath, pathsOf, playerPath, tournamentPath } from "@/lib/routes";
 import { SITE_URL } from "@/lib/site";
+import { WEBSITE_ID } from "@/lib/structured-data";
 import { CopyLink } from "./CopyLink";
 import { Flag } from "./Flag";
 import { Avatar, CueArt, Medal } from "./GameArt";
@@ -40,7 +41,7 @@ export async function PlayerProfile({ player: p, locale }: { player: Player; loc
     name: fmt(t.title, { name: p.username }),
     ...(p.createdAt ? { dateCreated: isoDate(p.createdAt) } : {}),
     inLanguage: locale === "pt" ? "pt-BR" : locale,
-    isPartOf: { "@type": "WebSite", name: "Snook Legend", url: SITE_URL },
+    isPartOf: { "@id": WEBSITE_ID },
     mainEntity: {
       "@type": "Person",
       name: p.username,
@@ -50,13 +51,12 @@ export async function PlayerProfile({ player: p, locale }: { player: Player; loc
       ...(avatarSrc(p.avatar) ? { image: SITE_URL + avatarSrc(p.avatar) } : {}),
       ...(country ? { nationality: { "@type": "Country", name: country } } : {}),
       ...(p.trophies.length ? { award: p.trophies.map((tr) => tr.name).slice(0, 20) } : {}),
-      interactionStatistic: [
-        {
-          "@type": "InteractionCounter",
-          interactionType: "https://schema.org/WinAction",
-          userInteractionCount: p.career?.wins ?? p.ratings.reduce((n, r) => n + r.wins, 0),
-        },
-      ],
+      // The games this player won (an action of theirs).
+      agentInteractionStatistic: {
+        "@type": "InteractionCounter",
+        interactionType: "https://schema.org/WinAction",
+        userInteractionCount: p.career?.wins ?? p.ratings.reduce((n, r) => n + r.wins, 0),
+      },
     },
   };
 
@@ -415,17 +415,19 @@ function RatingCard({ r, d, locale, primary }: { r: PlayerRating; d: Dict; local
 }
 
 function Stat({ label, value, title, href }: { label: string; value: string; title?: string; href?: string }) {
-  const v = <dd className="mt-1 font-display text-xl font-bold tabular-nums text-cream">{value}</dd>;
+  // The link goes inside the <dd>: a <dl>'s groups hold only <dt> and <dd>.
   return (
     <div className="rounded-2xl bg-white/[0.03] px-2 py-3 ring-1 ring-white/[0.05]" title={title}>
       <dt className="text-[11px] font-medium uppercase tracking-[0.12em] text-fog">{label}</dt>
-      {href ? (
-        <a href={href} className="block rounded transition hover:text-gold-200">
-          {v}
-        </a>
-      ) : (
-        v
-      )}
+      <dd className="mt-1 font-display text-xl font-bold tabular-nums text-cream">
+        {href ? (
+          <a href={href} className="block rounded transition hover:text-gold-200">
+            {value}
+          </a>
+        ) : (
+          value
+        )}
+      </dd>
     </div>
   );
 }

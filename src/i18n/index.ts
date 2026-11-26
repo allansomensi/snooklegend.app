@@ -7,10 +7,26 @@ export type { Dict };
 export const LOCALES = ["en", "pt", "es"] as const;
 export type Locale = (typeof LOCALES)[number];
 
-export const LOCALE_INFO: Record<Locale, { name: string; short: string; htmlLang: string; og: string; path: string }> = {
-  en: { name: "English", short: "EN", htmlLang: "en", og: "en_US", path: "/" },
-  pt: { name: "Português", short: "PT", htmlLang: "pt-BR", og: "pt_BR", path: "/pt/" },
-  es: { name: "Español", short: "ES", htmlLang: "es", og: "es_ES", path: "/es/" },
+export const LOCALE_INFO: Record<
+  Locale,
+  {
+    name: string;
+    short: string;
+    /** `<html lang>`. */
+    htmlLang: string;
+    /**
+     * The `hreflang` codes this language's pages answer for: Brazilian
+     * Portuguese, and Portuguese anywhere else too (there's no other
+     * Portuguese version).
+     */
+    hreflang: readonly string[];
+    og: string;
+    path: string;
+  }
+> = {
+  en: { name: "English", short: "EN", htmlLang: "en", hreflang: ["en"], og: "en_US", path: "/" },
+  pt: { name: "Português", short: "PT", htmlLang: "pt-BR", hreflang: ["pt-BR", "pt"], og: "pt_BR", path: "/pt/" },
+  es: { name: "Español", short: "ES", htmlLang: "es", hreflang: ["es"], og: "es_ES", path: "/es/" },
 };
 
 const DICTS: Record<Locale, Dict> = { en, pt, es };

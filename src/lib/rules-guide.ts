@@ -8,6 +8,12 @@ import path from "node:path";
 import type { Locale } from "@/i18n";
 import type { Rules } from "./ranking";
 
+/**
+ * When the rules' text (src/content/rules) last changed: the guide's date
+ * for search engines. Change it with the text.
+ */
+export const RULES_UPDATED = "2026-11-25";
+
 export type GuideRule = { id: string; title: string; text: string };
 export type GuidePart = { id: string; title: string; rules: GuideRule[] };
 

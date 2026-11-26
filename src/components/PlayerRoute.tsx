@@ -8,8 +8,8 @@ import { cache } from "react";
 import { fmt, getDict, type Locale } from "@/i18n";
 import { ServerUnavailable } from "@/lib/api";
 import { countryName } from "@/lib/format";
-import { avatarSrc, fetchPlayer, mainRating, plausibleName } from "@/lib/player";
-import { pageMetadata } from "@/lib/metadata";
+import { fetchPlayer, mainRating, plausibleName } from "@/lib/player";
+import { notFoundMetadata, pageMetadata } from "@/lib/metadata";
 import { playerPath } from "@/lib/routes";
 import { PlayerProfile } from "./PlayerProfile";
 
@@ -22,8 +22,8 @@ export function nameParam(raw: string): string {
   }
 }
 
-/** The player (once per page made, for the page and its metadata), or null for a 404. */
-const loadPlayer = cache(async (name: string) => {
+/** The player (once per page made, for the page, its metadata and its picture), or null for a 404. */
+export const loadPlayer = cache(async (name: string) => {
   if (!plausibleName(name)) return null;
   const res = await fetchPlayer(name);
   if (res.ok) return res.data;
@@ -34,7 +34,7 @@ const loadPlayer = cache(async (name: string) => {
 export async function playerMetadata(locale: Locale, raw: string): Promise<Metadata> {
   const p = await loadPlayer(nameParam(raw)).catch(() => null);
   const t = getDict(locale);
-  if (!p) return { title: t.player.notFoundTitle, robots: { index: false, follow: true } };
+  if (!p) return notFoundMetadata(t.player.notFoundTitle, t.player.notFoundText);
   const main = mainRating(p);
   const country = countryName(locale, p.country);
   const from = country ? fmt(t.player.from, { country }) : "";
@@ -51,15 +51,16 @@ export async function playerMetadata(locale: Locale, raw: string): Promise<Metad
           games: main.games,
         })
       : fmt(t.player.descriptionNew, { name: p.username, from, level: p.level });
-  const avatar = avatarSrc(p.avatar);
   return pageMetadata({
     locale,
     pathOf: (l) => playerPath(l, p.username),
     title: fmt(t.player.title, { name: p.username }),
     description,
     type: "profile",
-    // The picture of the profile (a small square: a summary card), or the game's.
-    image: avatar ? { url: avatar, width: 128, height: 128, alt: fmt(t.player.avatarAlt, { name: p.username }) } : undefined,
+    profile: { username: p.username },
+    // The player's card (card.png, next to the page).
+    image: { url: `${playerPath(locale, p.username)}card.png`, width: 1200, height: 630, type: "image/png" },
+    imageAlt: fmt(t.player.cardAlt, { name: p.username }),
   });
 }
 

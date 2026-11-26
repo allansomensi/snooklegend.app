@@ -2,9 +2,10 @@ import { Globe, Plus } from "lucide-react";
 import { Fragment } from "react";
 import { getDict, LOCALE_INFO, type Locale } from "@/i18n";
 import { pagePath, pathsOf } from "@/lib/routes";
-import { readRules, type GuidePart } from "@/lib/rules-guide";
+import { readRules, RULES_UPDATED, type GuidePart } from "@/lib/rules-guide";
 import { SCENE_AT, type SceneKey } from "@/lib/scenes";
-import { SITE_URL } from "@/lib/site";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { faqEntities, ORG_ID, WEBSITE_ID } from "@/lib/structured-data";
 import { Flag } from "./Flag";
 import { RuleScene } from "./RuleScene";
 import { SceneFigure } from "./SceneFigure";
@@ -27,13 +28,17 @@ export async function RulesGuide({ locale }: { locale: Locale }) {
     {
       "@context": "https://schema.org",
       "@type": "Article",
+      "@id": `${SITE_URL + path}#article`,
       headline: g.title,
       description: g.description,
       inLanguage: LOCALE_INFO[locale].htmlLang,
       url: SITE_URL + path,
+      mainEntityOfPage: SITE_URL + path,
+      isPartOf: { "@id": WEBSITE_ID },
       image: `${SITE_URL}/og.jpg`,
-      author: { "@type": "Organization", name: "Snook Legend", url: SITE_URL },
-      publisher: { "@type": "Organization", name: "Snook Legend", logo: { "@type": "ImageObject", url: `${SITE_URL}/brand/icon-512.png` } },
+      dateModified: `${RULES_UPDATED}T12:00:00Z`,
+      author: { "@type": "Organization", "@id": ORG_ID, name: SITE_NAME, url: `${SITE_URL}/` },
+      publisher: { "@type": "Organization", "@id": ORG_ID, name: SITE_NAME, logo: { "@type": "ImageObject", url: `${SITE_URL}/brand/icon-512.png` } },
       about: [
         { "@type": "Thing", name: "Eight-ball", sameAs: "https://en.wikipedia.org/wiki/Eight-ball" },
         { "@type": "Thing", name: g.brTitle },
@@ -43,7 +48,7 @@ export async function RulesGuide({ locale }: { locale: Locale }) {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: g.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+      mainEntity: faqEntities(g.faq),
     },
   ];
 

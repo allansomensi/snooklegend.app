@@ -1,0 +1,9 @@
+import { tournamentCard } from "@/components/TournamentOgImage";
+
+// The tournament's picture for social networks (the page's og:image), at an
+// address ending in .png, which the trailing-slash redirect leaves alone.
+export const revalidate = 60;
+
+export async function GET(_request: Request, { params }: RouteContext<"/[lang]/torneios/[id]/card.png">) {
+  return tournamentCard("pt", (await params).id);
+}

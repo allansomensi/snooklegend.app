@@ -23,8 +23,13 @@ const nextConfig: NextConfig = {
       { key: "X-Content-Type-Options", value: "nosniff" },
       { key: "Strict-Transport-Security", value: "max-age=31536000" },
     ];
+    // The site's pictures and icons keep their names when they change, so
+    // they're kept a week, and used a month longer while checked again.
+    const pictures = [{ key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=2592000" }];
     return [
       { source: "/:path*", headers: [...common, { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" }] },
+      { source: "/:dir(shots|art|avatars|opponents|brand)/:file*", headers: pictures },
+      { source: "/:file(og\\.jpg|flags\\.png)", headers: pictures },
       {
         // The staff portal: never in a frame, no referrer, never in a search engine.
         source: "/admin/:path*",
@@ -37,6 +42,9 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // A player's picture for social networks (`…/card.png`) draws their
+  // profile picture, read from public/avatars when it's made.
+  outputFileTracingIncludes: { "/**/card.png": ["./public/avatars/*.webp"] },
   turbopack: {
     rules: {
       "*.css": {

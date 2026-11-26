@@ -1,6 +1,27 @@
 // Everything the site links to, in one place.
 
 export const SITE_URL = "https://snooklegend.app";
+export const SITE_NAME = "Snook Legend";
+
+/**
+ * The game's official profiles: linked from every page's footer (with
+ * `rel="me"`) and named in the structured data (`sameAs`). Adding one is one
+ * line here (and its icon in `components/icons.tsx`); an entry whose `url` is
+ * still empty is left out everywhere.
+ */
+export const SOCIAL_PROFILES: readonly { key: "bluesky" | "instagram" | "facebook" | "x" | "threads"; name: string; url: string }[] = [
+  { key: "bluesky", name: "Bluesky", url: "https://bsky.app/profile/snooklegend.app" },
+  { key: "instagram", name: "Instagram", url: "https://www.instagram.com/snooklegend.app/" },
+  { key: "facebook", name: "Facebook", url: "https://www.facebook.com/snooklegend" },
+  { key: "x", name: "X", url: "https://x.com/snooklegend_app" },
+  { key: "threads", name: "Threads", url: "https://www.threads.com/@snooklegend.app" },
+];
+
+/** The game's account on X, for the cards shared there (`twitter:site`, `twitter:creator`). */
+export const X_HANDLE = "@snooklegend_app";
+
+/** The official profiles that have an address. */
+export const socialProfiles = () => SOCIAL_PROFILES.filter((p) => p.url !== "");
 
 export const REPO = "allansomensi/snook-legend";
 export const GITHUB_URL = `https://github.com/${REPO}`;
@@ -14,12 +35,11 @@ export const TRANSLATIONS_URL = `${GITHUB_URL}/tree/main/crates/client/lang`;
 /** A file of the latest release: GitHub always redirects to the newest version. */
 export const latestAsset = (name: string) => `${GITHUB_URL}/releases/latest/download/${name}`;
 
-/**
- * The game in the Microsoft Store. Replace the search with the product page
- * (https://apps.microsoft.com/detail/<product id>) once it is at hand.
- */
-export const MS_STORE_URL =
-  process.env.NEXT_PUBLIC_MS_STORE_URL || "https://apps.microsoft.com/search?query=Snook%20Legend";
+/** The game in the Microsoft Store (`NEXT_PUBLIC_MS_STORE_URL` replaces it when building). */
+export const MS_STORE_URL = process.env.NEXT_PUBLIC_MS_STORE_URL || "https://apps.microsoft.com/detail/9NZ15BNMZPTG";
+
+/** The game's page on itch.io. */
+export const ITCH_URL = "https://allansomensi.itch.io/snook-legend";
 
 /** The legal pages: the privacy policy and the terms of use. */
 export const LEGAL_DOCS = ["privacy", "terms"] as const;

@@ -1,8 +1,14 @@
+// What search engines and social networks read in every page's <head>: the
+// title (" | Snook Legend" after it), the description, the canonical address
+// and the same page in the other languages (hreflang), the cards for social
+// networks and the robots' instructions.
+
 import type { Metadata, Viewport } from "next";
 import { getDict, LOCALE_INFO, LOCALES, type Locale } from "@/i18n";
+import { LEGAL_UPDATED } from "./legal";
 import { rankingPath } from "./ranking";
 import { languagesOf } from "./routes";
-import { legalPath, SITE_URL, type LegalDoc } from "./site";
+import { legalPath, SITE_NAME, SITE_URL, X_HANDLE, type LegalDoc } from "./site";
 
 export const VIEWPORT: Viewport = {
   themeColor: "#040907",
@@ -12,157 +18,171 @@ export const VIEWPORT: Viewport = {
   viewportFit: "cover",
 };
 
+/** What every page's title is followed by (the home pages' titles start with the name instead). */
+export const TITLE_SUFFIX = ` | ${SITE_NAME}`;
+
+/** The site's picture for social networks (1200×630): a pool table in a dim pool hall. */
+export const OG_IMAGE = { url: "/og.jpg", width: 1200, height: 630, type: "image/jpeg" } as const;
+
+/** A page for search engines: indexed, with large image previews and full snippets. */
+export const ROBOTS_INDEX = {
+  index: true,
+  follow: true,
+  googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+} satisfies Metadata["robots"];
+
+/** A page kept out of search results (its links are still followed). */
+export const ROBOTS_NOINDEX = {
+  index: false,
+  follow: true,
+  googleBot: { index: false, follow: true },
+} satisfies Metadata["robots"];
+
+/**
+ * Search Console's and Bing's ownership checks, from the environment
+ * (`GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`), when set.
+ */
+function verification(): Metadata["verification"] {
+  const google = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+  const bing = process.env.BING_SITE_VERIFICATION?.trim();
+  if (!google && !bing) return undefined;
+  return { ...(google ? { google } : {}), ...(bing ? { other: { "msvalidate.01": bing } } : {}) };
+}
+
+/**
+ * What every page of a language starts from (its root layout's). No address
+ * of its own: each page gives its canonical address and its versions in the
+ * other languages, so a page that gives none (a 404) doesn't borrow the home
+ * page's.
+ */
 export function buildMetadata(locale: Locale): Metadata {
   const t = getDict(locale);
   const info = LOCALE_INFO[locale];
-  const languages: Record<string, string> = { "x-default": "/" };
-  for (const l of LOCALES) languages[LOCALE_INFO[l].htmlLang] = LOCALE_INFO[l].path;
-
   return {
     metadataBase: new URL(SITE_URL),
-    title: { default: t.meta.title, template: `%s · ${t.meta.shortTitle}` },
+    title: { default: t.meta.title, template: `%s${TITLE_SUFFIX}` },
     description: t.meta.description,
-    applicationName: "Snook Legend",
-    keywords: [
-      "Snook Legend",
-      "pool",
-      "8 ball",
-      "eight-ball",
-      "billiards",
-      "sinuca",
-      "bilhar",
-      "bola 8",
-      "billar",
-      "pool online",
-      "3D pool game",
-      "Windows",
-      "macOS",
-      "Linux",
-    ],
-    authors: [{ name: "Snook Legend" }],
+    applicationName: SITE_NAME,
+    keywords: t.meta.keywords,
+    authors: [{ name: SITE_NAME, url: `${SITE_URL}/` }],
+    creator: SITE_NAME,
+    publisher: SITE_NAME,
     category: "games",
-    alternates: { canonical: info.path, languages },
     openGraph: {
       type: "website",
-      url: info.path,
-      siteName: "Snook Legend",
-      title: t.meta.title,
-      description: t.meta.description,
+      siteName: SITE_NAME,
       locale: info.og,
-      alternateLocale: LOCALES.filter((l) => l !== locale).map((l) => LOCALE_INFO[l].og),
-      images: [{ url: "/og.jpg", width: 1200, height: 630, alt: t.meta.ogAlt }],
+      images: [{ ...OG_IMAGE, alt: t.meta.ogAlt }],
     },
-    twitter: {
-      card: "summary_large_image",
-      title: t.meta.title,
-      description: t.meta.description,
-      images: ["/og.jpg"],
-    },
-    robots: { index: true, follow: true },
-    formatDetection: { telephone: false },
+    twitter: { card: "summary_large_image", site: X_HANDLE, creator: X_HANDLE, images: [{ url: OG_IMAGE.url, alt: t.meta.ogAlt }] },
+    // No `robots` here: each page says its own (a page that isn't there must not say "index").
+    formatDetection: { telephone: false, email: false, address: false },
+    verification: verification(),
   };
 }
 
 /**
  * A page's metadata (on top of its language's, from the layout): its title
- * (the layout's template adds " · Snook Legend"), description, canonical
- * address and the same page in the other languages, and its cards for
- * social networks. `image: false` leaves the picture to an
- * `opengraph-image` next to the page.
+ * (the layout's template adds " | Snook Legend"; `absoluteTitle` keeps it as
+ * it is), description, canonical address and the same page in the other
+ * languages, and its cards for social networks. `image: false` leaves the
+ * picture to an `opengraph-image` next to the page.
  */
 export function pageMetadata({
   locale,
   pathOf,
   title,
   description,
+  absoluteTitle = false,
   type = "website",
-  image = { url: "/og.jpg", width: 1200, height: 630 },
+  image = OG_IMAGE,
+  imageAlt,
   index = true,
+  profile,
+  dates,
 }: {
   locale: Locale;
   pathOf: (l: Locale) => string;
   title: string;
   description: string;
+  absoluteTitle?: boolean;
   type?: "website" | "article" | "profile";
-  image?: { url: string; width: number; height: number; alt?: string } | false;
+  image?: { url: string; width: number; height: number; type?: string } | false;
+  imageAlt?: string;
   index?: boolean;
+  /** A player's page: their name. */
+  profile?: { username: string };
+  /** An article's dates (ISO 8601). */
+  dates?: { modified?: string; published?: string };
 }): Metadata {
   const t = getDict(locale);
   const info = LOCALE_INFO[locale];
-  const full = `${title} · Snook Legend`;
-  const images = image ? [{ ...image, alt: image.alt ?? t.meta.ogAlt }] : undefined;
-  return {
-    title,
+  const full = absoluteTitle ? title : `${title}${TITLE_SUFFIX}`;
+  const alt = imageAlt ?? t.meta.ogAlt;
+  const url = pathOf(locale);
+  const og = {
+    url,
+    siteName: SITE_NAME,
+    title: full,
     description,
-    alternates: { canonical: pathOf(locale), languages: languagesOf(pathOf) },
-    openGraph: {
-      type,
-      url: pathOf(locale),
-      siteName: "Snook Legend",
-      title: full,
-      description,
-      locale: info.og,
-      alternateLocale: LOCALES.filter((l) => l !== locale).map((l) => LOCALE_INFO[l].og),
-      ...(images ? { images } : {}),
-    },
+    locale: info.og,
+    alternateLocale: LOCALES.filter((l) => l !== locale).map((l) => LOCALE_INFO[l].og),
+    ...(image ? { images: [{ ...image, alt }] } : {}),
+  };
+  return {
+    title: absoluteTitle ? { absolute: title } : title,
+    description,
+    alternates: { canonical: url, languages: languagesOf(pathOf) },
+    openGraph:
+      type === "profile"
+        ? { ...og, type, ...(profile ? { username: profile.username } : {}) }
+        : type === "article"
+          ? { ...og, type, ...(dates?.modified ? { modifiedTime: dates.modified } : {}), ...(dates?.published ? { publishedTime: dates.published } : {}) }
+          : { ...og, type },
     twitter: {
-      // A small square picture (a player's) makes a summary card; a wide one, a large card.
-      card: image && image.width < 600 ? "summary" : "summary_large_image",
+      card: "summary_large_image",
+      site: X_HANDLE,
+      creator: X_HANDLE,
       title: full,
       description,
-      ...(images ? { images: images.map((i) => i.url) } : {}),
+      ...(image ? { images: [{ url: image.url, alt }] } : {}),
     },
-    robots: index ? { index: true, follow: true } : { index: false, follow: true },
+    robots: index ? ROBOTS_INDEX : ROBOTS_NOINDEX,
   };
 }
 
-/** A legal page's metadata (on top of its language's, from the layout). */
+/** A page that isn't there (a player or a tournament): its title, out of search results. */
+export function notFoundMetadata(title: string, description?: string): Metadata {
+  return { title, ...(description ? { description } : {}), robots: ROBOTS_NOINDEX };
+}
+
+/** A home page: `/`, `/pt/`, `/es/`. */
+export function homeMetadata(locale: Locale): Metadata {
+  const t = getDict(locale);
+  return pageMetadata({
+    locale,
+    pathOf: (l) => LOCALE_INFO[l].path,
+    title: t.meta.title,
+    description: t.meta.description,
+    absoluteTitle: true,
+  });
+}
+
+/** A legal page's metadata (the privacy policy, the terms of use). */
 export function buildLegalMetadata(locale: Locale, doc: LegalDoc): Metadata {
   const t = getDict(locale);
-  const info = LOCALE_INFO[locale];
-  const languages: Record<string, string> = { "x-default": legalPath("en", doc) };
-  for (const l of LOCALES) languages[LOCALE_INFO[l].htmlLang] = legalPath(l, doc);
-  const title = t.legal[doc];
-  const description = doc === "privacy" ? t.legal.privacyDescription : t.legal.termsDescription;
-  return {
-    title,
-    description,
-    alternates: { canonical: legalPath(locale, doc), languages },
-    openGraph: {
-      type: "article",
-      url: legalPath(locale, doc),
-      siteName: "Snook Legend",
-      title: `${title} · Snook Legend`,
-      description,
-      locale: info.og,
-      images: [{ url: "/og.jpg", width: 1200, height: 630, alt: t.meta.ogAlt }],
-    },
-    twitter: { card: "summary", title: `${title} · Snook Legend`, description },
-    robots: { index: true, follow: true },
-  };
+  return pageMetadata({
+    locale,
+    pathOf: (l) => legalPath(l, doc),
+    title: t.legal[doc],
+    description: doc === "privacy" ? t.legal.privacyDescription : t.legal.termsDescription,
+    type: "article",
+    dates: { modified: `${LEGAL_UPDATED[doc]}T12:00:00Z` },
+  });
 }
 
-/** The world ranking's metadata (on top of its language's, from the layout). */
+/** The world ranking's metadata. */
 export function buildRankingMetadata(locale: Locale): Metadata {
-  const t = getDict(locale);
-  const info = LOCALE_INFO[locale];
-  const languages: Record<string, string> = { "x-default": rankingPath("en") };
-  for (const l of LOCALES) languages[LOCALE_INFO[l].htmlLang] = rankingPath(l);
-  const { title, description } = t.ranking;
-  return {
-    title,
-    description,
-    alternates: { canonical: rankingPath(locale), languages },
-    openGraph: {
-      type: "website",
-      url: rankingPath(locale),
-      siteName: "Snook Legend",
-      title: `${title} · Snook Legend`,
-      description,
-      locale: info.og,
-      images: [{ url: "/og.jpg", width: 1200, height: 630, alt: t.meta.ogAlt }],
-    },
-    twitter: { card: "summary_large_image", title: `${title} · Snook Legend`, description, images: ["/og.jpg"] },
-    robots: { index: true, follow: true },
-  };
+  const r = getDict(locale).ranking;
+  return pageMetadata({ locale, pathOf: rankingPath, title: r.metaTitle, description: r.description });
 }

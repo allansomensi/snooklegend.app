@@ -8,6 +8,7 @@ import { SITE_URL } from "./site";
 
 /** The pages with a slug of their own in each language. */
 export const PAGE_SLUGS = {
+  download: { en: "download", pt: "baixar", es: "descargar" },
   rules: { en: "rules", pt: "regras", es: "reglas" },
   rating: { en: "rating", pt: "rating", es: "rating" },
   supporters: { en: "supporters", pt: "apoiadores", es: "mecenas" },
@@ -39,10 +40,14 @@ export function pathsOf(pathOf: (l: Locale) => string): Record<Locale, string> {
   return Object.fromEntries(LOCALES.map((l) => [l, pathOf(l)])) as Record<Locale, string>;
 }
 
-/** `hreflang` alternates: each language, and English for everyone else. */
+/**
+ * `hreflang` alternates: each language (the same on every version of the
+ * page, so they point at each other), and English for everyone else.
+ */
 export function languagesOf(pathOf: (l: Locale) => string, absolute = false): Record<string, string> {
   const base = absolute ? SITE_URL : "";
-  const out: Record<string, string> = { "x-default": base + pathOf("en") };
-  for (const l of LOCALES) out[LOCALE_INFO[l].htmlLang] = base + pathOf(l);
+  const out: Record<string, string> = {};
+  for (const l of LOCALES) for (const code of LOCALE_INFO[l].hreflang) out[code] = base + pathOf(l);
+  out["x-default"] = base + pathOf("en");
   return out;
 }

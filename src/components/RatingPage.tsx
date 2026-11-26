@@ -5,6 +5,7 @@ import { ELO, LEAGUE_PRIZES } from "@/lib/rating";
 import { rankingPath, TIERS } from "@/lib/ranking";
 import { pagePath, pathsOf } from "@/lib/routes";
 import { SITE_URL } from "@/lib/site";
+import { faqEntities, ORG_ID, WEBSITE_ID } from "@/lib/structured-data";
 import { RatingCalculator } from "./RatingCalculator";
 import { Breadcrumbs, DownloadCta, JsonLd, PageHeader, SiteFrame } from "./SiteFrame";
 
@@ -23,12 +24,16 @@ export async function RatingPage({ locale }: { locale: Locale }) {
       applicationCategory: "GameApplication",
       operatingSystem: "Any",
       inLanguage: LOCALE_INFO[locale].htmlLang,
+      browserRequirements: "Requires JavaScript",
+      isAccessibleForFree: true,
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      isPartOf: { "@id": WEBSITE_ID },
+      publisher: { "@id": ORG_ID },
     },
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: t.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+      mainEntity: faqEntities(t.faq),
     },
   ];
   return (

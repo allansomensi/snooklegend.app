@@ -87,12 +87,15 @@ describe("players", () => {
     expect(plausibleName("ana")).toBe(true);
     expect(plausibleName("a/b")).toBe(false);
     expect(plausibleName("x".repeat(40))).toBe(false);
+    // Portuguese answers for pt-BR and for Portuguese anywhere else.
     expect(languagesOf((l) => playerPath(l, "ana"))).toEqual({
       "x-default": "/player/ana/",
       en: "/player/ana/",
       "pt-BR": "/jogador/ana/",
+      pt: "/jogador/ana/",
       es: "/es/jugador/ana/",
     });
+    expect(languagesOf((l) => playerPath(l, "ana"), true)["x-default"]).toBe("https://snooklegend.app/player/ana/");
   });
 });
 
