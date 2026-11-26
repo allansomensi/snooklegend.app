@@ -1,0 +1,8 @@
+# Flathub: the apps published from snooklegend.app, one verification token
+# a line (https://docs.flathub.org/docs/for-app-authors/verification).
+# Flathub reads https://snooklegend.app/.well-known/org.flathub.VerifiedApps.txt
+# and looks for the token; lines beginning with # are ignored.
+#
+# app.snooklegend.SnookLegend
+# The token is shown in Flathub's Developer Portal (the app → Verification →
+# Website) once the submission is accepted: put it on the line below.

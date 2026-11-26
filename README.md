@@ -62,6 +62,13 @@ tag: the `content` value) and/or `BING_SITE_VERIFICATION` (Bing Webmaster
 Tools, `msvalidate.01`), redeploy, verify, then submit
 `https://snooklegend.app/sitemap.xml` in both.
 
+Telling Flathub the game's Flatpak (`app.snooklegend.SnookLegend`) is
+published by the owner of snooklegend.app: Flathub reads
+`/.well-known/org.flathub.VerifiedApps.txt` (`public/.well-known/`) and looks
+for the app's token in it. The token is shown on flathub.org (Developer
+Portal → the app → Verification → Website) once the submission is accepted:
+add it on a line of its own, deploy, then press "Verify" there.
+
 When a page's text changes, change its date with it: `LEGAL_UPDATED`
 (`src/lib/legal.ts`) and `RULES_UPDATED` (`src/lib/rules-guide.ts`).
 
