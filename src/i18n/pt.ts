@@ -61,7 +61,7 @@ const pt: Dict = {
   stats: [
     { value: "15", label: "adversários de computador" },
     { value: "24", label: "treinos com estrelas" },
-    { value: "50", label: "conquistas" },
+    { value: "68", label: "conquistas" },
     { value: "27", label: "idiomas" },
     { value: "~20 MB", label: "um download pequeno" },
   ],

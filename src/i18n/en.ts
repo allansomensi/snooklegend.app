@@ -58,7 +58,7 @@ const en = {
   stats: [
     { value: "15", label: "computer opponents" },
     { value: "24", label: "drills with stars" },
-    { value: "50", label: "achievements" },
+    { value: "68", label: "achievements" },
     { value: "27", label: "languages" },
     { value: "~20 MB", label: "a single small download" },
   ],

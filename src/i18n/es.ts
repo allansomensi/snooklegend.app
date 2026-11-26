@@ -60,7 +60,7 @@ const es: Dict = {
   stats: [
     { value: "15", label: "rivales de la computadora" },
     { value: "24", label: "ejercicios con estrellas" },
-    { value: "50", label: "logros" },
+    { value: "68", label: "logros" },
     { value: "27", label: "idiomas" },
     { value: "~20 MB", label: "una descarga pequeña" },
   ],
