@@ -14,8 +14,7 @@ export function ReleaseBadge({ text }: { text: string }) {
       href={CHANGELOG_URL}
       target="_blank"
       rel="noopener"
-      data-reveal
-      className="group mx-auto inline-flex max-w-full items-center gap-2 rounded-full bg-ink-900/70 py-1.5 pl-1.5 pr-4 text-[13px] text-cream/85 ring-1 ring-white/10 transition hover:bg-white/[0.08] hover:ring-white/20"
+      className="rise group mx-auto inline-flex max-w-full items-center gap-2 rounded-full bg-ink-900/70 py-1.5 pl-1.5 pr-4 text-[13px] text-cream/85 ring-1 ring-white/10 transition hover:bg-white/[0.08] hover:ring-white/20"
     >
       <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-gold-400/15 px-2.5 py-0.5 font-semibold text-gold-200 ring-1 ring-gold-400/30">
         <Sparkles className="size-3.5" aria-hidden="true" /> v{release.version}

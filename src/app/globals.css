@@ -326,6 +326,24 @@ body {
   .js [data-reveal] { opacity: 1; transform: none; }
 }
 
+/* The first screen comes in by itself, in CSS: it doesn't wait for the
+   scripts (unlike [data-reveal]), so the headline and the picture are painted
+   at once (Largest Contentful Paint). */
+@keyframes rise {
+  from {
+    /* Not quite 0: an element that starts invisible isn't counted as painted. */
+    opacity: 0.01;
+    transform: translateY(22px);
+  }
+}
+.rise {
+  animation: rise 0.9s var(--ease-out-expo) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise { animation: none; }
+}
+
 /* Native dialogs */
 dialog::backdrop {
   background: rgb(2 6 4 / 0.82);

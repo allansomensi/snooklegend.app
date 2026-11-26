@@ -37,27 +37,25 @@ export function Hero({ t, locale, shotsDir }: Props) {
       <div className="container-page relative text-center">
         <ReleaseBadge text={t.hero.badge} />
 
-        <h1
-          data-reveal
-          style={{ ["--reveal-delay" as string]: "80ms" }}
-          className="mx-auto mt-7 max-w-4xl text-balance font-display text-[2.85rem] font-extrabold leading-[0.98] tracking-[-0.035em] sm:text-7xl lg:text-[5.6rem]"
-        >
-          <span className="block text-cream">{t.hero.titleA}</span>
-          <span className="block text-gold pb-2">{t.hero.titleB}</span>
+        {/* The page's heading says what the game is (for people and search engines), above the motto. */}
+        <h1 className="rise mx-auto mt-7 max-w-4xl" style={{ ["--reveal-delay" as string]: "80ms" }}>
+          <span className="block text-[13px] font-semibold uppercase tracking-[0.18em] text-gold-300/90 sm:text-sm">{t.hero.eyebrow}</span>{" "}
+          <span className="mt-4 block text-balance font-display text-[2.85rem] font-extrabold leading-[0.98] tracking-[-0.035em] sm:text-7xl lg:text-[5.6rem]">
+            <span className="block text-cream">{t.hero.titleA}</span>{" "}
+            <span className="block text-gold pb-2">{t.hero.titleB}</span>
+          </span>
         </h1>
 
         <p
-          data-reveal
           style={{ ["--reveal-delay" as string]: "160ms" }}
-          className="mx-auto mt-6 max-w-2xl text-pretty text-[17px] leading-relaxed text-mist sm:text-lg"
+          className="rise mx-auto mt-6 max-w-2xl text-pretty text-[17px] leading-relaxed text-mist sm:text-lg"
         >
           {t.hero.sub}
         </p>
 
         <div
-          data-reveal
           style={{ ["--reveal-delay" as string]: "240ms" }}
-          className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row sm:items-start"
+          className="rise mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row sm:items-start"
         >
           <DownloadButton t={{ hero: t.hero, os: t.os }} locale={locale} showMeta />
           <AllPlatformsLink label={t.hero.allPlatforms} />
@@ -66,9 +64,8 @@ export function Hero({ t, locale, shotsDir }: Props) {
         <MobileNotice t={{ hero: t.hero }} />
 
         <ul
-          data-reveal
           style={{ ["--reveal-delay" as string]: "320ms" }}
-          className="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-cream/70"
+          className="rise mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-cream/70"
         >
           {t.hero.perks.map((p) => (
             <li key={p} className="flex items-center gap-1.5">
@@ -79,7 +76,7 @@ export function Hero({ t, locale, shotsDir }: Props) {
       </div>
 
       {/* The game, framed */}
-      <div className="container-page relative mt-14 sm:mt-20" data-reveal style={{ ["--reveal-delay" as string]: "380ms" }}>
+      <div className="rise container-page relative mt-14 sm:mt-20" style={{ ["--reveal-delay" as string]: "380ms" }}>
         <div className="pointer-events-none absolute inset-x-0 -bottom-28 top-[15%] -z-10 bg-[radial-gradient(closest-side,rgb(36_163_91/0.30),rgb(36_163_91/0.10)_55%,transparent)]" />
         <div className="mx-auto max-w-6xl [perspective:2000px]">
           <div className="overflow-hidden rounded-[18px] bg-ink-900 shadow-[0_50px_120px_-30px_rgb(0_0_0/0.95),0_0_0_1px_rgb(255_255_255/0.08)] [transform:rotateX(8deg)] transition-transform duration-1000 ease-[var(--ease-out-expo)] hover:[transform:rotateX(0deg)] sm:rounded-[22px]">
@@ -87,7 +84,7 @@ export function Hero({ t, locale, shotsDir }: Props) {
               <span className="size-2.5 rounded-full bg-[#ff5f57]/90 sm:size-3" />
               <span className="size-2.5 rounded-full bg-[#febc2e]/90 sm:size-3" />
               <span className="size-2.5 rounded-full bg-[#28c840]/90 sm:size-3" />
-              <span className="mx-auto pr-12 text-[11px] font-medium text-cream/45 sm:text-xs">{t.hero.windowTitle}</span>
+              <span className="mx-auto pr-12 text-[11px] font-medium text-cream/70 sm:text-xs">{t.hero.windowTitle}</span>
             </div>
             <Shot dir={shotsDir} name="01-aim" alt={t.gallery.items[0]} priority sizes="(max-width: 1200px) 100vw, 1150px" />
           </div>

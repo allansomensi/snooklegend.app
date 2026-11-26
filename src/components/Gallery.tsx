@@ -68,7 +68,7 @@ export function Gallery({ t, shotsDir }: { t: Dict["gallery"]; shotsDir: string 
             <Shot
               dir={shotsDir}
               name={name}
-              alt=""
+              alt={caption(name)}
               sizes={i === 0 ? "(max-width: 1024px) 100vw, 800px" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"}
               className="h-full object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.035]"
             />
@@ -94,7 +94,8 @@ export function Gallery({ t, shotsDir }: { t: Dict["gallery"]; shotsDir: string 
         <div className="flex h-dvh w-screen flex-col items-center justify-center gap-4 px-3 py-14 sm:px-16" onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}>
           <figure className="relative w-full max-w-[min(100%,calc((100dvh-9rem)*16/9))]">
             <div className="overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10">
-              <Shot key={current} dir={shotsDir} name={current} alt={caption(current)} sizes="100vw" priority />
+              {/* Loaded when the picture is opened (not with the page: it would compete with the first screen's). */}
+              <Shot key={current} dir={shotsDir} name={current} alt={caption(current)} sizes="100vw" />
             </div>
             <figcaption className="mt-4 flex items-center justify-between gap-4 text-sm text-cream/85">
               <span>{caption(current)}</span>

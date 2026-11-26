@@ -207,7 +207,7 @@ export function PoolTable({ t }: Props) {
 
       {/* Tray of potted balls + hint */}
       <div className="mt-4 flex min-h-9 flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap gap-1.5" aria-label={`${t.potted}: ${potted.join(", ")}`}>
+        <div className="flex flex-wrap gap-1.5" role="img" aria-label={`${t.potted}: ${potted.join(", ")}`}>
           {potted.map((n) => (
             <BallChip key={n} n={n} size={26} />
           ))}
