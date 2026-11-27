@@ -59,7 +59,7 @@ export function DoublesTable({ games, player }: { games: DoublesGame[]; player?:
   );
   if (player) {
     return (
-      <DataTable className="doubles" headers={[t("When"), t("Rules"), t("Partner"), t("Opponents"), t("Result"), t("How it ended"), { label: t("Rating"), cls: "num" }, ""]}>
+      <DataTable className="doubles" lead={4} headers={[t("When"), t("Rules"), t("Partner"), t("Opponents"), t("Result"), t("How it ended"), { label: t("Rating"), cls: "num" }, ""]}>
         {games.map((g) => {
           const s = sideOf(g, player);
           return (
@@ -88,7 +88,7 @@ export function DoublesTable({ games, player }: { games: DoublesGame[]; player?:
     );
   }
   return (
-    <DataTable className="doubles" headers={["#", t("When"), t("Rules"), t("Teams"), t("How it ended"), { label: t("Strokes"), cls: "num" }, t("Status"), ""]}>
+    <DataTable className="doubles" lead={4} headers={["#", t("When"), t("Rules"), t("Teams"), t("How it ended"), { label: t("Strokes"), cls: "num" }, t("Status"), ""]}>
       {games.map((g) => (
         <tr key={g.id}>
           <td className="mono"><Link href={doublesHref(g.id)}>{g.id}</Link></td>
@@ -124,7 +124,7 @@ export function LiveDoublesTable({ games }: { games: LiveDoubles[] }) {
   const { t, fmtNum } = useLocale();
   const viewer = useViewer();
   return (
-    <DataTable headers={[t("Room"), t("Rules"), t("Teams"), { label: t("Strokes so far"), cls: "num" }, t("Status"), ""]}>
+    <DataTable lead={3} headers={[t("Room"), t("Rules"), t("Teams"), { label: t("Strokes so far"), cls: "num" }, t("Status"), ""]}>
       {games.map((g) => (
         <tr key={g.id}>
           <td className="mono">{g.id}</td>

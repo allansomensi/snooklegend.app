@@ -84,7 +84,7 @@ function Week({ w, stale, limit, onWeek, onAll }: { w: ClockWeek; stale: boolean
         <CardHead title={t("The table")} sub={tn(w.players, "{n} player", "{n} players")} />
         {w.board.length ? (
           <>
-            <DataTable headers={[{ label: t("Place"), cls: "num" }, t("Player"), { label: t("Best time"), cls: "num" }, t("Set"), { label: t("Prize"), cls: "num" }, ""]}>
+            <DataTable lead={2} headers={[{ label: t("Place"), cls: "num" }, t("Player"), { label: t("Best time"), cls: "num" }, t("Set"), { label: t("Prize"), cls: "num" }, ""]}>
               {w.board.map((r) => (
                 <tr key={r.user_id || r.username}>
                   <td className="num"><span className={"place" + (r.place <= 3 ? " p" + r.place : "")}>{r.place}</span></td>

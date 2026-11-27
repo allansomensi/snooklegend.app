@@ -94,7 +94,7 @@ function AttemptTable({ list }: { list: ClockAttempt[] }) {
   const admin = useIsAdmin();
   const actions = useModeActions();
   return (
-    <DataTable headers={[t("Started"), { label: t("Time on the clock"), cls: "num" }, { label: t("Strokes"), cls: "num" }, { label: t("Fouls"), cls: "num" }, t("Week"), t("Status"), ""]}>
+    <DataTable lead={2} headers={[t("Started"), { label: t("Time on the clock"), cls: "num" }, { label: t("Strokes"), cls: "num" }, { label: t("Fouls"), cls: "num" }, t("Week"), t("Status"), ""]}>
       {list.map((a) => {
         const status = attemptStatus(a);
         return (

@@ -64,7 +64,7 @@ export default function AuditPage() {
       <Card className={log.isFetching && !log.isFetchingNextPage ? "loading-soft" : ""}>
         {entries.length ? (
           <>
-            <DataTable headers={[t("When"), t("Staff"), t("Action"), t("Target"), t("Details")]}>
+            <DataTable lead={3} headers={[t("When"), t("Staff"), t("Action"), t("Target"), t("Details")]}>
               {entries.map((e) => {
                 const [tone, Icon] = auditLook(e.action);
                 const login = e.action === "login";

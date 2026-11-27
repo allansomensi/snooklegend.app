@@ -169,7 +169,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .textarea { height: auto; min-height: 84px; padding: 9px 11px; resize: vertical; line-height: 1.45; }
 .input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .input::placeholder, .textarea::placeholder { color: var(--text-3); }
-.select { padding-right: 28px; }
+.select { padding-right: 28px; max-width: 100%; }
 .input.invalid, .textarea.invalid { border-color: var(--danger); }
 .check { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; user-select: none; }
 .check input { width: 16px; height: 16px; accent-color: var(--accent); margin: 0; }
@@ -331,6 +331,8 @@ kbd {
 
 /* ---------------------------------------------------- page structure */
 .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.page-head > div:first-child { min-width: 0; }
+.page-head h1, .profile-head h1 { overflow-wrap: anywhere; }
 .page-head h1 { font-size: 24px; }
 .page-head .sub { color: var(--text-2); margin-top: 4px; }
 .page-head .head-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -341,7 +343,8 @@ kbd {
 .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
 .section-head h2 { font-size: 16px; }
 .section-head .sub { color: var(--text-3); font-size: 13px; }
-.stack { display: grid; gap: 14px; align-content: start; }
+/* One column that never grows past its place (a wide table inside scrolls). */
+.stack { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-content: start; }
 .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .row.between { justify-content: space-between; }
 .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
@@ -355,7 +358,11 @@ kbd {
 /* ------------------------------------------------------------- cards */
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); }
 .card-body { padding: 18px; }
-.card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.card-head > div:first-child { min-width: 0; }
+/* A card's icon stays beside its title, however long. */
+.card-head > .row:first-child { flex-wrap: nowrap; }
+.card-head > .row:first-child > div { min-width: 0; }
 .card-head h3 { font-size: 15px; }
 .card-head .sub { color: var(--text-3); font-size: 12px; }
 .card-foot { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
@@ -399,6 +406,7 @@ table.data td.wrap { white-space: normal; min-width: 240px; }
 table.data .dim td { opacity: .55; }
 .card > .table-wrap table.data th:first-child, .card > .table-wrap table.data td:first-child { padding-left: 18px; }
 .card > .table-wrap table.data th:last-child, .card > .table-wrap table.data td:last-child { padding-right: 18px; }
+.table-wrap { overscroll-behavior-x: contain; }
 
 .person { display: inline-flex; align-items: center; gap: 9px; min-width: 0; }
 .person .name { font-weight: 600; color: var(--text); }
@@ -435,7 +443,9 @@ td.unplayed b { color: var(--text-3); font-weight: 600; }
 .pager .row { gap: 6px; }
 
 /* -------------------------------------------------------------- tabs */
-.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin-bottom: 18px; overflow-x: auto; }
+/* More tabs than room: they scroll sideways (the bar is the tabs' offset
+   parent, for bringing the current one into view). */
+.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin-bottom: 18px; overflow-x: auto; position: relative; overscroll-behavior-x: contain; }
 .tab {
   display: inline-flex; align-items: center; gap: 7px; padding: 10px 14px; border: 0; background: none; cursor: pointer;
   color: var(--text-2); font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap;
@@ -743,10 +753,10 @@ svg.chart .stroke.c-accent { fill: none; stroke: var(--accent); stroke-width: 2;
 /* Three layouts: a sidebar (wide screens); a top bar with the sections in a
    drawer (tablets, below 920px); and on a phone (below 640px) a bar of the
    main sections at the bottom, in reach of a thumb, with every other section
-   in a sheet over it ("More"). */
+   in a sheet over it ("More"). Tables turn into cards on a phone. */
 .tabbar { display: none; }
 @media (max-width: 1180px) {
-  .grid-aside { grid-template-columns: 1fr; }
+  .grid-aside { grid-template-columns: minmax(0, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 920px) {
@@ -765,10 +775,17 @@ svg.chart .stroke.c-accent { fill: none; stroke: var(--accent); stroke-width: 2;
   .topbar .menu-btn { display: inline-flex; }
   .me-chip .who { display: none; }
   .main { padding: 18px max(16px, env(safe-area-inset-right)) calc(56px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
-  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .grid-2, .grid-3 { grid-template-columns: minmax(0, 1fr); }
   .kpis.cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .topbar .lang-select { display: none; }
-  .viewer-body { grid-template-columns: 1fr; }
+  /* A table wider than its card scrolls inside it, its first column (what
+     each row is) kept in view, its buttons on one line. */
+  .table-wrap table.data th:first-child, .table-wrap table.data td:first-child {
+    position: sticky; left: 0; z-index: 1; background: var(--surface); box-shadow: inset -1px 0 0 var(--border);
+  }
+  .table-wrap table.data tbody tr:hover td:first-child { background: var(--surface-2); }
+  table.data td.actions-cell .row { flex-wrap: nowrap; }
+  .viewer-body { grid-template-columns: minmax(0, 1fr); }
   .viewer-side { border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: 8px; }
   .stroke-list { max-height: 200px; }
   .viewer-card { overflow-y: auto; }
@@ -825,15 +842,78 @@ svg.chart .stroke.c-accent { fill: none; stroke: var(--accent); stroke-width: 2;
   .main { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 32px); }
   /* Above the bar, never over it. */
   .toasts { left: max(12px, env(safe-area-inset-left)); right: max(12px, env(safe-area-inset-right)); width: auto; bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 10px); }
+
+  /* A table's rows as cards: the lead column on top, every other value
+     under its heading (DataTable puts the headings in --th1, --th2…). */
+  table.data.cards, table.data.cards tbody { display: block; width: 100%; }
+  table.data.cards thead { display: none; }
+  table.data.cards tr {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 10px 14px; align-items: start;
+    padding: 14px 16px; border-bottom: 1px solid var(--border);
+  }
+  table.data.cards tr:last-child { border-bottom: 0; }
+  .table-wrap table.data.cards td,
+  .card > .table-wrap table.data.cards td:first-child,
+  .card > .table-wrap table.data.cards td:last-child {
+    display: block; position: static; min-width: 0; padding: 0; border: 0; background: none; box-shadow: none; text-align: left; overflow-wrap: anywhere;
+  }
+  table.data.cards td.nowrap { white-space: normal; }
+  table.data.cards td:empty { display: none; }
+  table.data.cards td::before {
+    display: block; margin-bottom: 3px; font-size: 11px; font-weight: 650; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em;
+    overflow-wrap: normal;
+  }
+  table.data.cards td:nth-child(1)::before { content: var(--th1, none); }
+  table.data.cards td:nth-child(2)::before { content: var(--th2, none); }
+  table.data.cards td:nth-child(3)::before { content: var(--th3, none); }
+  table.data.cards td:nth-child(4)::before { content: var(--th4, none); }
+  table.data.cards td:nth-child(5)::before { content: var(--th5, none); }
+  table.data.cards td:nth-child(6)::before { content: var(--th6, none); }
+  table.data.cards td:nth-child(7)::before { content: var(--th7, none); }
+  table.data.cards td:nth-child(8)::before { content: var(--th8, none); }
+  table.data.cards td:nth-child(9)::before { content: var(--th9, none); }
+  table.data.cards td:nth-child(10)::before { content: var(--th10, none); }
+  table.data.cards td:nth-child(11)::before { content: var(--th11, none); }
+  table.data.cards[data-lead="1"] td:nth-child(1), table.data.cards[data-lead="2"] td:nth-child(2),
+  table.data.cards[data-lead="3"] td:nth-child(3), table.data.cards[data-lead="4"] td:nth-child(4) { grid-column: 1 / -1; order: -1; font-size: 14.5px; }
+  table.data.cards[data-lead="1"] td:nth-child(1)::before, table.data.cards[data-lead="2"] td:nth-child(2)::before,
+  table.data.cards[data-lead="3"] td:nth-child(3)::before, table.data.cards[data-lead="4"] td:nth-child(4)::before { content: none; }
+  /* Long texts and the actions take the card's width; the actions last. */
+  table.data.cards td.wrap, table.data.cards td.full { grid-column: 1 / -1; min-width: 0; }
+  table.data.cards td.actions-cell { grid-column: 1 / -1; order: 1; white-space: normal; }
+  table.data.cards td.actions-cell::before { content: none; }
+  table.data.cards td.actions-cell .row { justify-content: flex-start; flex-wrap: wrap; }
+  table.data.cards td .rating-cell .faint, table.data.cards .rating-cell .faint { white-space: normal; }
+  .table-wrap table.data.cards td.hide-xs { display: none; }
+
+  /* A table of short columns stays a table (scrolling, as on a tablet). */
+  table.heatmap th[scope="row"] { position: sticky; left: 0; z-index: 1; background: var(--surface); }
+  .table-wrap.scroll-x .hide-xs { display: none; }
+
+  .card-head { padding: 13px 16px; }
+  .card-body { padding: 16px; }
+  .card-body.toolbar-in { padding: 12px 16px; }
+  .card-foot, .pager { padding-left: 16px; padding-right: 16px; }
+  .mini-list .mi { padding: 10px 16px; }
+  .chat-line { padding-left: 16px; padding-right: 16px; }
+  .empty-state { padding: 32px 16px; }
+  .section { margin-top: 22px; }
+  .toolbar .input.wide { flex: 1 1 100%; min-width: 0; max-width: none; }
+  .toolbar > .select { flex: 1 1 160px; min-width: 0; }
+  .profile-head { gap: 14px; align-items: flex-start; }
+  .profile-head .avatar.lg { width: 52px; height: 52px; font-size: 22px; }
 }
 @media (max-width: 600px) {
   .search kbd, .topbar .hide-sm { display: none; }
   .search .input { padding-right: 12px; }
+  .page-head { margin-bottom: 16px; gap: 12px; }
   .page-head h1 { font-size: 21px; }
+  .profile-head h1 { font-size: 21px; }
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .kpi { padding: 12px 14px; }
-  .kpi .kpi-value { font-size: 21px; }
-  .chat-line { grid-template-columns: 1fr; gap: 4px; }
+  .kpi .kpi-value { font-size: 21px; overflow-wrap: anywhere; }
+  .kpi .kpi-top { align-items: flex-start; gap: 6px; }
+  .chat-line { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .chat-line .line-actions { opacity: 1; }
   .barlist .bl-row { grid-template-columns: minmax(90px, 130px) minmax(0, 1fr) 54px; }
   .dialog-scrim { padding: 10px; align-items: end; }

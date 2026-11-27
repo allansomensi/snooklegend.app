@@ -142,7 +142,7 @@ function MetricsView({ d, at, onRefresh }: { d: Metrics; at: number; onRefresh: 
       <Card>
         <CardHead title={t("Who comes back, by week of sign-up")} sub={t("Back on day N: active exactly N days after the account was made")} />
         {(m.cohorts || []).length ? (
-          <DataTable className="heat" headers={[t("Accounts made"), { label: t("Accounts"), cls: "num" }, t("Day 1"), t("Day 7"), t("Day 30")]}>
+          <DataTable className="heat" cards={false} headers={[t("Accounts made"), { label: t("Accounts"), cls: "num" }, t("Day 1"), t("Day 7"), t("Day 30")]}>
             {(m.cohorts || []).map((c) => (
               <tr key={c.first_day}>
                 <td className="nowrap">{fmtDay(c.first_day) + " – " + fmtDay(c.first_day + 6)}</td>

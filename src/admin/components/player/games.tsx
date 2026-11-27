@@ -82,7 +82,7 @@ export function PlayerGames({ d }: { d: UserDetail }) {
         />
       </CardHead>
       {list.length ? (
-        <DataTable headers={[t("When"), t("Rules"), t("Opponent"), t("Result"), t("How it ended"), { label: t("Rating"), cls: "num" }, { label: t("After"), cls: "num" }, ""]}>
+        <DataTable lead={3} headers={[t("When"), t("Rules"), t("Opponent"), t("Result"), t("How it ended"), { label: t("Rating"), cls: "num" }, { label: t("After"), cls: "num" }, ""]}>
           {list.map((h) => <GameLine key={h.match_id} h={h} name={d.user.username} />)}
         </DataTable>
       ) : (

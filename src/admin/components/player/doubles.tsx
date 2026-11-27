@@ -10,7 +10,7 @@ import type { UserDetail } from "@/admin/lib/types";
 import { DoublesTable, LiveDoublesTable } from "../modes/doubles";
 import { useLocale } from "../providers/locale";
 import { useToasts } from "../providers/toasts";
-import { Btn, Card, CardHead, Empty, ErrorPage, PageLoading, RulesBadge } from "../ui/bits";
+import { Btn, Card, CardHead, DataTable, Empty, ErrorPage, PageLoading, RulesBadge } from "../ui/bits";
 
 /** A player's doubles: their record under each of the rules, the games
  * they play now, and those they finished. */
@@ -38,28 +38,22 @@ export function PlayerDoubles({ d }: { d: UserDetail }) {
         <CardHead title={t("Doubles ratings")} sub={t("Their own, apart from the singles ratings")}>
           <Link className="btn sm ghost" href={"/admin/doubles?player=" + encodeURIComponent(name)}>{t("In the doubles list")}</Link>
         </CardHead>
-        <div className="table-wrap">
-          <table className="data">
-            <thead>
-              <tr><th>{t("Rules")}</th><th className="num">{t("Rating")}</th><th className="num">{t("Peak")}</th><th className="num">{t("Rated games")}</th><th className="num">{t("Wins")}</th><th className="num">{t("Won")}</th></tr>
-            </thead>
-            <tbody>
-              {RULES.map((r) => {
-                const x = ratings[r];
-                return (
-                  <tr key={r}>
-                    <td><RulesBadge rules={r} long /></td>
-                    <td className="num"><b>{fmtNum(x.rating)}</b></td>
-                    <td className="num">{fmtNum(x.peak_rating)}</td>
-                    <td className="num">{fmtNum(x.games)}</td>
-                    <td className="num">{fmtNum(x.wins)}</td>
-                    <td className="num">{x.games ? fmtPct((x.wins * 100) / x.games, 1) : "—"}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <DataTable headers={[t("Rules"), { label: t("Rating"), cls: "num" }, { label: t("Peak"), cls: "num" }, { label: t("Rated games"), cls: "num" },
+          { label: t("Wins"), cls: "num" }, { label: t("Won"), cls: "num" }]}>
+          {RULES.map((r) => {
+            const x = ratings[r];
+            return (
+              <tr key={r}>
+                <td><RulesBadge rules={r} long /></td>
+                <td className="num"><b>{fmtNum(x.rating)}</b></td>
+                <td className="num">{fmtNum(x.peak_rating)}</td>
+                <td className="num">{fmtNum(x.games)}</td>
+                <td className="num">{fmtNum(x.wins)}</td>
+                <td className="num">{x.games ? fmtPct((x.wins * 100) / x.games, 1) : "—"}</td>
+              </tr>
+            );
+          })}
+        </DataTable>
       </Card>
       {live.length ? (
         <Card>

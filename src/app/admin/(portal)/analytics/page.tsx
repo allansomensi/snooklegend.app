@@ -216,7 +216,7 @@ function SellersTab() {
             <div className="grid-2">
               <Card>
                 <CardHead title={t("Worst sellers")} sub={t("Items for coins sold the least in this period")} />
-                <DataTable headers={headers}>{worst.map(row)}</DataTable>
+                {worst.length ? <DataTable headers={headers}>{worst.map(row)}</DataTable> : <Empty icon={ShoppingBag} title={t("Nothing sold in this period")} />}
               </Card>
               <Card>
                 <CardHead title={t("Never sold")} sub={t("Items for coins nobody bought nor gave")} />
@@ -274,12 +274,12 @@ function CountriesTab() {
             <Card>
               <CardHead title={t("Players by country")} sub={t("Accounts, new in the last 7 days, online now")} />
               {rows.length ? (
-                <DataTable className="countries" headers={["#", t("Country"), "", { label: t("Accounts"), cls: "num" }, { label: t("Share"), cls: "num" }, { label: t("New this week"), cls: "num" }, { label: t("Online now"), cls: "num" }]}>
+                <DataTable className="countries" lead={2} headers={["#", t("Country"), "", { label: t("Accounts"), cls: "num" }, { label: t("Share"), cls: "num" }, { label: t("New this week"), cls: "num" }, { label: t("Online now"), cls: "num" }]}>
                   {rows.map((c, k) => (
                     <tr key={c.country || "none"}>
-                      <td className="faint num">{k + 1}</td>
+                      <td className="faint num hide-xs">{k + 1}</td>
                       <td><Country code={c.country || null} /></td>
-                      <td className="bar-cell"><div className="bl-track"><div className="bl-fill" style={{ width: Math.max(c[sort] ? 1.5 : 0, (c[sort] * 100) / max) + "%" }} /></div></td>
+                      <td className="bar-cell hide-xs"><div className="bl-track"><div className="bl-fill" style={{ width: Math.max(c[sort] ? 1.5 : 0, (c[sort] * 100) / max) + "%" }} /></div></td>
                       <td className="num"><b>{fmtNum(c.players)}</b></td>
                       <td className="num faint">{players ? fmtPct((c.players * 100) / players, 1) : "—"}</td>
                       <td className="num">{c.new_7d ? <Badge kind="success">+{fmtNum(c.new_7d)}</Badge> : <span className="faint">0</span>}</td>

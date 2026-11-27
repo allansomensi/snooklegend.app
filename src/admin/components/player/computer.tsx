@@ -55,7 +55,7 @@ export function PlayerComputer({ d }: { d: UserDetail }) {
       </Card>
       <Card>
         <CardHead title={t("Medals of the tournaments against the computer")} sub={t("Kept in the account once the player is online; shown only here and on the game's Tournament tab.")} />
-        <DataTable headers={[t("Format"), { label: t("Gold"), cls: "num" }, { label: t("Silver"), cls: "num" }, { label: t("Bronze"), cls: "num" }, { label: t("Total"), cls: "num" }]}>
+        <DataTable cards={false} headers={[t("Format"), { label: t("Gold"), cls: "num" }, { label: t("Silver"), cls: "num" }, { label: t("Bronze"), cls: "num" }, { label: t("Total"), cls: "num" }]}>
           {medalRow(t("Knockout"), medals.knockout)}
           {medalRow(t("Arena"), medals.arena)}
         </DataTable>
@@ -78,7 +78,7 @@ export function PlayerComputer({ d }: { d: UserDetail }) {
       <Card>
         <CardHead title={t("Drills")} sub={tf("{n} of {max} stars", stars)} />
         {drills.length ? (
-          <DataTable headers={[t("Drill"), { label: t("Best"), cls: "num" }, t("Stars")]}>
+          <DataTable cards={false} headers={[t("Drill"), { label: t("Best"), cls: "num" }, t("Stars")]}>
             {drills.map((x) => (
               <tr key={x.code}>
                 <td>{x.name ? t(x.name) : x.code}</td>

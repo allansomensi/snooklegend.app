@@ -122,7 +122,7 @@ function PaymentsTab({ e }: { e: Economy }) {
       {e.private_hidden ? (
         <Empty icon={Lock} title={t("Visible to administrators only")} />
       ) : e.payments.length ? (
-        <DataTable headers={[t("When"), t("Player"), t("What"), { label: t("Coins"), cls: "num" }, { label: t("Amount"), cls: "num" }, t("Status"), ""]}>
+        <DataTable lead={2} headers={[t("When"), t("Player"), t("What"), { label: t("Coins"), cls: "num" }, { label: t("Amount"), cls: "num" }, t("Status"), ""]}>
           {e.payments.map((p: Payment) => (
             <tr key={p.id} className={p.test || p.refunded ? "dim" : ""}>
               <td className="nowrap">{fmtDate(p.at)}</td>

@@ -3,7 +3,7 @@
 import * as Menu from "@radix-ui/react-dropdown-menu";
 import { CircleCheck, Globe, Info, RefreshCw, Shield, TriangleAlert, Ban, MicOff, type LucideIcon } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState, type ButtonHTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ButtonHTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
 import { avatarSrc } from "@/admin/lib/avatars";
 import { FLAG_CODES } from "@/admin/lib/countries";
 import { hue, nowSecs } from "@/admin/lib/format";
@@ -76,15 +76,26 @@ export function Segmented<V extends string | number>({ options, value, onChange,
   );
 }
 
-/** Tabs that change the address (links) or the page's state (buttons). */
+/** Tabs that change the address (links) or the page's state (buttons). On a
+ * narrow screen they scroll sideways, the current one brought into view. */
 export function Tabs({ items, current, onChange }: {
   items: { id: string; label: string; icon?: LucideIcon; count?: number | null; alert?: boolean; href?: string }[];
   current: string;
   onChange?: (id: string) => void;
 }) {
   const { fmtNum } = useLocale();
+  const bar = useRef<HTMLDivElement>(null);
+  const shown = useRef(false);
+  useEffect(() => {
+    const el = bar.current;
+    const on = el?.querySelector<HTMLElement>(".tab.on");
+    if (!el || !on || (on.offsetLeft >= el.scrollLeft && on.offsetLeft + on.offsetWidth <= el.scrollLeft + el.clientWidth)) return;
+    // Sideways only (the bar is the tabs' offset parent): the page doesn't move.
+    el.scrollTo({ left: on.offsetLeft - (el.clientWidth - on.offsetWidth) / 2, behavior: shown.current ? "smooth" : "instant" });
+    shown.current = true;
+  }, [current]);
   return (
-    <div className="tabs" role="tablist">
+    <div className="tabs" role="tablist" ref={bar}>
       {items.map(({ id, label, icon: Icon, count, alert, href }) => {
         const inner = (
           <>
@@ -214,11 +225,32 @@ export function Kpi({ label, value, sub, icon: Icon, tone = "", href }: {
   );
 }
 
-export type Header = string | { label: ReactNode; cls?: string };
-export function DataTable({ headers, children, className }: { headers: Header[]; children: ReactNode; className?: string }) {
+/** A column's heading: its text, or a node with the text a phone shows
+ * beside each value (`text`) and its classes ("num"). */
+export type Header = string | { label: ReactNode; text?: string; cls?: string };
+
+/**
+ * A table. On a phone (globals.css, `table.data.cards`) each row becomes a
+ * card: the `lead` column (from 1) on top, the others under it with their
+ * heading. `cards={false}` keeps a table of short columns (numbers side by
+ * side) a table, scrolling inside its card with its first column kept in view.
+ */
+export function DataTable({ headers, children, className, cards = true, lead = 1 }: {
+  headers: Header[];
+  children: ReactNode;
+  className?: string;
+  cards?: boolean;
+  lead?: number;
+}) {
+  // The headings as CSS strings (--th1, --th2…) for the cards' labels.
+  const labels: Record<string, string> = {};
+  headers.forEach((h, k) => {
+    const text = typeof h === "string" ? h : h.text ?? (typeof h.label === "string" ? h.label : "");
+    if (text) labels["--th" + (k + 1)] = JSON.stringify(text);
+  });
   return (
-    <div className="table-wrap">
-      <table className={"data" + (className ? " " + className : "")}>
+    <div className={"table-wrap" + (cards ? "" : " scroll-x")}>
+      <table className={["data", cards ? "cards" : "", className].filter(Boolean).join(" ")} data-lead={cards ? lead : undefined} style={cards ? labels : undefined}>
         <thead>
           <tr>
             {headers.map((h, k) => (typeof h === "string" ? <th key={k}>{h}</th> : <th key={k} className={h.cls || ""}>{h.label}</th>))}

@@ -74,13 +74,14 @@ function Words({ words, max }: { words: BannedWord[]; max: number }) {
           <input className="input" type="search" placeholder={t("Find a word")} aria-label={t("Find a word")} value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
         {list.length ? (
-          <DataTable headers={[t("Word or phrase"), t("Language"), t("Added by"), t("When"), ""]}>
+          // A long list of short rows: on a phone a table still, the word, its language and the button.
+          <DataTable cards={false} headers={[t("Word or phrase"), t("Language"), { label: t("Added by"), cls: "hide-xs" }, { label: t("When"), cls: "hide-xs" }, ""]}>
             {list.map((w) => (
               <tr key={w.lang + ":" + w.word}>
                 <td><b className="mono">{w.word}</b></td>
                 <td><Badge kind={w.lang === "*" ? "accent" : "info"}>{langName(w.lang)}</Badge></td>
-                <td>{w.added_by ? <PersonLink name={w.added_by} /> : <span className="faint">{t("the starting list")}</span>}</td>
-                <td className="nowrap">{w.added_at ? <TimeAgo at={w.added_at} /> : "—"}</td>
+                <td className="hide-xs">{w.added_by ? <PersonLink name={w.added_by} /> : <span className="faint">{t("the starting list")}</span>}</td>
+                <td className="nowrap hide-xs">{w.added_at ? <TimeAgo at={w.added_at} /> : "—"}</td>
                 <td className="actions-cell"><Btn label={t("Remove")} kind="sm ghost" icon={Trash2} iconOnly onClick={() => void remove(w)} /></td>
               </tr>
             ))}

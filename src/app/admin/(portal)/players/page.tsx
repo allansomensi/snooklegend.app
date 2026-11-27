@@ -56,7 +56,7 @@ function PlayerList({ d, q, pageNo, stale, onPage }: { d: UsersPage; q: string; 
   const pages = Math.max(1, Math.ceil(d.total / d.per_page));
   const from = d.total ? pageNo * d.per_page + 1 : 0;
   const to = Math.min(d.total, (pageNo + 1) * d.per_page);
-  const rulesHead = (r: RulesId): Header => ({ label: <span className="th-rules"><RulesMark rules={r} />{rulesShort(r)}</span>, cls: "num" });
+  const rulesHead = (r: RulesId): Header => ({ label: <span className="th-rules"><RulesMark rules={r} />{rulesShort(r)}</span>, text: rulesShort(r), cls: "num" });
   return (
     <Card className={stale ? "is-stale" : ""}>
       {d.users.length ? (

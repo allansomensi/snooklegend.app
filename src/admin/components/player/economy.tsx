@@ -65,7 +65,7 @@ export function PlayerEconomy({ d }: { d: UserDetail }) {
         {d.private_hidden ? (
           <Empty icon={Lock} title={t("Visible to administrators only")} />
         ) : d.payments.length ? (
-          <DataTable headers={[t("When"), t("What"), { label: t("Coins"), cls: "num" }, { label: t("Amount"), cls: "num" }, t("Status"), t("Payment"), ""]}>
+          <DataTable lead={2} headers={[t("When"), t("What"), { label: t("Coins"), cls: "num" }, { label: t("Amount"), cls: "num" }, t("Status"), t("Payment"), ""]}>
             {d.payments.map((p) => (
               <tr key={p.id} className={p.test || p.refunded ? "dim" : ""}>
                 <td className="nowrap">{fmtDate(p.at)}</td>
@@ -92,7 +92,7 @@ export function PlayerEconomy({ d }: { d: UserDetail }) {
       {msstore.length ? (
         <Card>
           <CardHead title={t("Microsoft Store purchases")} />
-          <DataTable headers={[t("Found"), t("Pack"), { label: t("Coins"), cls: "num" }, t("State"), { label: t("Tries"), cls: "num" }, t("Last error"), t("Orders"), ""]}>
+          <DataTable lead={2} headers={[t("Found"), t("Pack"), { label: t("Coins"), cls: "num" }, t("State"), { label: t("Tries"), cls: "num" }, t("Last error"), t("Orders"), ""]}>
             {msstore.map((r) => {
               const [label, tone] = STATES[r.state] || [r.state, "danger"];
               return (

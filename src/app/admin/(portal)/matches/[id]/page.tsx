@@ -197,7 +197,7 @@ function StrokeTable({ strokes, rules }: { strokes: MatchStroke[]; rules: MatchD
   const kindWord = (s: MatchStroke) =>
     s.kind === "time_foul" ? t("ran out of time") : s.kind === "resign" ? t("resigned") : s.kind === "abandon" ? t("left the game") : s.kind === "choice" ? s.option || "" : s.break ? t("break") : t("shot");
   return (
-    <DataTable className="strokes"
+    <DataTable className="strokes" cards={false}
       headers={["#", t("Player"), t("Stroke"), { label: t("Power"), cls: "num" }, t("Spin"), { label: t("Aim"), cls: "num" }, t("Cue ball in hand"), t("Called"),
         t("Made"), t("Fouls"), { label: t("Think"), cls: "num" }]}>
       {strokes.map((s) => {

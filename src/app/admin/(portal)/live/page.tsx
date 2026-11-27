@@ -78,7 +78,7 @@ function GamesTab({ d }: { d: Live }) {
   return (
     <Card>
       {d.rooms.length ? (
-        <DataTable headers={["", t("Players"), t("Game"), { label: t("Strokes"), cls: "num" }, t("State"), ""]}>
+        <DataTable lead={2} headers={["", t("Players"), t("Game"), { label: t("Strokes"), cls: "num" }, t("State"), ""]}>
           {d.rooms.map((r) => (
             <tr key={r.id} className={r.finished ? "dim" : ""}>
               <td className="mono faint">#{r.id}</td>
