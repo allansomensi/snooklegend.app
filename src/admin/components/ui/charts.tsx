@@ -1,7 +1,42 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useLocale } from "../providers/locale";
+
+/**
+ * A chart is drawn at the width of its place (a phone's or a wide screen's),
+ * not scaled from a fixed one: its words stay the size of the page's. Until
+ * the place is measured, `fallback`. A narrow chart is a little lower.
+ */
+function useChartSize(fallback: number, height: number) {
+  const box = useRef<HTMLDivElement>(null);
+  const [measured, setMeasured] = useState(0);
+  useEffect(() => {
+    const el = box.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(([e]) => setMeasured(Math.round(e.contentRect.width)));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const W = Math.max(240, measured || fallback);
+  const H = Math.round(height * Math.min(1, Math.max(0.72, W / 640)));
+  return { box, W, H };
+}
+
+/** The columns that get a label: every `every`, or every 2×, 4×… that when
+ * they would run into each other; the last one when there is room. */
+function tickIndexes(labels: string[], every: number, step: number) {
+  const n = labels.length;
+  if (!every || !n) return new Set<number>();
+  const room = Math.max(...labels.map((l) => l.length)) * 6.5 + 10;
+  let ev = every;
+  while (ev * step < room && ev < n) ev *= 2;
+  const out = new Set<number>();
+  for (let k = 0; k < n; k += ev) out.add(k);
+  const last = Math.floor((n - 1) / ev) * ev;
+  if (last !== n - 1 && (n - 1 - last) * step >= room) out.add(n - 1);
+  return out;
+}
 
 function niceMax(v: number) {
   if (!(v > 0)) return 1;
@@ -36,8 +71,7 @@ export function Chart({ labels, titles, bars, line, every = 6, height = 200, uni
   width?: number;
 }) {
   const { fmtNum } = useLocale();
-  const W = width;
-  const H = height;
+  const { box, W, H } = useChartSize(width, height);
   const left = 46;
   const right = 14;
   const top = 12;
@@ -49,8 +83,9 @@ export function Chart({ labels, titles, bars, line, every = 6, height = 200, uni
   const x = (k: number) => left + step * k + step / 2;
   const y = (v: number) => top + (H - top - bottom) * (1 - v / max);
   const bw = Math.max(1.5, step * 0.66);
+  const ticks = tickIndexes(labels, every, step);
   return (
-    <div className="chart-wrap">
+    <div className="chart-wrap" ref={box}>
       <div className="legend">
         {bars.keys ? (
           bars.keys.map(([name, cls]) => (
@@ -95,15 +130,13 @@ export function Chart({ labels, titles, bars, line, every = 6, height = 200, uni
             {line.values.map((v, k) => (v > 0 ? <circle key={k} cx={x(k)} cy={y(v)} r={2.6} className={"dot " + line.cls} /> : null))}
           </>
         ) : null}
-        {every
-          ? labels.map((l, k) =>
-              k % every === 0 || k === n - 1 ? (
-                <text key={k} x={x(k)} y={H - 6} className="axis" textAnchor="middle">
-                  {l}
-                </text>
-              ) : null,
-            )
-          : null}
+        {labels.map((l, k) =>
+          ticks.has(k) ? (
+            <text key={k} x={x(k)} y={H - 6} className="axis" textAnchor="middle">
+              {l}
+            </text>
+          ) : null,
+        )}
         {labels.map((_, k) => {
           let tip = (titles[k] || labels[k]) + "\n" + bars.name + ": " + fmt(bars.values[k]) + unit;
           if (line) tip += "\n" + line.name + ": " + fmtNum(line.values[k]);
@@ -175,8 +208,7 @@ export function StackChart({ labels, titles, up, down = [], line, every = 5, hei
   const sum = (stacks: Stack[], k: number) => stacks.reduce((a, s) => a + (s.values[k] || 0), 0);
   const maxUp = niceMax(Math.max(0, ...labels.map((_, k) => sum(up, k)), ...(line ? line.values : [])));
   const maxDown = down.length ? niceMax(Math.max(0, ...labels.map((_, k) => sum(down, k)), ...(line ? line.values.map((v) => -v) : []))) : 0;
-  const W = width;
-  const H = height;
+  const { box, W, H } = useChartSize(width, height);
   const left = 56;
   const right = 12;
   const top = 10;
@@ -188,9 +220,15 @@ export function StackChart({ labels, titles, up, down = [], line, every = 5, hei
   const x = (k: number) => left + step * k + step / 2;
   const bw = Math.max(1.5, step * 0.66);
   const y = (v: number) => zero - v * scale;
-  const ticks = [maxUp, maxUp / 2, 0, ...(maxDown ? [-maxDown / 2, -maxDown] : [])];
+  // The zero line and the ends first; a half way only where it doesn't run
+  // into another (a small side under a large one).
+  const ticks: number[] = [];
+  for (const v of [0, maxUp, ...(maxDown ? [-maxDown] : []), maxUp / 2, ...(maxDown ? [-maxDown / 2] : [])]) {
+    if (ticks.every((u) => Math.abs((u - v) * scale) >= 14)) ticks.push(v);
+  }
+  const shown = tickIndexes(labels, every, step);
   return (
-    <div className="chart-wrap">
+    <div className="chart-wrap" ref={box}>
       <div className="legend">
         {[...up, ...down].map((s) => (
           <span key={s.name + s.cls} className="key"><i className={"sw-bar " + s.cls} />{s.name}</span>
@@ -222,7 +260,7 @@ export function StackChart({ labels, titles, up, down = [], line, every = 5, hei
           return <g key={k}>{ups}{downs}</g>;
         })}
         {line ? <polyline points={line.values.map((v, k) => x(k).toFixed(1) + "," + y(v).toFixed(1)).join(" ")} className="line c-ink" /> : null}
-        {every ? labels.map((l, k) => (k % every === 0 || k === n - 1 ? <text key={k} x={x(k)} y={H - 6} className="axis" textAnchor="middle">{l}</text> : null)) : null}
+        {labels.map((l, k) => (shown.has(k) ? <text key={k} x={x(k)} y={H - 6} className="axis" textAnchor="middle">{l}</text> : null))}
         {labels.map((_, k) => {
           const parts = [...up.map((s) => [s.name, s.values[k] || 0] as const), ...down.map((s) => [s.name, -(s.values[k] || 0)] as const)].filter(([, v]) => v);
           const tip = [titles[k] || labels[k], ...parts.map(([nm, v]) => nm + ": " + (v > 0 ? "+" : "") + fmt(v)), ...(line ? [line.name + ": " + fmt(line.values[k])] : [])].join("\n");
@@ -246,8 +284,7 @@ export function LineChart({ labels, titles, values, name, every = 5, height = 18
 }) {
   const { fmtNum } = useLocale();
   const fmt = format || ((v: number) => fmtNum(Math.round(v)));
-  const W = width;
-  const H = height;
+  const { box, W, H } = useChartSize(width, height);
   const left = 64;
   const right = 12;
   const top = 10;
@@ -263,8 +300,9 @@ export function LineChart({ labels, titles, values, name, every = 5, height = 18
   const x = (k: number) => left + step * k;
   const y = (v: number) => top + (H - top - bottom) * (1 - (v - lo) / (hi - lo || 1));
   const pts = values.map((v, k) => x(k).toFixed(1) + "," + y(v).toFixed(1)).join(" ");
+  const shown = tickIndexes(labels, every, step);
   return (
-    <div className="chart-wrap">
+    <div className="chart-wrap" ref={box}>
       <svg viewBox={`0 0 ${W} ${H}`} className="chart" role="img" aria-label={name}>
         {[hi, (hi + lo) / 2, lo].map((v) => (
           <g key={v}>
@@ -274,7 +312,7 @@ export function LineChart({ labels, titles, values, name, every = 5, height = 18
         ))}
         {n > 1 ? <polygon points={`${x(0)},${y(lo)} ${pts} ${x(n - 1)},${y(lo)}`} className="area c-accent" /> : null}
         <polyline points={pts} className="stroke c-accent" />
-        {every ? labels.map((l, k) => (k % every === 0 || k === n - 1 ? <text key={k} x={x(k)} y={H - 6} className="axis" textAnchor="middle">{l}</text> : null)) : null}
+        {labels.map((l, k) => (shown.has(k) ? <text key={k} x={x(k)} y={H - 6} className="axis" textAnchor="middle">{l}</text> : null))}
         {values.map((v, k) => (
           <rect key={k} x={x(k) - step / 2} y={top} width={step} height={H - top - bottom} className="hit"><title>{(titles[k] || labels[k]) + "\n" + name + ": " + fmt(v)}</title></rect>
         ))}
