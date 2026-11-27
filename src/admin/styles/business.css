@@ -17,7 +17,11 @@
   .stroke-list li.current { scroll-margin: 8px; }
   @media (max-width: 600px) {
     .viewer { padding: 0; }
-    .viewer-card { max-height: 100dvh; height: 100dvh; border-radius: 0; padding: 12px; }
+    /* The whole screen, clear of the notch and the home indicator. */
+    .viewer-card {
+      max-height: 100dvh; height: 100dvh; border-radius: 0; border: 0;
+      padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    }
     .viewer-controls .play { min-width: 0; flex: 1; }
   }
 }

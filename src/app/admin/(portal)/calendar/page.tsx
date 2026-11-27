@@ -7,7 +7,7 @@ import { AlertBox, Badge, Btn, Card, CardHead, Empty, PageHead, Segmented, Updat
 import { Loaded, updatedAt } from "@/admin/components/ui/loaded";
 import { StatusBadge } from "@/admin/components/ops/schedule";
 import { msg } from "@/admin/i18n";
-import { useApi, useQueryParams } from "@/admin/lib/hooks";
+import { PHONE, useApi, useMediaQuery, useQueryParams } from "@/admin/lib/hooks";
 import { clashes, dayStart, itemKey, itemsOnDay, monthGrid, weekOrder, weekStartOf, type Clash } from "@/admin/lib/ops";
 import type { CalendarItem, CalendarKind, CalendarRange as Range } from "@/admin/lib/types";
 import "@/admin/styles/ops.css";
@@ -32,7 +32,9 @@ const monthKey = (d: Date) => d.getFullYear() + "-" + String(d.getMonth() + 1).p
 export default function CalendarPage() {
   const { t, lang } = useLocale();
   const { get, set } = useQueryParams();
-  const view = get("view", "month");
+  // A month's grid is small on a phone: the list first there.
+  const usual = useMediaQuery(PHONE) ? "agenda" : "month";
+  const view = get("view", usual);
   const m = get("month").match(/^(\d{4})-(\d{2})$/);
   const today = new Date();
   const year = m ? Number(m[1]) : today.getFullYear();
@@ -50,7 +52,7 @@ export default function CalendarPage() {
     <div className="stack">
       <PageHead title={t("Calendar")} sub={t("Everything scheduled, to avoid clashes")}>
         <Updated at={updatedAt(q)} onRefresh={() => void q.refetch()} />
-        <Segmented<string> name={t("View")} value={view} onChange={(v) => set({ view: v === "month" ? null : v })}
+        <Segmented<string> name={t("View")} value={view} onChange={(v) => set({ view: v === usual ? null : v })}
           options={[["month", t("Month")], ["agenda", t("Agenda")]]} />
       </PageHead>
       <div className="toolbar">

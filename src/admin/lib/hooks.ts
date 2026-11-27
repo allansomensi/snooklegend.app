@@ -72,3 +72,19 @@ export function useDebounced<T>(value: T, ms: number): T {
   }, [value, ms]);
   return v;
 }
+
+/** Whether a media query matches now (a phone's width…), kept current. */
+export function useMediaQuery(query: string) {
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      const m = matchMedia(query);
+      m.addEventListener("change", onChange);
+      return () => m.removeEventListener("change", onChange);
+    },
+    [query],
+  );
+  return useSyncExternalStore(subscribe, () => matchMedia(query).matches, () => false);
+}
+
+/** A phone's width: the portal's bar at the bottom, tables as cards (globals.css). */
+export const PHONE = "(max-width: 640px)";

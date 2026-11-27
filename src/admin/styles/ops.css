@@ -80,6 +80,7 @@
   /* Filters at the top of a card, above its list. */
   .card-body.toolbar-in { padding: 12px 18px; border-bottom: 1px solid var(--border); }
   .card-body.toolbar-in .select { width: auto; flex: 0 1 200px; }
+  @media (max-width: 640px) { .card-body.toolbar-in .select { flex: 1 1 140px; min-width: 0; } }
 }
 
 /* A game shot by shot. */
@@ -125,7 +126,8 @@
 
 /* The live settings. */
 @layer components {
-  .anchor { position: relative; top: -70px; }
+  /* Under the sticky top bar (and a phone's notch) when jumped to. */
+  .anchor { position: relative; top: calc(-70px - env(safe-area-inset-top)); }
   .grow-0 { flex: 0 1 280px; }
   .settings-list { display: grid; }
   .setting-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 340px); gap: 18px; padding: 14px 18px; border-bottom: 1px solid var(--border); align-items: start; }
@@ -155,6 +157,7 @@
   .countdown b { font-size: 30px; font-variant-numeric: tabular-nums; color: var(--text); margin-right: 3px; }
   .maintenance-card { border-top: 3px solid var(--warning); }
   .auction-numbers { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  @media (max-width: 640px) { .auction-numbers { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .auction-numbers > div { display: grid; gap: 2px; }
   .auction-numbers b { font-size: 18px; font-variant-numeric: tabular-nums; }
   table.data.compact td, table.data.compact th { padding: 6px 10px; }
@@ -202,7 +205,11 @@
 @layer components {
   .export-card { display: flex; gap: 14px; align-items: center; }
   .stack-tight-left { display: grid; gap: 3px; }
-  @media (max-width: 600px) { .export-card { flex-wrap: wrap; } }
+  /* On a phone: the icon and the words, the button under them. */
+  @media (max-width: 600px) {
+    .export-card { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+    .export-card > .btn { grid-column: 1 / -1; }
+  }
   .month-title { min-width: 150px; text-align: center; }
   .k-event { --k: var(--p2); } .k-tournament { --k: var(--p3); } .k-cup { --k: var(--p6); } .k-promotion { --k: var(--p1); }
   .k-maintenance { --k: var(--p7); } .k-auction { --k: var(--p4); } .k-vip { --k: var(--p5); }
@@ -234,5 +241,15 @@
     .cal-item { padding: 3px; border-left-width: 0; }
     .cal-item .ellipsis { display: none; }
     .cal-head { padding: 6px 2px; text-align: center; }
+  }
+  /* An agenda's line on a phone: its status and when under its title. */
+  @media (max-width: 640px) {
+    .mini-list a.agenda-row { flex-wrap: wrap; }
+    .mini-list a.agenda-row .mi-main { flex: 1 1 calc(100% - 42px); }
+    .mini-list a.agenda-row .mi-side { margin-left: 42px; }
+  }
+  @media (max-width: 700px) and (pointer: coarse) {
+    .cal-items { gap: 4px; }
+    .cal-item { min-width: 26px; min-height: 26px; justify-content: center; }
   }
 }
