@@ -2,11 +2,11 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState, type ReactNode } from "react";
+import { Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { useLocale } from "@/admin/components/providers/locale";
 import { Shell } from "@/admin/components/shell/shell";
 import { Btn, ErrorPage, PageLoading, Spinner } from "@/admin/components/ui/bits";
-import { api, ApiError } from "@/admin/lib/api";
+import { api, ApiError, resumeWithDevice } from "@/admin/lib/api";
 import { useSession } from "@/admin/lib/hooks";
 import { session } from "@/admin/lib/session";
 import type { Me } from "@/admin/lib/types";
@@ -38,8 +38,18 @@ function Gate({ children }: { children: ReactNode }) {
   const { t } = useLocale();
   const [failure, setFailure] = useState<Error | null>(null);
   const [attempt, setAttempt] = useState(0);
+  // A device kept signed in gets a session first (once per visit).
+  const [resuming, setResuming] = useState(() => !session.token() && !!session.device());
+  const tried = useRef(false);
 
   useEffect(() => {
+    if (!token && resuming) {
+      if (!tried.current) {
+        tried.current = true;
+        void resumeWithDevice().finally(() => setResuming(false));
+      }
+      return;
+    }
     if (!token) {
       // Nothing from the last session stays in memory.
       client.clear();
@@ -57,7 +67,7 @@ function Gate({ children }: { children: ReactNode }) {
     return () => {
       live = false;
     };
-  }, [token, me, router, pathname, search, client, attempt]);
+  }, [token, me, router, pathname, search, client, attempt, resuming]);
 
   if (failure) {
     return (

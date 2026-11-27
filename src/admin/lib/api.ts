@@ -26,7 +26,68 @@ export interface ApiOptions {
   signal?: AbortSignal;
 }
 
+/** The sign-in's own requests: a 401 there is a wrong password or code. */
+const SIGN_IN = new Set(["/login", "/login/code", "/login/device"]);
+
+let resuming: Promise<boolean> | null = null;
+
+/** Trades the device kept signed in for a new session (one request at a
+ * time, however many pages ask). False without one, or when the server no
+ * longer knows it (it is then forgotten here). */
+export function resumeWithDevice(): Promise<boolean> {
+  if (resuming) return resuming;
+  const device = session.device();
+  if (!device) return Promise.resolve(false);
+  resuming = (async () => {
+    try {
+      const res = await fetch(apiBase() + "/admin/api/login/device", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ device: device.token }),
+        cache: "no-store",
+        credentials: "omit",
+      });
+      if (res.ok) {
+        const d = (await res.json()) as { token?: string; device_id?: string };
+        if (!d.token) return false;
+        if (session.get().me) session.renewed(d.token);
+        else session.signedIn(d.token);
+        if (d.device_id && d.device_id !== device.id) session.keepDevice({ token: device.token, id: d.device_id });
+        return true;
+      }
+      // Signed out, unused for 30 days, or no longer staff: the password again.
+      if (res.status === 401 || res.status === 403) {
+        session.forgetDevice();
+        session.end(words.t("This device was signed out (or unused for 30 days). Sign in again."));
+      }
+      return false;
+    } catch {
+      // No connection: the device stays kept for the next try.
+      return false;
+    } finally {
+      resuming = null;
+    }
+  })();
+  return resuming;
+}
+
+/** Signs out of the portal on this device: its session ends and, when it
+ * was kept signed in, the device too. */
+export async function signOutHere() {
+  const device = session.device();
+  session.forgetDevice();
+  if (session.token()) {
+    if (device?.id) await api("/security/devices/" + seg(device.id), { method: "DELETE" }).catch(() => {});
+    await api("/logout", { method: "POST" }).catch(() => {});
+  }
+  session.end(null);
+}
+
 export async function api<T = unknown>(path: string, options: ApiOptions = {}): Promise<T> {
+  return request<T>(path, options, true);
+}
+
+async function request<T>(path: string, options: ApiOptions, mayResume: boolean): Promise<T> {
   const { t, tf } = words;
   const token = session.token();
   let res: Response;
@@ -57,8 +118,11 @@ export async function api<T = unknown>(path: string, options: ApiOptions = {}): 
   // request the server couldn't read, a proxy's page) gets the general one.
   const error = (data as { error?: unknown }).error;
   const said = typeof error === "string" && error ? error : null;
-  if (res.status === 401 && path !== "/login") {
-    session.end(t("Your session expired. Sign in again."));
+  if (res.status === 401 && !SIGN_IN.has(path)) {
+    // The tab's session ended: a device kept signed in gets a new one, and
+    // the request is made again.
+    if (mayResume && token && (await resumeWithDevice())) return request<T>(path, options, false);
+    if (session.token() === token) session.end(t("Your session expired. Sign in again."));
     throw new ApiError(said ? t(said) : t("Your session expired."), 401);
   }
   if (!res.ok) {
@@ -69,7 +133,7 @@ export async function api<T = unknown>(path: string, options: ApiOptions = {}): 
 
 /** A file from the staff API (a CSV export): the body as it came, with
  * the bearer token. Errors as `api`'s. */
-export async function apiFile(path: string, signal?: AbortSignal): Promise<Blob> {
+export async function apiFile(path: string, signal?: AbortSignal, mayResume = true): Promise<Blob> {
   const { t, tf } = words;
   const token = session.token();
   let res: Response;
@@ -93,7 +157,8 @@ export async function apiFile(path: string, signal?: AbortSignal): Promise<Blob>
     /* not JSON */
   }
   if (res.status === 401) {
-    session.end(t("Your session expired. Sign in again."));
+    if (mayResume && token && (await resumeWithDevice())) return apiFile(path, signal, false);
+    if (session.token() === token) session.end(t("Your session expired. Sign in again."));
     throw new ApiError(said ? t(said) : t("Your session expired."), 401);
   }
   throw new ApiError(said ? t(said) : tf("Something went wrong ({status}).", { status: res.status }), res.status);

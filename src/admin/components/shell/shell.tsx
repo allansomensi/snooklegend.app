@@ -2,16 +2,15 @@
 
 import { useQuery } from "@tanstack/react-query";
 import {
-  ChevronDown, Globe, Keyboard, ListOrdered, LogOut, Menu as MenuIcon, Moon, Search, Sun, User as UserIcon, Play, UsersRound, X,
+  ChevronDown, Globe, Keyboard, ListOrdered, LogOut, Menu as MenuIcon, Moon, Search, ShieldCheck, Sun, User as UserIcon, Play, UsersRound, X,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { LANGS } from "@/admin/i18n";
-import { api, ApiError } from "@/admin/lib/api";
+import { api, ApiError, signOutHere } from "@/admin/lib/api";
 import { useDebounced, useMe } from "@/admin/lib/hooks";
 import { NAV_ITEMS, navFor, navItemsFor, sectionOf, type NavItem } from "@/admin/lib/nav";
-import { session } from "@/admin/lib/session";
 import type { Overview, UsersPage } from "@/admin/lib/types";
 import { useDialogs } from "../providers/dialogs";
 import { useLocale } from "../providers/locale";
@@ -40,9 +39,10 @@ function useCounts() {
   });
 }
 
+/** Signs out of the portal on this device (a device kept signed in is
+ * signed out too). */
 export function signOut() {
-  if (session.token()) api("/logout", { method: "POST" }).catch(() => {});
-  session.end(null);
+  void signOutHere();
 }
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -211,6 +211,7 @@ function Topbar({ onMenu, menuOpen }: { onMenu: () => void; menuOpen: boolean })
           }
           items={[
             { group: me.username + " · " + roleLabel(me.role) },
+            { label: t("Your account"), icon: ShieldCheck, onSelect: () => router.push("/admin/account") },
             { label: t("My player page"), icon: UserIcon, onSelect: () => router.push(playerHref(me.username)) },
             { label: themeLabel, icon: theme === "dark" ? Sun : Moon, onSelect: toggleTheme },
             { group: t("Language") },

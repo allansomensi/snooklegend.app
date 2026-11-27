@@ -1,15 +1,19 @@
 "use client";
 
 import {
-  Ban, CalendarDays, Clock, Coins, Copy, Ellipsis, Gift, Key, LogOut, Mail, MicOff, Pencil, Scale, Shield, Star, StickyNote, Trash2, TriangleAlert, Undo2, UserX,
+  Ban, CalendarDays, Clock, Coins, Copy, Ellipsis, Gift, Key, LogOut, Mail, MicOff, Pencil, Scale, Shield, ShieldCheck, ShieldOff, Star, StickyNote, Trash2, TriangleAlert, Undo2,
+  UserX,
 } from "lucide-react";
+import { api, seg } from "@/admin/lib/api";
 import { useIsAdmin, useMe } from "@/admin/lib/hooks";
 import { FOREVER, nowSecs } from "@/admin/lib/format";
 import { RULES, recordOf } from "@/admin/lib/rules";
 import type { UserDetail } from "@/admin/lib/types";
 import { usePlayerActions } from "../player-dialogs";
+import { useRefresh } from "../providers";
 import { useDialogs } from "../providers/dialogs";
 import { useLocale } from "../providers/locale";
+import { useToasts } from "../providers/toasts";
 import { AlertBox, Avatar, Btn, Card, Country, DropMenu, RulesBadge, UserBadges, type MenuItem } from "../ui/bits";
 import { useCopy } from "./copy";
 
@@ -20,6 +24,8 @@ export function PlayerHeader({ d }: { d: UserDetail }) {
   const admin = useIsAdmin();
   const actions = usePlayerActions();
   const dialogs = useDialogs();
+  const { attempt } = useToasts();
+  const refresh = useRefresh();
   const copy = useCopy();
   const u = d.user;
   const now = nowSecs();
@@ -55,6 +61,23 @@ export function PlayerHeader({ d }: { d: UserDetail }) {
           { label: t("Give an item…"), icon: Gift, onSelect: () => void actions.item(u) },
           { label: t("Give VIP days…"), icon: Star, onSelect: () => actions.vip(u) },
           isSelf ? null : { label: t("Adjust the rating…"), icon: Scale, onSelect: () => actions.rating(u, d.history) },
+          // A staff member who lost their phone and their recovery codes.
+          d.two_step_at
+            ? {
+                label: t("Turn two-step verification off…"),
+                icon: ShieldOff,
+                onSelect: async () => {
+                  const ok = await dialogs.confirm({
+                    title: tf("Turn {name}'s two-step verification off?", { name: u.username }),
+                    text: t("For a lost phone. They are signed out of the portal everywhere and set it up again at their next sign-in. Make sure it is really them asking."),
+                    confirm: t("Turn off"),
+                    tone: "danger",
+                    icon: ShieldOff,
+                  });
+                  if (ok && (await attempt(() => api("/users/" + seg(u.username) + "/two-step/reset", { method: "POST" }), t("Two-step verification turned off.")))) refresh();
+                },
+              }
+            : null,
         ] as const)
       : []),
   ];
@@ -86,6 +109,12 @@ export function PlayerHeader({ d }: { d: UserDetail }) {
                 {u.online ? t("online now") : tf("seen {when}", { when: ago(u.last_seen) })}
               </span>
               <span className="faint mono">ID {u.id}</span>
+              {u.role === "admin" || u.role === "moderator" ? (
+                <span title={d.two_step_at ? fmtDate(d.two_step_at) : undefined}>
+                  {d.two_step_at ? <ShieldCheck className="icon" aria-hidden /> : <ShieldOff className="icon" aria-hidden />}
+                  {d.two_step_at ? t("Two-step verification on") : t("Two-step verification not set up yet")}
+                </span>
+              ) : null}
             </div>
           </div>
           {u.deleted_at ? null : (

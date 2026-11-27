@@ -1,0 +1,48 @@
+/* Two-step verification: the sign-in's steps and the account's page. */
+.login-card .login-step { display: grid; gap: 14px; }
+.login-card .login-back { justify-self: start; }
+.login-links { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 13px; }
+.login-links a { color: var(--accent); text-decoration: none; }
+.login-links a:hover { text-decoration: underline; }
+.login-card .check { font-size: 14px; color: var(--text-2); min-height: 40px; }
+.login-card .check input { width: 20px; height: 20px; }
+
+.login-foot > .row { flex: 1; min-width: 0; flex-wrap: nowrap; align-items: center; gap: 6px; }
+.login-foot > .row .icon { flex: none; }
+
+.code-input { font-size: 22px; letter-spacing: .18em; text-align: center; height: 52px; }
+
+.two-step-setup { display: grid; gap: 14px; }
+.two-step-list { margin: 0; padding-left: 22px; display: grid; gap: 6px; color: var(--text-2); font-size: 14px; line-height: 1.45; list-style: decimal; }
+.two-step-list li::marker { color: var(--accent); font-weight: 700; }
+.two-step-qr { display: grid; place-items: center; }
+.qr { width: min(208px, 62vw); height: auto; border-radius: 10px; border: 1px solid var(--border); display: block; }
+.two-step-key { display: grid; gap: 4px; justify-items: center; }
+.two-step-key code { font-size: 15px; letter-spacing: .06em; word-break: break-all; text-align: center; user-select: all; }
+.two-step-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.two-step-actions .btn { min-height: 40px; }
+
+.recovery { display: grid; gap: 12px; }
+.recovery-codes {
+  list-style: none; margin: 0; padding: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px;
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; font-size: 16px; text-align: center; user-select: all;
+}
+
+.security-grid { display: grid; gap: 16px; }
+.device-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.device-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--border); }
+.device-row:first-child { border-top: 0; }
+.device-row .device-icon { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--surface-2); flex: none; }
+.device-row .device-main { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.device-row .device-name { font-weight: 600; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.device-row .device-meta { font-size: 12px; color: var(--text-3); }
+.security-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 4px 0; }
+.security-row .security-text { display: grid; gap: 2px; min-width: 0; }
+.security-row .security-text strong { font-size: 15px; }
+.security-row .security-text span { font-size: 13px; color: var(--text-2); }
+
+@media (max-width: 600px) {
+  .device-row { align-items: flex-start; }
+  .device-row .btn { min-height: 40px; }
+  .security-row .btn { width: 100%; justify-content: center; min-height: 44px; }
+}

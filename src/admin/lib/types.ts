@@ -170,6 +170,10 @@ export interface UserDetail {
   /** Their doubles records under each of the rules (0.12; read with
    * `parseDoublesRatings`). */
   doubles_ratings?: unknown;
+  /** When they turned two-step verification on (staff; 0.12.3). */
+  two_step_at?: number | null;
+  /** Their recovery e-mail was confirmed by its link (0.12.3). */
+  recovery_email_confirmed?: boolean;
 }
 
 export interface Overview {

@@ -83,10 +83,19 @@ root layout of its own: none of the website's scripts (no analytics), its own
 styles, `noindex`. It talks to the game server's staff API (`/admin/api`,
 Rust, on Render) from the browser.
 
-- **Signing in:** with a game account (moderator or administrator). The session
-  is a bearer token kept for the tab only (`sessionStorage`, never a cookie, so
-  there is no CSRF surface); it lasts 8 hours. When it ends, every page sends to
-  `/admin/login`, and back to the same page after signing in again.
+- **Signing in:** with a game account (moderator or administrator), in two
+  steps: the password, then a code from an authenticator app (two-step
+  verification is required; the first sign-in sets it up with a QR code
+  drawn here, `src/admin/lib/qr.ts`, and shows ten recovery codes). The
+  session is a bearer token kept for the tab only (`sessionStorage`, never a
+  cookie, so there is no CSRF surface); it lasts 8 hours. "Keep me signed in
+  on this device" (ticked by default in the installed app) also keeps a
+  device token in `localStorage`, traded for a new session whenever the
+  tab's is missing or ends (`resumeWithDevice`, `src/admin/lib/api.ts`), until
+  the device goes 30 days unused. *Your account* (`/admin/account/`, the
+  account menu) lists the devices, signs them out and makes new recovery
+  codes. Without a session (or a device), every page sends to `/admin/login`,
+  and back to the same page after signing in again.
 - **The API:** `src/admin/lib/api.ts` calls `NEXT_PUBLIC_API_URL` + `/admin/api`
   with the token; errors carry the server's own words, translated. The server
   answers browsers only from this site's origin (`SNOOK_LEGEND_ADMIN_ORIGIN` on
@@ -134,9 +143,16 @@ last good page at once, and a server that doesn't answer keeps it in place.
 | Supporters | `/supporters/` | `/pt/apoiadores/` | `/es/mecenas/` | `GET /api/supporters` |
 | The rules guide, illustrated | `/rules/` | `/pt/regras/` | `/es/reglas/` | `src/content/rules/` |
 | The rating calculator | `/rating/` | `/pt/rating/` | `/es/rating/` | `src/lib/rating.ts` |
+| A forgotten password (ask for the link; with `#token=…`, choose the new one) | `/reset-password/` | `/pt/redefinir-senha/` | `/es/restablecer-contrasena/` | `POST /api/account/forgot`, `/api/account/reset` |
+| The recovery e-mail confirmed (with `#token=…`) | `/confirm-email/` | `/pt/confirmar-email/` | `/es/confirmar-correo/` | `POST /api/account/confirm-email` |
 
 A player's page in Portuguese is `/jogador/<name>/` (the address the game
-shares); `/pt/jogador/<name>/` redirects there. The addresses are in
+shares); `/pt/jogador/<name>/` redirects there. The account pages are opened
+from the game ("Forgot your password?") and from the server's e-mails, whose
+links carry the token after `#` (never sent to a server; the page takes it
+out of the address): the game server has their addresses too
+(`crates/server/src/mail.rs`), so change them together. They call the API from
+the browser, which answers only this site's origin, and say `noindex`. The addresses are in
 `src/lib/routes.ts`; the readers of the API's answers, with tests and
 fixtures, in `src/lib/` (`player.ts`, `tournaments.ts`, `supporters.ts`).
 
