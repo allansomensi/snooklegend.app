@@ -1,14 +1,16 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ChevronDown, Globe, Keyboard, ListOrdered, LogOut, Menu as MenuIcon, Moon, Search, Sun, User as UserIcon, Play, UsersRound } from "lucide-react";
+import {
+  ChevronDown, Globe, Keyboard, ListOrdered, LogOut, Menu as MenuIcon, Moon, Search, Sun, User as UserIcon, Play, UsersRound, X,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { LANGS } from "@/admin/i18n";
 import { api, ApiError } from "@/admin/lib/api";
 import { useDebounced, useMe } from "@/admin/lib/hooks";
-import { NAV_ITEMS, navFor, navItemsFor, sectionOf } from "@/admin/lib/nav";
+import { NAV_ITEMS, navFor, navItemsFor, sectionOf, type NavItem } from "@/admin/lib/nav";
 import { session } from "@/admin/lib/session";
 import type { Overview, UsersPage } from "@/admin/lib/types";
 import { useDialogs } from "../providers/dialogs";
@@ -47,12 +49,31 @@ export function Shell({ children }: { children: ReactNode }) {
   const [navOpen, setNavOpen] = useState(false);
   const pathname = usePathname();
   const { t, tf } = useLocale();
+  // The button that opened the menu gets the keyboard back when it closes.
+  const opener = useRef<HTMLElement | null>(null);
   // The menu folds away when the page changes (phones).
   const [lastPath, setLastPath] = useState(pathname);
   if (lastPath !== pathname) {
     setLastPath(pathname);
     setNavOpen(false);
   }
+  const toggleNav = () => {
+    if (!navOpen) opener.current = document.activeElement as HTMLElement | null;
+    setNavOpen((o) => !o);
+  };
+  useEffect(() => {
+    if (!navOpen) return;
+    // Into the menu: the page shown, else its first link.
+    const nav = document.getElementById("sections");
+    (nav?.querySelector<HTMLElement>("[aria-current=page]") || nav?.querySelector<HTMLElement>("a"))?.focus({ preventScroll: true });
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setNavOpen(false);
+      opener.current?.focus();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [navOpen]);
   useShortcuts();
   const section = sectionOf(pathname);
   const item = NAV_ITEMS.find((n) => n.id === section);
@@ -62,19 +83,53 @@ export function Shell({ children }: { children: ReactNode }) {
   return (
     <div className={"shell" + (navOpen ? " nav-open" : "")}>
       <a className="skip-link" href="#main">{t("Skip to the page")}</a>
-      <Sidebar section={section} />
-      <div className="scrim" onClick={() => setNavOpen(false)} />
+      <Sidebar section={section} onClose={() => setNavOpen(false)} />
+      <div className="scrim" aria-hidden onClick={() => setNavOpen(false)} />
       <div className="workspace">
-        <Topbar onMenu={() => setNavOpen((o) => !o)} />
+        <Topbar onMenu={toggleNav} menuOpen={navOpen} />
         <main id="main" className="main" tabIndex={-1}>
           {children}
         </main>
       </div>
+      <TabBar section={section} menuOpen={navOpen} onMenu={toggleNav} />
     </div>
   );
 }
 
-function Sidebar({ section }: { section: string }) {
+/** The sections a phone keeps at hand, at the bottom of the screen; the
+ * others are under "More". */
+const TAB_BAR = ["dashboard", "players", "reports", "chat"];
+
+function TabBar({ section, menuOpen, onMenu }: { section: string; menuOpen: boolean; onMenu: () => void }) {
+  const { t, tn, fmtNum } = useLocale();
+  const reports = useCounts().data?.stored.open_reports || 0;
+  const items = TAB_BAR.map((id) => NAV_ITEMS.find((n) => n.id === id)).filter((n): n is NavItem => !!n);
+  const elsewhere = !items.some((n) => n.id === section);
+  return (
+    <nav className="tabbar" aria-label={t("Main sections")}>
+      {items.map((n) => {
+        const Icon = n.icon;
+        const on = section === n.id && !menuOpen;
+        const c = n.count === "reports" ? reports : 0;
+        return (
+          <Link key={n.id} className={"tab-link" + (on ? " on" : "")} href={"/admin/" + n.id} aria-current={section === n.id ? "page" : undefined}>
+            <span className="tab-icon">
+              <Icon className="icon" aria-hidden />
+              {c ? <span className="nav-count" title={tn(c, "{n} open report", "{n} open reports")}>{c > 99 ? "99+" : fmtNum(c)}</span> : null}
+            </span>
+            <span className="tab-label">{n.id === "chat" ? t("Chat") : t(n.label)}</span>
+          </Link>
+        );
+      })}
+      <button type="button" className={"tab-link" + (menuOpen || elsewhere ? " on" : "")} aria-expanded={menuOpen} aria-controls="sections" onClick={onMenu}>
+        <span className="tab-icon">{menuOpen ? <X className="icon" aria-hidden /> : <MenuIcon className="icon" aria-hidden />}</span>
+        <span className="tab-label">{t("More")}</span>
+      </button>
+    </nav>
+  );
+}
+
+function Sidebar({ section, onClose }: { section: string; onClose: () => void }) {
   const { t, tn, tf, fmtNum } = useLocale();
   const me = useMe();
   const counts = useCounts();
@@ -82,14 +137,17 @@ function Sidebar({ section }: { section: string }) {
   const o = counts.data;
   const reports = o?.stored.open_reports || 0;
   return (
-    <aside className="sidebar" aria-label={t("Sections")}>
-      <Link className="brand" href="/admin/dashboard">
-        <BrandMark />
-        <div>
-          <b>Snook Legend</b>
-          <span>{t("Staff portal")}</span>
-        </div>
-      </Link>
+    <aside className="sidebar" id="sections" aria-label={t("Sections")}>
+      <div className="sidebar-top">
+        <Link className="brand" href="/admin/dashboard">
+          <BrandMark />
+          <div>
+            <b>Snook Legend</b>
+            <span>{t("Staff portal")}</span>
+          </div>
+        </Link>
+        <Btn label={t("Close")} kind="ghost sidebar-close" icon={X} iconOnly onClick={onClose} />
+      </div>
       <nav>
         {navFor(me.role).map((n, k) => {
           if ("group" in n) return <div key={k} className="nav-group">{t(n.group)}</div>;
@@ -119,7 +177,7 @@ function Sidebar({ section }: { section: string }) {
   );
 }
 
-function Topbar({ onMenu }: { onMenu: () => void }) {
+function Topbar({ onMenu, menuOpen }: { onMenu: () => void; menuOpen: boolean }) {
   const { t, lang, setLang, theme, setTheme } = useLocale();
   const me = useMe();
   const router = useRouter();
@@ -129,7 +187,7 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
   const themeLabel = theme === "dark" ? t("Light theme") : t("Dark theme");
   return (
     <header className="topbar">
-      <Btn label={t("Menu")} kind="ghost menu-btn" icon={MenuIcon} iconOnly onClick={onMenu} />
+      <Btn label={t("Menu")} kind="ghost menu-btn" icon={MenuIcon} iconOnly aria-expanded={menuOpen} aria-controls="sections" onClick={onMenu} />
       <SearchBox />
       <div className="topbar-actions">
         <select className="select lang-select hide-sm" aria-label={t("Language")} value={lang} onChange={(e) => setLang(e.target.value as typeof lang)}>

@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import type { ReactNode } from "react";
 import { AppProviders } from "@/admin/components/providers";
-import { THEME_SCRIPT } from "@/admin/lib/prefs";
-import { RegisterServiceWorker } from "./pwa";
+import { THEME_COLORS, THEME_SCRIPT } from "@/admin/lib/prefs";
+import { RegisterServiceWorker, ThemeColor } from "./pwa";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,9 +16,17 @@ export const metadata: Metadata = {
   icons: { apple: [{ url: "/admin-icons/apple-touch-icon.png", sizes: "180x180" }] },
 };
 
+// The bars of a phone take the colour of the portal's background (--bg in
+// globals.css): the system's theme first, then the one chosen in the
+// portal (src/admin/lib/prefs.ts sets both tags to it). The page runs under
+// a notch and the home indicator (viewport-fit=cover); globals.css keeps
+// its bars clear of them with env(safe-area-inset-*).
 export const viewport: Viewport = {
   colorScheme: "dark light",
-  themeColor: "#0e0c0a",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: THEME_COLORS.light },
+    { media: "(prefers-color-scheme: dark)", color: THEME_COLORS.dark },
+  ],
   viewportFit: "cover",
 };
 
@@ -36,6 +44,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         </noscript>
         <AppProviders>{children}</AppProviders>
         <RegisterServiceWorker />
+        <ThemeColor />
       </body>
     </html>
   );
