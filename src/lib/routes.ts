@@ -13,6 +13,10 @@ export const PAGE_SLUGS = {
   rating: { en: "rating", pt: "rating", es: "rating" },
   supporters: { en: "supporters", pt: "apoiadores", es: "mecenas" },
   tournaments: { en: "tournaments", pt: "torneios", es: "torneos" },
+  // Opened from the game server's e-mails (crates/server/src/mail.rs in the
+  // game's repository has these addresses too): change them together.
+  resetPassword: { en: "reset-password", pt: "redefinir-senha", es: "restablecer-contrasena" },
+  confirmEmail: { en: "confirm-email", pt: "confirmar-email", es: "confirmar-correo" },
 } as const satisfies Record<string, Record<Locale, string>>;
 
 export type PageKey = keyof typeof PAGE_SLUGS;

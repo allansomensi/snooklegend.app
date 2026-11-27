@@ -5,7 +5,7 @@ import { GITHUB_URL, ISSUES_URL, type LegalDoc } from "./site";
 
 /** When each text last changed (shown at its top): change it with the text. */
 export const LEGAL_UPDATED: Record<LegalDoc, string> = {
-  privacy: "2026-11-26",
+  privacy: "2026-11-27",
   terms: "2026-11-26",
 };
 

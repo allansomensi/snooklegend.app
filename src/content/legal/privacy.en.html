@@ -51,12 +51,19 @@ that request carries no data from your account.</p>
     chat on. On accounts of minors, also whether the parent or guardian allowed the chat and the
     date of that permission.</li>
   <li><b>Recovery e-mail</b> (optional): only if you give it, to prove the account is yours if you
-    forget the password.</li>
+    forget the password. It is confirmed by a link sent to it, and it only gets the account's
+    messages: that link, the links to choose a new password (which you ask for on the website) and
+    the notice that the password changed. Never advertising. The links work for a short time and
+    once, and the server keeps only a <i>hash</i> of them.</li>
   <li><b>IP address:</b> used for a few minutes, in the server's memory, to limit abuse (password
     attempts, mass accounts, too many messages). The IP of the sign-up is kept with the account,
     to investigate mass accounts and fraud.</li>
   <li><b>Session:</b> an access code to sign in automatically. The server keeps only a
     <i>hash</i> of it; the code is in the settings file on your computer.</li>
+  <li><b>Moderation staff:</b> moderators and administrators sign in to the staff portal with their
+    password and a code from an authenticator app. We keep that app's secret, the <i>hashes</i> of
+    the recovery codes and, when they choose to stay signed in, the portal's devices (browser,
+    system and dates of use), forgotten after 30 days without use.</li>
   <li><b>Presence:</b> whether you are online and what you are doing (in the lounge, at a table,
     playing, in focus mode), visible to other players while you are online; when you were last
     seen (shown to friends); the days you played and, for one week, the hours you were online,
@@ -131,6 +138,8 @@ that request carries no data from your account.</p>
 <ul>
   <li><b>Hosting for the server and the database</b> (cloud providers, which may be outside
     Brazil, for example in the United States).</li>
+  <li><b>Resend</b>, which sends the account's e-mails described above (the address, the username
+    and the message), from the United States.</li>
   <li><b>Stripe</b>, for purchases with money made outside the Microsoft Store. You enter your
     payment details directly on Stripe's page, under Stripe's privacy policy.</li>
   <li><b>Microsoft</b>, when the game is installed or bought through the Microsoft Store, under

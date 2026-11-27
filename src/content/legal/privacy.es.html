@@ -52,12 +52,20 @@ consulta no lleva ningún dato de tu cuenta.</p>
     activar el chat. En las cuentas de menores, también si el responsable autorizó el chat y la
     fecha de esa autorización.</li>
   <li><b>Correo de recuperación</b> (opcional): solo si lo indicas, para probar que la cuenta es
-    tuya si olvidas la contraseña.</li>
+    tuya si olvidas la contraseña. Se confirma con un enlace enviado a él, y solo recibe mensajes
+    de la cuenta: ese enlace, los enlaces para elegir una nueva contraseña (que pides en el sitio)
+    y el aviso de que la contraseña cambió. Nunca publicidad. Los enlaces valen poco tiempo,
+    funcionan una vez y el servidor guarda solo un <i>hash</i> de ellos.</li>
   <li><b>Dirección IP:</b> se usa durante algunos minutos, en la memoria del servidor, para
     limitar abusos (intentos de contraseña, cuentas en masa, exceso de mensajes). La IP del
     registro se guarda con la cuenta, para investigar cuentas en masa y fraudes.</li>
   <li><b>Sesión:</b> un código de acceso para entrar automáticamente. El servidor guarda solo un
     <i>hash</i>; el código queda en el archivo de configuración de tu computadora.</li>
+  <li><b>Equipo de moderación:</b> moderadores y administradores entran en el portal del equipo
+    con la contraseña y un código de una aplicación autenticadora. Guardamos el secreto de esa
+    aplicación, los <i>hashes</i> de los códigos de recuperación y, cuando eligen seguir
+    conectados, los dispositivos del portal (navegador, sistema y fechas de uso), que se olvidan
+    tras 30 días sin uso.</li>
   <li><b>Presencia:</b> si estás en línea y qué estás haciendo (en el salón, en una mesa, jugando,
     en modo concentración), visible para los demás jugadores mientras estás en línea; la última
     vez que te vieron (se muestra a los amigos); los días en que jugaste y, durante una semana,
@@ -131,6 +139,8 @@ consulta no lleva ningún dato de tu cuenta.</p>
 <ul>
   <li><b>Alojamiento del servidor y de la base de datos</b> (proveedores en la nube, que pueden
     estar fuera de Brasil, por ejemplo en Estados Unidos).</li>
+  <li><b>Resend</b>, que envía los correos de la cuenta descritos arriba (la dirección, el nombre
+    de usuario y el mensaje), desde Estados Unidos.</li>
   <li><b>Stripe</b>, en las compras con dinero hechas fuera de Microsoft Store. Introduces los
     datos de pago directamente en la página de Stripe, según su política de privacidad.</li>
   <li><b>Microsoft</b>, cuando el juego se instala o se compra en Microsoft Store, según la

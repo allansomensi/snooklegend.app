@@ -48,12 +48,19 @@ nova; essa consulta não leva nenhum dado da sua conta.</p>
     para ligar o chat. Nas contas de menores, também se o responsável autorizou o chat e a data
     dessa autorização.</li>
   <li><b>E-mail de recuperação</b> (opcional): só se você o informar, para provar que a conta é
-    sua se esquecer a senha.</li>
+    sua se esquecer a senha. Ele é confirmado por um link enviado a ele, e só recebe mensagens da
+    conta: esse link, os links para escolher uma nova senha (que você pede no site) e o aviso de
+    que a senha mudou. Nunca propaganda. Os links valem por pouco tempo, funcionam uma vez e o
+    servidor guarda só um <i>hash</i> deles.</li>
   <li><b>Endereço IP:</b> usado por alguns minutos, na memória do servidor, para limitar abusos
     (tentativas de senha, contas em massa, excesso de mensagens). O IP do cadastro fica guardado
     junto da conta, para investigar contas em massa e fraudes.</li>
   <li><b>Sessão:</b> um código de acesso para entrar automaticamente. O servidor guarda só um
     <i>hash</i> dele; o código fica no arquivo de configurações no seu computador.</li>
+  <li><b>Equipe de moderação:</b> moderadores e administradores entram no portal da equipe com a
+    senha e um código de um aplicativo autenticador. Guardamos o segredo desse aplicativo, os
+    <i>hashes</i> dos códigos de recuperação e, quando escolhem continuar conectados, os aparelhos
+    do portal (navegador, sistema e datas de uso), esquecidos após 30 dias sem uso.</li>
   <li><b>Presença:</b> se você está online e o que está fazendo (no salão, numa mesa, jogando, em
     modo foco), visível aos outros jogadores enquanto você está online; a última vez que foi visto
     (mostrada aos amigos); os dias em que jogou e, por uma semana, as horas em que esteve online,
@@ -127,6 +134,8 @@ nova; essa consulta não leva nenhum dado da sua conta.</p>
 <ul>
   <li><b>Hospedagem do servidor e do banco de dados</b> (provedores de nuvem, que podem ficar
     fora do Brasil, por exemplo nos Estados Unidos).</li>
+  <li><b>Resend</b>, que envia os e-mails da conta descritos acima (o endereço, o nome de
+    usuário e a mensagem), a partir dos Estados Unidos.</li>
   <li><b>Stripe</b>, nas compras com dinheiro feitas fora da Microsoft Store. Você informa os
     dados de pagamento diretamente na página da Stripe, conforme a política de privacidade
     dela.</li>
