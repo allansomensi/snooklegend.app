@@ -888,7 +888,9 @@ svg.chart .stroke.c-accent { fill: none; stroke: var(--accent); stroke-width: 2;
   table.data.cards td.actions-cell::before { content: none; }
   table.data.cards td.actions-cell .row { justify-content: flex-start; flex-wrap: wrap; }
   table.data.cards td .rating-cell .faint, table.data.cards .rating-cell .faint { white-space: normal; }
-  .table-wrap table.data.cards td.hide-xs { display: none; }
+  .table-wrap table.data.cards td.hide-xs,
+  .card > .table-wrap table.data.cards td.hide-xs:first-child,
+  .card > .table-wrap table.data.cards td.hide-xs:last-child { display: none; }
 
   /* A table of short columns stays a table (scrolling, as on a tablet). */
   table.heatmap th[scope="row"] { position: sticky; left: 0; z-index: 1; background: var(--surface); }
