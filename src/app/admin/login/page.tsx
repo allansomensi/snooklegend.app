@@ -108,9 +108,12 @@ function Login() {
     }
     setSending(true);
     try {
-      const d = await api<FirstStep>("/login", { method: "POST", body: { username: username.trim(), password, remember } });
+      const d = await api<FirstStep & { token?: string }>("/login", { method: "POST", body: { username: username.trim(), password, remember } });
       setCode("");
-      if (d.step === "setup" && d.secret && d.uri) setStep({ kind: "setup", ticket: d.ticket, secret: d.secret, uri: d.uri });
+      // A game server from before two-step verification (0.12.2 and older)
+      // signs in on the password alone: this portal still works with it.
+      if (d.token && !d.step) finish({ token: d.token });
+      else if (d.step === "setup" && d.secret && d.uri) setStep({ kind: "setup", ticket: d.ticket, secret: d.secret, uri: d.uri });
       else setStep({ kind: "code", ticket: d.ticket });
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
