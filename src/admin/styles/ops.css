@@ -30,7 +30,7 @@
   .picker-tools { display: flex; gap: 8px; flex-wrap: wrap; }
   .picker-tools .select { width: auto; flex: 0 1 170px; }
   .picker-search { position: relative; flex: 1 1 200px; }
-  .picker-search .icon { position: absolute; left: 10px; top: 10px; color: var(--text-3); }
+  .picker-search .icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-3); }
   .picker-search .input { padding-left: 32px; }
   .picker-list { overflow-y: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-2); }
   .picker-row {

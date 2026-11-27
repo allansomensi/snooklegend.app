@@ -40,12 +40,15 @@ export function Modal({ title, text, icon: Icon, tone = "", wide, onClose, foote
             onOpenAutoFocus={(e) => {
               e.preventDefault();
               const root = content.current;
+              // On a touch screen a field focused at once would bring up the
+              // keyboard over the window: the window itself takes the focus.
+              const touch = matchMedia("(pointer: coarse)").matches;
               const first =
                 initialFocus?.current ||
-                root?.querySelector<HTMLElement>("input:not([type=checkbox]), textarea, select") ||
+                (touch ? root : root?.querySelector<HTMLElement>("input:not([type=checkbox]), textarea, select")) ||
                 root?.querySelector<HTMLElement>("[data-primary]") ||
                 root?.querySelector<HTMLElement>("button");
-              setTimeout(() => first?.focus(), 0);
+              setTimeout(() => first?.focus({ preventScroll: true }), 0);
             }}
           >
             <div className="dialog-head">

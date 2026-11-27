@@ -195,8 +195,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip {
-  height: 30px; padding: 0 11px; border-radius: 15px; border: 1px solid var(--border-strong);
-  background: transparent; color: var(--text-2); cursor: pointer; font-size: 13px; font-weight: 550;
+  display: inline-flex; align-items: center; height: 30px; padding: 0 11px; border-radius: 15px; border: 1px solid var(--border-strong);
+  background: transparent; color: var(--text-2); cursor: pointer; font-size: 13px; font-weight: 550; text-decoration: none !important;
 }
 .chip:hover { color: var(--text); border-color: var(--text-3); }
 .chip.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
@@ -300,9 +300,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .topbar .menu-btn { display: none; }
 .search { position: relative; flex: 1; max-width: 460px; }
-.search .icon.lead { position: absolute; left: 11px; top: 10px; width: 16px; height: 16px; color: var(--text-3); pointer-events: none; }
+.search .icon.lead { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-3); pointer-events: none; }
 .search .input { padding-left: 36px; padding-right: 44px; background: var(--surface); }
-.search kbd { position: absolute; right: 9px; top: 8px; }
+.search kbd { position: absolute; right: 9px; top: 50%; transform: translateY(-50%); }
 kbd {
   display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 5px;
   border: 1px solid var(--border-strong); border-bottom-width: 2px; font: 600 11px/1 ui-monospace, monospace; color: var(--text-2); background: var(--surface-2);
@@ -472,10 +472,10 @@ td.unplayed b { color: var(--text-3); font-weight: 600; }
 /* ----------------------------------------------------------- dialogs */
 .dialog-scrim {
   position: fixed; inset: 0; background: var(--scrim); display: grid; place-items: center; padding: 20px; z-index: 50;
-  animation: fade .14s ease;
+  animation: fade .14s ease; overscroll-behavior: contain;
 }
 .dialog {
-  width: min(520px, 100%); max-height: calc(100vh - 40px); display: flex; flex-direction: column;
+  width: min(520px, 100%); max-height: calc(100vh - 40px); max-height: calc(100dvh - 40px); display: flex; flex-direction: column;
   background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-lg);
   animation: pop .16s ease;
 }
@@ -489,16 +489,20 @@ td.unplayed b { color: var(--text-3); font-weight: 600; }
 .dialog-head h2 { font-size: 17px; }
 .dialog-head p { color: var(--text-2); font-size: 13px; margin-top: 3px; }
 .dialog-head .btn { margin-left: auto; }
-.dialog-body { padding: 14px 20px; display: grid; gap: 14px; overflow-y: auto; }
+.dialog-body { padding: 14px 20px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; overflow-y: auto; overscroll-behavior: contain; }
+.dialog:focus { outline: none; }
 .dialog-foot { padding: 14px 20px 18px; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 .preview-box { border: 1px dashed var(--border-strong); border-radius: 10px; padding: 10px 12px; font-size: 13px; background: var(--bg-2); }
 .preview-box .faint { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 650; display: block; margin-bottom: 4px; }
 @keyframes fade { from { opacity: 0; } }
 @keyframes pop { from { opacity: 0; transform: translateY(6px) scale(.985); } }
 
+/* A menu (Radix) fits the screen: as wide and as high as there is room,
+   scrolling inside when longer. */
 .menu {
-  z-index: 60; min-width: 220px; background: var(--surface); border: 1px solid var(--border);
+  z-index: 60; min-width: 220px; max-width: calc(100vw - 16px); background: var(--surface); border: 1px solid var(--border);
   border-radius: 12px; box-shadow: var(--shadow-lg); padding: 6px; display: grid; gap: 1px; animation: pop .12s ease;
+  max-height: var(--radix-dropdown-menu-content-available-height, 70vh); overflow-y: auto; overscroll-behavior: contain;
 }
 .menu .menu-item {
   display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 10px; border-radius: 7px;
@@ -916,8 +920,56 @@ svg.chart .stroke.c-accent { fill: none; stroke: var(--accent); stroke-width: 2;
   .chat-line { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .chat-line .line-actions { opacity: 1; }
   .barlist .bl-row { grid-template-columns: minmax(90px, 130px) minmax(0, 1fr) 54px; }
-  .dialog-scrim { padding: 10px; align-items: end; }
-  .dialog { max-height: calc(100vh - 20px); }
+  /* A window rises from the bottom, the width of the screen, its buttons
+     side by side for a thumb. */
+  .dialog-scrim { padding: max(12px, env(safe-area-inset-top)) 0 0; align-items: end; }
+  .dialog, .dialog.wide {
+    width: 100%; max-height: calc(100dvh - max(12px, env(safe-area-inset-top))); border-radius: 18px 18px 0 0; border-bottom: 0;
+    padding-bottom: env(safe-area-inset-bottom); animation: rise .2s ease;
+  }
+  .dialog-head { padding: 16px max(16px, env(safe-area-inset-right)) 6px max(16px, env(safe-area-inset-left)); }
+  .dialog-body { padding: 12px max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left)); }
+  .dialog-foot { padding: 12px max(16px, env(safe-area-inset-right)) 16px max(16px, env(safe-area-inset-left)); }
+  .dialog-foot > .btn { flex: 1 1 0; min-width: max-content; }
+}
+@keyframes rise { from { transform: translateY(32px); opacity: 0; } }
+
+/* Fingers, not a mouse: controls at least about 40px high, and text fields
+   at 16px (iOS zooms into a smaller one when it gets the focus). */
+@media (pointer: coarse) {
+  .input, .select, .textarea, .login-foot .select { font-size: 16px; }
+  .input, .select { height: 42px; }
+  .login-foot .select { height: 40px; }
+  .btn, .btn.sm { height: 40px; }
+  .btn.sm { padding: 0 12px; }
+  .btn.icon-only, .btn.sm.icon-only { width: 40px; padding: 0; }
+  .viewer-controls .select { height: 40px; }
+  .pass-wrap .btn { height: 36px; width: 38px; }
+  .pass-wrap .input { padding-right: 46px; }
+  .segmented button { height: 36px; padding: 0 12px; }
+  .chip { height: 38px; padding: 0 14px; border-radius: 19px; }
+  .tab { padding: 12px 14px; }
+  .tabs { scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .nav-link { height: 44px; }
+  .menu .menu-item { height: 44px; }
+  .search-results .result { min-height: 46px; }
+  .search kbd { display: none; }
+  .check { min-height: 40px; }
+  .check input { width: 20px; height: 20px; }
+  .switch { min-height: 40px; }
+  .picker-row { min-height: 46px; }
+  .stroke-list li { padding: 9px 8px; }
+  .chat-line .line-actions { opacity: 1; }
+  /* Small buttons inside a chip keep their look; their target is larger. */
+  .item-chip .btn.icon-only, .toolbar .badge.accent .btn.icon-only { position: relative; height: 26px; width: 26px; }
+  .item-chip .btn::after, .toolbar .badge.accent .btn::after { content: ""; position: absolute; inset: -8px; }
+  .item-chip { height: 34px; }
+  .toolbar .badge.accent { height: 36px; border-radius: 18px; }
+  .toast .btn { margin: -8px -8px -8px 0; }
+  /* A name or a link standing alone: a taller target, the same layout. */
+  .person a.name, .crumbs a, .rc-d-link, .seat-links a { padding-block: 10px; margin-block: -10px; }
+  .dialog-head .btn { margin: -6px -8px 0 auto; }
 }
 
 /* Installed as an app: no rubber band past the page's ends. With the light
