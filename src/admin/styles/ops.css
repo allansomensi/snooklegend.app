@@ -48,7 +48,12 @@
   .picker-empty { padding: 14px; text-align: center; }
   .item-chip.picked { cursor: pointer; gap: 8px; }
   .field.invalid .picker-list { border-color: var(--danger); }
-  @media (max-width: 600px) { .picker-row .hide-xs { display: none; } }
+  @media (max-width: 600px) {
+    .picker-row .hide-xs { display: none; }
+    /* Its two filters share a line under the search. */
+    .picker-search { flex-basis: 100%; }
+    .picker-tools .select { flex: 1 1 120px; min-width: 0; }
+  }
 
   /* What the player will see in their inbox. */
   .notif-preview { display: grid; gap: 10px; border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border)); background: var(--accent-soft); border-radius: 12px; padding: 12px; }
